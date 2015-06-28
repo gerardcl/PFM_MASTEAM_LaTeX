@@ -294,7 +294,7 @@
 
   \begin{tabular}{p{\textwidth}}
     \ifthenelse{\boolean{logo}}{\usebox{\logoEPSC}  \hfill \usebox{\logo}   \\[8cm]}{\usebox{\logoEPSC} \\[8cm]}
-    \ifthenelse{\boolean{PFC}}{\begin{center}\Huge\sffamily\bfseries  FINAL MASTER THESIS \end{center}  \\[5cm]}
+    \ifthenelse{\boolean{PFC}}{\begin{center}\Huge\sffamily\bfseries  MASTER THESIS \end{center}  \\[5cm]}
                               %{\begin{center}\Huge\sffamily\bfseries  TREBALL DE FI DE CARRERA  \end{center}  \\[5cm]}
                               % Modificaci� respecte a la versi� 2.1 - Iv�n Padilla Montero - Juliol 2014
                               {\begin{center}\Huge\sffamily\bfseries  TREBALL DE FI DE GRAU  \end{center}  \\[5cm]}
