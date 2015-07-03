@@ -12,125 +12,61 @@ In order to achieve it in order, this is done by enumerating potential technolog
 
 \subsection{Physical and Data link layers}
 
-Ethernet (standardised in 1983) has been increasing its speed rate from the initial 10 Mbps to 100 Gbps (foreseen 400 Gbps by IEEE P802.3bs Task Force), with currently easily affordable 10 Gbps and 40 Gbps interfaces. These rates seem to be enough to accommodate current broadcast formats (HD 1.5 Gbps, 3G 3 Gbps and UHD 12 Gbps) and further innovations because the nature of the packet technologies make them completely agnostic to the upper formats and indeed transparent for future formats in contrast with current media transport technologies which are completely bounded with the transported formats. On another hand, Ethernet hasn't got any timing awareness or QoS assurance, so it makes difficult to accommodate current operation workflows over this technology. Nevertheless, because Ethernet is widely used in the IT industry, its use as COTS switches have motivated studies about the use of these switches in the broadcast industry deployments to validate specific necessary
-features as the latency deviation or packet loss. (REFERENCE: TEST http://www.tvtechnology.com/article/smpte--uncompressed-video-over-cots-ethernet-switches/272983)
+Ethernet was standardised in 1983 and since then the standard has been increasing its speed rate from the initial 10 Mbps to 100 Gbps (foreseen 400 Gbps by IEEE P802.3bs Task Force), with currently easily affordable 10 Gbps and 40 Gbps interfaces. These rates seem to be enough to accommodate current broadcast formats (e.g.: HD at ~1.5 Gbps, 3G at ~3 Gbps and UHD at ~12 Gbps) and further innovations because of the nature of the packet technologies make them completely agnostic to the upper formats and indeed transparent for future formats in contrast with current media transport technologies which are completely bounded with the transported formats (i.e.: standard cable video formats used over broadcast environments). On another hand, Ethernet hasn't got any timing awareness or QoS assurance, so it makes difficult to accommodate current operation workflows over this technology. Nevertheless, because Ethernet is widely used in the IT industry, its use, as COTS switches, have motivated studies about the use of these switches in the broadcast industry deployments to validate specific necessary features as the latency deviation or packet loss. (REFERENCE: TEST http://www.tvtechnology.com/article/smpte--uncompressed-video-over-cots-ethernet-switches/272983)
 
 At the same level, to address some of the inherent Ethernet limitations, Audio Video Bridging (AVB) appeared in 2011 which is a set of standard extensions to the Ethernet IEEE 802.1 focusing on timing and QoS guarantee within local area networks. Its approach is a plug-and-play platform to ease transition from current transport technologies to the newer ones using the same workflows, but the current version is still limited to local premises and limited topologies. Since November 2012, because more varied industry sectors joined the task group, a more general name, Time Sensitive Networks (TSN), was created to carry on with the new developments.
 
-On another hand, the emergence of the SDN paradigm, separating the control and forwarding plane
-besides creating northbound interfaces to interact with external applications enables new flexible and customised network operations and deployments. There are a lot of foreseen benefits from this
-approach but to be fully capable of support all type of streams some extensions should appear,
-such as a specific extension which has been released by the ONF to address timing restrictions known
-as OpenFlow Time Extension to OpenFlow 1.3.x ext340.
+On another hand, the emergence of the SDN paradigm (--REFERENCE--), separating the control and forwarding plane besides creating northbound interfaces to interact with external applications enables new flexible and customised network operations and deployments. There are a lot of foreseen benefits from this approach but to be fully capable of support all type of streams some extensions should appear, such as a specific extension which has been released by the ONF to address timing restrictions known as OpenFlow Time Extension to OpenFlow 1.3.x ext340 (--REFERENCE--).
 
-Furthermore, the Telecom Industry introduced the NFV concept in 2012 to enable the shifting from
-the hardware-centric approach to the software-centric one. In spite of not being thought for
-broadcasting issues, this parading provides an amazing flexibility to bring up new deployments,
-enhance current workflows and create future ones.
+Furthermore, the Telecom Industry introduced the NFV concept (--REFERENCE--) in 2012 to enable the shifting from the hardware-centric approach to the software-centric one. In spite of not being thought for
+broadcasting issues, this parading provides an amazing flexibility to bring up new deployments, enhance current workflows and create future ones.
 
-Related to above statements, the recent advances in chip designs, by industry leaders, such as Intel, Broadcom, Xilinx, Altera, \ldots, have facilitated a strong movement towards consolidation of complex functions (such as encoding, transcoding, conversion, \ldots ) into a single device, instead
-several disparate platforms. Additionally, these hardware advances implied the chance of using
-software-centric frameworks, which provide for greater flexibility and customization from a business
-standpoint. Coupled together, these advances will enable a broader adoption of upcoming media
-technologies, at a reduced cost, without compromise on quality, flexibility and or capability. The
-disruptive nature of such advances can be readily seen in the mobile telephony market, via the entry
-of open source mobile phone software, such as Google’s Android OS, which when couple with low
-cost but powerful chipsets, has democratised the market, allowing millions of low income countries
-access to mobile phones and with it the Internet.
+Related to above statements, the recent advances in chip designs, by industry leaders, such as Intel, Broadcom, Xilinx, Altera, \ldots, have eased a strong movement towards consolidation of complex functions (such as encoding, transcoding, conversion, \ldots ) into a single device, instead
+several disparate platforms. Additionally, these hardware advances implied the chance of using software-centric frameworks, which provide for greater flexibility and customization from a business standpoint. Coupled together, these advances will enable a broader adoption of upcoming media technologies, at a reduced cost, without compromise on quality, flexibility and or capability. The disruptive nature of such advances can be readily seen in the mobile telephony market, such as the entry of open source mobile phone software (e.g.: Google’s Android OS) which when couple with low cost but powerful chipsets, has democratised the market, allowing millions of low income countries access to mobile phones and with it the Internet.
 
-In parallel, regarding the specific timing and synchronising requirements of live media production,
-the standard IEEE 1588-2008, commonly known as PTPv2, appeared covering several profiles to be used through several network environments. For instance, SMPTE published a draft profile SMPTE ST 2059 (1 and 2) defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo https://www.youtube.com/watch?v=uF805Tx0DWo --> Check also annex with ieee presentation!).
+In parallel, regarding the specific timing and synchronising requirements of live media production, the standard IEEE 1588-2008 (--REFERENCE--), commonly known as PTPv2(--REFERENCE--), appeared covering several profiles to be used through several network environments. For instance, SMPTE(--REFERENCE--) published a draft profile SMPTE ST 2059 (1 and 2) (--REFERENCE--)defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo https://www.youtube.com/watch?v=uF805Tx0DWo --> Check also annex with ieee presentation!).
 
 \subsection{Network and Transport layers}
 
 On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast paradigm operation using widely supported routing protocols (DVMRP, PIM, IGMP, \ldots) but the
-computational and scalable complexity of these protocols is let to complex and limited deployments.
+computational and scalable complexity of these protocols tends to complex and limited deployments.
 
-Regarding QoS, IP has a mechanism known as ToS/DSCP which marks the packets (in the header)
-along their way to help mappings with lower-layer protocols (as Ethernet or MPLS) to implement
-QoS at the buffer level. Furthermore, IP networks have been evolving its own architectures from
-traditional hierarchic ones to flatter ones, such as the leaf-and-spine, used in most of the big data centre deployments nowadays facilitating horizontal data movement, useful for heavy load
-transactions between same level hosts.
+Regarding QoS, IP has a mechanism known as ToS/DSCP which marks the packets (in the header) along their way to help mappings with lower-layer protocols (as Ethernet or MPLS) to implement QoS at the buffer level. Furthermore, IP networks have been evolving its own architectures from
+traditional hierarchic ones to flatter ones, such as the leaf-and-spine, used in most of the big data centre deployments nowadays by facilitating horizontal data movement which is useful for heavy load transactions between same level hosts.
 
-On the transport layer, UDP has been preferred over TCP for real-time transport because of its
-connectionless avoiding unnecessary retransmission for live streams. A basic extension, RTP (most
-deployed version is RFC 3550) was introduced to transport audio and media services using a
-timestamp field together with the protocol for control purposes (RTCP). Recently, new extensions
-have appeared introducing new header options to support the adoption of services related to media
-production workflows. Concretely, RTP and RTCP have been proposed to accommodate media specific info over IP, answering to specific challenges.
+On the transport layer, UDP has been preferred over TCP for real-time transport because of its connectionless avoiding unnecessary retransmission for live streams. A basic extension, RTP, which its most
+deployed version is RFC 3550, was introduced to transport audio and media services using a timestamp field together with the protocol for control purposes (RTCP). Recently, new extensions have appeared introducing new header options to support the adoption of services related to media production workflows. Concretely, RTP and RTCP have been proposed to accommodate media specific info over IP, answering to specific challenges.
 
 \subsection{Session, Presentation and Application layers}
 
-Encapsulation audio (AES67-2013) and video (SMPTE 2022-6) standards have appeared (2012-2013) to transport high-quality media signals over IP Networks, but specially in the audio field a broad spectrum of proprietary solutions exist such as RAVENNA, Livewire or Dante.
+Encapsulation audio (AES67-2013) and video (SMPTE 2022-6) standards have appeared (2012-2013) to transport high-quality media signals over IP Networks, but specially in the audio field a broad spectrum of proprietary solutions exist such as Dante, RAVENNA or Livewire (-- FOOTNOTE??--).
 
-On the video side, SMPTE 2022-6 is focused on mapping SDI and HDSDI (opposite to raw video,
-audio and metadata mapping, known as essence mapping) within IP packets and further specific
-solutions for manage packet loss recovery using FEC (SMPTE 2022-5) and a seamless protection
+On the video side, SMPTE 2022-6 is focused on mapping SDI and HDSDI (opposite to raw video, audio and metadata mapping, known as essence mapping) within IP packets and further specific solutions for manage packet loss recovery using FEC (SMPTE 2022-5) and a seamless protection
 system (SMPTE 2022-7).
 
-In the middle of 2014, the Video Services Forum (VSF) has formed a new group (SVIP) looking at
-new encapsulation mechanisms for Audio, Video and Ancillary data into IP without using SDI
-framing (raw data) to develop or recommend a standard for Video over IP without SDI encapsulation.
-They aim to study and document the requirements for Video over IP/Ethernet within Plant (Video,
-Audio, Ancillary Data, Bundles, Timing, Sequencing, Identities, and Latency), to research current
-and proposed solutions to report on gaps between requirements and existing solutions (especially
-regarding existing SMPTE 2022 Standards) and finally to propose scope for follow-on activity if
-required
+In the middle of 2014, the Video Services Forum (VSF) has formed a new group (SVIP) looking at new encapsulation mechanisms for audio, video and ancillary data into IP without using SDI framing (raw data) to develop or recommend a standard for video over IP without SDI encapsulation.
+They aim to study and document the requirements for video over IP/Ethernet within plant (video, audio, ancillary data, bundles, timing, sequencing, identities, and latency), to research current and proposed solutions to report on gaps between requirements and existing solutions (especially regarding existing SMPTE 2022 Standards) and finally to propose scope for follow on activity if required.
 
-On another hand, the wide adoption of low-delay encoding (JPEG2K, AVC, AVCi, VC-2) for high-
-quality video stream could represent a new opportunity to reduce the bandwidth consumption in
-several scenarios. Likewise, high-compression mechanism as MPEG4 H264 or HEVC could be
-useful to transport media content through very limited network resources scenarios (as Internet or
-cloud-based systems).
+On another hand, the wide adoption of low-delay encoding (e.g.: JPEG2K, AVC, AVCi, VC-2) for high- quality video stream could represent a new opportunity to reduce the bandwidth consumption in several scenarios. Likewise, high-compression mechanism as MPEG4 H264 or HEVC could be
+useful to transport media content through very limited network resources scenarios (as Internet or cloud-based systems).
 
-Likewise, specific efforts have risen to arrange specific challenges such as a networked media
-interface by Sony to carry a virtually lossless UHD/4K (12 Gbps non-compressed) over a single 10
-GBE interface [SON14], limited proofs of concept [KOU13, POU14] or specific implementations
-facing the switching-point issue [EDW14b]. All of these are a useful starting point for future
-enhancements towards a global operational framework.
+Moreover, specific efforts have risen to arrange specific challenges such as a networked media interface by Sony to carry a virtually lossless UHD/4K (12 Gbps non-compressed) over a single 10 GBE interface, limited proofs of concept or specific implementations facing the switching-point issue. All of these are a useful starting point for future enhancements towards a global operational framework. (RESOURCES/REFERENCES??? http://www.digitalmedia-world.com/Broadcast/sony-launches-networked-media-interface-to-support-ip-based-networks.html , http://www.digitalmedia-world.com/Broadcast/imagine-comms-sony-broadcast-transition-uhd-4k , http://www.imaginecommunications.com/resources/press-release/industry-transition-uhd4k-collaboration-with-sony , http://leakinwallaproblem.bravesites.com/entries/general/tehuti-introduces-industry’s-first-nbase-ttm-adapter-reference-design-for-enterprise-networks---yahoo-finance)
 
-Another important issue is the automation of the system to enhance flexibility for deployment set-up
-and maintenance. Here, some solutions as Zero-configuration networking [ZEROC] could contribute
-using well-known protocols as DHCP or DNS-SD to enable auto-configuration and streaming
-announcement, but to be implemented in an operational scenario a common approach should be
+Another important issue is the automation of the system to enhance flexibility for deployment set-up and maintenance. Here, some solutions as Zero-configuration networking (-- REFERENCE - http://www.zeroconf.org/ ) could contribute using well-known protocols as DHCP or DNS-SD to enable auto-configuration and streaming announcement, but to be implemented in an operational scenario a common approach should be
 defined.
 
-In the media plane, protocols as RTSP for end-to-end session control or SDP for service description
-provide capabilities for the stream management. Complementary, media wrappers aim to gather
-different types of programme media and associated information, as well as generically identify this
-information. Different media wrapper formats are in use at this time, but, for the media industry, it is
-important that the wrappers have characteristics like openness, extensibility, performance \ldots The MXF (a SMPTE standard) is a “container” format which supports a number of different streams of coded
-"essence", encoded in any of a variety of video and audio compression formats, together with a
-metadata wrapper which describes the material contained within the MXF file enable interoperability
-between different platforms. Also DDS (a machine-to-machines middleware standard from OMG)
-could be used to enable interoperable media exchange between actors. At the same time, EBU has
-launched the [FIMS] (Framework for Interoperable Media Services) which intends to answer to
-different interoperability issues between SOA proprietary systems by defining an open, consensual
-framework with standardised interfaces.
+In the media plane, protocols as RTSP for end-to-end session control or SDP for service description provide capabilities for the stream management. Complementary, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time (e.g.: MXF http://www.amwa.tv/downloads/whitepapers/AMWA_MXF_wrappersKovalick1-2012.pdf), but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility, performance \ldots The MXF (a SMPTE standard) is a “container” format which supports a number of different streams of coded based, encoded in any of a variety of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file enable interoperability
+between different platforms. Also DDS (a machine-to-machines middleware standard from OMG --REFERENCE--) could be used to enable interoperable media exchange between actors. At the same time, EBU has launched the FIMS (Framework for Interoperable Media Services --REFERENCE--) which intends to answer to different interoperability issues between SOA proprietary systems by defining an open, consensual framework with standardised interfaces.
 
-Regarding the measurement of media transport over IP, VSF published in 2006 a document [RVOIM]
-to define the recommended metrics for Video over IP transport. The aim of the document is help in
-the monitoring, troubleshooting, equipment performance compliance to standards and specifications,
-verifying and measuring the delivered services statistics and equipment analysis and debug, but
-basically with a distribution approach, no focused on live production as the current project aims.
-As could be inferred from the above statements, there are no current common approach to solve the
-whole challenge yet and to face this issue some initiatives have appeared lately. One of the first
-outstanding initiatives was a BBC research project called IP Studio [BBC12] which tried to provide
-an operational framework for a live studio within their environment, creating commercial outcomes
-as Stagebox [STBOX] and being used in operational scenarios [RAW15].
+Regarding the measurement of media transport over IP, VSF published in 2006 a document (RVOIM http://www.videoservicesforum.org/activity_groups/Test_and_Measurements_AG_Report_Final.pdf ) to define the recommended metrics for Video over IP transport. The aim of the document is help in the monitoring, troubleshooting, equipment performance compliance to standards and specifications, verifying and measuring the delivered services statistics and equipment analysis and debug, but basically with a distribution approach, not focused on live production as the current project aims.
 
-Likewise, in 2013 SMPTE, VSF and EBU created the JT-NM task force [JTNM] to drive the
-broadcasting industry towards a full IP adoption by providing guidelines to enable a successful
-migration. Currently, the JT-NM is working to develop a reference architecture (Phase 2) to help all
-the parties to speak a common language whereas defining specific requirements over concrete use
-cases to uncover missing definitions to address the general scenario. Just in few months, the JT-NM
-will publish the Phase 2 Final report by June 30, 2015 which will be taken into account to reuse as
-many guidelines as possible in the project.
+As could be inferred from the above statements, there are no current common approach to solve the whole challenge yet and to face this issue some initiatives have appeared lately. Many outstanding research initiatives are on the way but an interesting one was carried out by the BBC (--REFERENCE - http://downloads.bbc.co.uk/rd/pubs/whp/whp-pdf-files/WHP281.pdf) which tried to provide an operational framework for a live studio within their environment.
 
-Recently, specific manufacturer approaches have been published [KOJ15] (and more are going to
-appear in the near future) to address the requirements from the broadcasting industry, defining some
-specific considerations and selecting standards (and drafts) to provide practical approaches.
+Likewise, in 2013 SMPTE, VSF and EBU created the JT-NM task force (JTNM) to drive the broadcasting industry towards a full IP adoption by providing guidelines to enable a successful migration. Currently, the JT-NM is working to develop a reference architecture (phase 2) to help all involved layers to agree on all cross issues whereas defining specific requirements over concrete use cases to uncover missing definitions to address the general scenario (--REFERENCE -- https://www.smpte.org/sites/default/files/JT-NM%20Phase%202%20Interim%20Report%20for%20IBC.pdf).
 
+Recently, specific manufacturer approaches have been published [KOJ15] (and more are going to appear in the near future) to address the requirements from the broadcasting industry, defining some specific considerations and selecting standards (and drafts) to provide practical approaches.
+
+(ADD INTRODUCTION TO NEXT CHAPTER)
 
 \section{Migration to cloud}
 
@@ -209,6 +145,7 @@ Build a true Software-Defined Data Center.
 
 \subsection{Media streaming}
 
+CHECK wikipedia -> advanced television system committee standards
 
 \subsection{Monitoring}
 
