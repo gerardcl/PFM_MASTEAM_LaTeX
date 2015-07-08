@@ -129,19 +129,39 @@ And, expected overall outcomes might be:
 \item Improved cross collaboration
 \end{itemize}
 
-Finally, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but also helps this project to organize and showcase in order the topics that are going to be specifically treated. These are virtualization, monitoring and media/coding.
+As a corollary, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but it also refers to this project's topics in order. These are virtualization, monitoring and media/coding.
 
 \subsection{Virtualization}
 
-Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over differnt infrastructure architectures. Although deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization.
+Virtualization, under computing environments, means creating a virtual version of any possible piece of actual hardware or software so that we can use system resources effectively. Besides hardware and desktop virtualization, which are the most known commercial concepts, it can be explained and organized in two different concepts:
 
-As cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops and others can only be traced back a few years, such as virtualized applications.
+(TO EXPLAIN EACH SUBITEM)
+\begin{itemize}
+\item Types
+\begin{itemize}
+\item Data virtualization
+\item Memory virtualization
+\item Network virtualization
+\item Storage virtualization
+\item Security virtualization
+\end{itemize}
+\item Levels
+\begin{itemize}
+\item Application virtualization
+\item Environment virtualization
+\item Operating System (OS) virtualization
+\item Networking virtualization
+\end{itemize}
+\end{itemize}
 
-Concretely, virtualization is a software technology that makes it possible to run multiple operating systems and applications on the same server at the same time. This fact gives the chance to define an Infrastructure as a Service (IaaS). Then, the way many defined virtualized nodes are configured and interconnected can become as a Platform as a Service (PaaS). Moreover, specific applications inside such platform can be defined as a Software as a Service where cloud users (internal or external ones) can interact with (see figure \ref{F:cloudComputingLayers}).
+Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization.
+
+As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, and others can only be traced back a few years, such as virtualized applications.
+
+INTERESTS AND COMPARISONS (TENDENCES) -> TALK ABOUT KVM AND LXC
+Containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others in the rush to speed up the pace of container adoption. A recent study by DevOps.com and ClusterHQ showed that over 90% of organizations have either looked at or plan to look at containers in the near future.
 
 
-
-TALK ABOUT SPECIFIC VIRTUALIZATION TECHNOLOGIES OF INTEREST AND ITS STATE. - LINK2
 
 FINALLY:
 Virtualization can increase IT agility, flexibility, and scalability while creating significant cost savings. Workloads get deployed faster, performance and availability increases and operations become automated, resulting in IT that's simpler to manage and less costly to own and operate.
@@ -155,17 +175,17 @@ Enable centralized management.
 Build a true Software-Defined Data Center.
 
 
-Containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others in the rush to speed up the pace of container adoption. A recent study by DevOps.com and ClusterHQ showed that over 90% of organizations have either looked at or plan to look at containers in the near future.
 
 
 \subsection{Monitoring}
 
+monitoring: mrtg (tobias oeticker - rrdb), cactix,...
 
 \subsection{Media streaming}
 
 CHECK wikipedia -> advanced television system committee standards
 
-
+transcoding, codecs, codification (nowadays), 
 
 \section{LiveMediaStreamer (LMS) framework}
 
