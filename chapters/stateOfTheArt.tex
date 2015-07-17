@@ -8,69 +8,69 @@ Moreover, this chapter will be focused on the topics related to media production
 
 As briefly as possible, this section aims to summarise the evolution of the IP convergence itself and how technologies are evolving to carry out such transformation at audio-visual media content production level.
 
-This subsection is organized by enumerating potential technologies and standards by following the OSI stack from the bottom layer.
+Next subsections are also organized by enumerating potential technologies and standards following the OSI stack from the bottom layer.
 
 \subsection{Physical and Data link layers}
 
 Ethernet was standardised in 1983 and since then the standard has been increasing its speed rate from the initial 10 Mbps to 100 Gbps (foreseen 400 Gbps by IEEE P802.3bs Task Force), with currently easily affordable 10 Gbps and 40 Gbps interfaces. These rates seem to be enough to accommodate current broadcast formats (e.g.: HD at ~1.5 Gbps, 3G at ~3 Gbps and UHD at ~12 Gbps) and further innovations because of the nature of the packet technologies make them completely agnostic to the upper formats and indeed transparent for future formats in contrast with current media transport technologies which are completely bounded with the transported formats (i.e.: standard cable video formats used over broadcast environments). On another hand, Ethernet hasn't got any timing awareness or QoS assurance, so it makes difficult to accommodate current operation workflows over this technology. Nevertheless, because Ethernet is widely used in the IT industry, its use, as COTS switches, have motivated studies about the use of these switches in the broadcast industry deployments to validate specific necessary features as the latency deviation or packet loss. (REFERENCE: TEST LINK3)
 
-At the same level, to address some of the inherent Ethernet limitations, Audio Video Bridging (AVB) appeared in 2011 which is a set of standard extensions to the Ethernet IEEE 802.1 focusing on timing and QoS guarantee within local area networks. Its approach is a plug-and-play platform to ease transition from current transport technologies to the newer ones using the same workflows, but the current version is still limited to local premises and limited topologies. Since November 2012, because more varied industry sectors joined the task group, a more general name, Time Sensitive Networks (TSN), was created to carry on with the new developments.
+At the same level, to address some of the inherent Ethernet limitations, Audio Video Bridging (AVB) appeared in 2011 which is a set of standard extensions to the Ethernet IEEE 802.1 focusing on timing and QoS guarantee within local area networks. Its approach is a plug-and-play platform to ease transition from current transport technologies to the newer ones using the same workflows, but the current version is still limited to local premises and limited topologies. Since November 2012, because more varied industry sectors joined the task group, a more general name, the Time Sensitive Networks (TSN), was created to carry on with the new developments.
 
-On another hand, the emergence of the SDN paradigm (--REFERENCE--), separating the control and forwarding plane besides creating northbound interfaces to interact with external applications enables new flexible and customised network operations and deployments. There are a lot of foreseen benefits from this approach but to be fully capable of support all type of streams some extensions should appear, such as a specific extension which has been released by the ONF to address timing restrictions known as OpenFlow Time Extension to OpenFlow 1.3.x ext340 (--REFERENCE--).
+On another hand, the emergence of the SDN paradigm (--REFERENCE--), separating the control and forwarding plane besides creating northbound interfaces to interact with external applications, enables new flexible and customised network operations and deployments. There are a lot of foreseen benefits from this approach but to be fully capable of support all type of streams some extensions should appear, such as a specific extension which has been released by the ONF to address timing restrictions known as OpenFlow Time Extension to OpenFlow 1.3.x ext340 (--REFERENCE--).
 
 Furthermore, the Telecom Industry introduced the NFV concept (--REFERENCE--) in 2012 to enable the shifting from the hardware-centric approach to the software-centric one. In spite of not being thought for
-broadcasting issues, this parading provides an amazing flexibility to bring up new deployments, enhance current workflows and create future ones.
+broadcasting issues, this parading provides new possibilities to bring up new deployments and  enhance current workflows.
 
-Related to above statements, the recent advances in chip designs, by industry leaders, such as Intel, Broadcom, Xilinx, Altera, \ldots, have eased a strong movement towards consolidation of complex functions (such as encoding, transcoding, conversion, \ldots ) into a single device, instead
-several disparate platforms. Additionally, these hardware advances implied the chance of using software-centric frameworks, which provide for greater flexibility and customization from a business standpoint. Coupled together, these advances will enable a broader adoption of upcoming media technologies, at a reduced cost, without compromise on quality, flexibility and or capability. The disruptive nature of such advances can be readily seen in the mobile telephony market, such as the entry of open source mobile phone software (e.g.: Google’s Android OS) which when couple with low cost but powerful chipsets, has democratised the market, allowing millions of low income countries access to mobile phones and with it the Internet.
+Related to above statements, the recent advances in chip designs by industry leaders (e.g.: Intel, Broadcom, Xilinx and Altera) have eased a strong movement towards consolidation of complex functions (e.g.: encoding, transcoding, conversion, \ldots ) into a single device, instead
+several disparate platforms. Additionally, these hardware advances implied the chance of using software-centric frameworks, which provide for greater flexibility and customization from a business standpoint. Both advances are enabling a broader adoption of upcoming media technologies, at a reduced cost, without compromise on quality, flexibility and capability. Moreover, the disruptive nature of such advances can be seen in the mobile telephony market, such as the entry of open source mobile phone software (e.g.: Google’s Android OS) which, when coupled with low cost but powerful chipsets, has democratised the market allowing millions of people access to mobile phones and with it the Internet.
 
-In parallel, regarding the specific timing and synchronising requirements of live media production, the standard IEEE 1588-2008 (--REFERENCE--), commonly known as PTPv2(--REFERENCE--), appeared covering several profiles to be used through several network environments. For instance, SMPTE(--REFERENCE--) published a draft profile SMPTE ST 2059 (1 and 2) (--REFERENCE--)defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo LINK4 --> Check also annex with ieee presentation!).
+In parallel, regarding the specific timing and synchronising requirements of live media production, the standard IEEE 1588-2008 (--REFERENCE--), commonly known as PTPv2(--REFERENCE--), appeared covering several profiles to be used through several network environments. For instance, SMPTE(--REFERENCE--) published a draft profile SMPTE ST 2059 (1 and 2) (--REFERENCE--) defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo LINK4 --> Check also annex with ieee presentation!).
 
 \subsection{Network and Transport layers}
 
-On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast paradigm operation using widely supported routing protocols (DVMRP, PIM, IGMP, \ldots) but the
-computational and scalable complexity of these protocols tends to complex and limited deployments.
+On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast paradigm operation using widely supported routing protocols (--REFERENCE--) (e.g.: DVMRP, PIM, IGMP, \ldots), but the computational and scalable complexity of these protocols tends to difficult and limit deployments.
 
-Regarding QoS, IP has a mechanism known as ToS/DSCP which marks the packets (in the header) along their way to help mappings with lower-layer protocols (as Ethernet or MPLS) to implement QoS at the buffer level. Furthermore, IP networks have been evolving its own architectures from
-traditional hierarchic ones to flatter ones, such as the leaf-and-spine, used in most of the big data centre deployments nowadays by facilitating horizontal data movement which is useful for heavy load transactions between same level hosts.
+In terms of QoS, IP has a mechanism known as ToS/DSCP (--REFERENCE--) which marks the header packets along their way to help mappings with lower-layer protocols (e.g.: Ethernet or MPLS) to implement QoS at the buffer level. Furthermore, IP networks have been evolving its own architectures from traditional hierarchic ones to flatter ones, such as the leaf-and-spine (--REFERENCE--), which is used in most of the nowadays big data centre deployments by facilitating horizontal data movement, which is useful for heavy load transactions between same level hosts.
 
-On the transport layer, UDP has been preferred over TCP for real-time transport because of its connectionless avoiding unnecessary retransmission for live streams. A basic extension, RTP, which its most
-deployed version is RFC 3550, was introduced to transport audio and media services using a timestamp field together with the protocol for control purposes (RTCP). Recently, new extensions have appeared introducing new header options to support the adoption of services related to media production workflows. Concretely, RTP and RTCP have been proposed to accommodate media specific info over IP, answering to specific challenges.
+On the transport layer, UDP has been preferred over TCP for real-time transport because of its connectionless and avoidance of unnecessary retransmission for live streams. As common known and basic extension, the RTP, which most deployed version is RFC 3550, was initially introduced to audio and video services using a timestamp field together with the protocol for control purposes (i.e.: RTCP). Recently, new extensions have appeared introducing new header options to support the adoption of services related to media production workflows. Concretely, RTP and RTCP have been proposed to accommodate media specific info over IP, answering to specific challenges.
 
-\subsection{Session, Presentation and Application layers}
+\subsection{Session, Presentation and Application layers}\label{S:sessionPresentationApplicatio}
 
-Encapsulation audio (AES67-2013) and video (SMPTE 2022-6) standards have appeared (2012-2013) to transport high-quality media signals over IP Networks, but specially in the audio field a broad spectrum of proprietary solutions exist such as Dante, RAVENNA or Livewire (-- FOOTNOTE??--).
+Encapsulation audio (AES67-2013) and video (SMPTE 2022-6) standards have appeared, around 2012 and 2013, to transport high-quality media signals over IP Networks.
 
-On the video side, SMPTE 2022-6 is focused on mapping SDI and HDSDI (opposite to raw video, audio and metadata mapping, known as essence mapping) within IP packets and further specific solutions for manage packet loss recovery using FEC (SMPTE 2022-5) and a seamless protection
-system (SMPTE 2022-7).
+In the audio field, a broad spectrum of proprietary solutions already exist (e.g.: Dante, RAVENNA and Livewire) (-- FOOTNOTE??REFERENCE--).
+
+On the video side, SMPTE 2022-6 is focused on mapping SDI and HDSDI (opposite to raw video, audio and metadata mapping that is known as essence mapping --REFERENCE--) within IP packets.
+
+Moreover, further specific solutions for manage packet loss recovery using FEC (SMPTE 2022-5) and a seamless protection system (SMPTE 2022-7) have appeared as potential robustness solutions.
 
 In the middle of 2014, the Video Services Forum (VSF) has formed a new group (SVIP) looking at new encapsulation mechanisms for audio, video and ancillary data into IP without using SDI framing (raw data) to develop or recommend a standard for video over IP without SDI encapsulation.
-They aim to study and document the requirements for video over IP/Ethernet within plant (video, audio, ancillary data, bundles, timing, sequencing, identities, and latency), to research current and proposed solutions to report on gaps between requirements and existing solutions (especially regarding existing SMPTE 2022 Standards) and finally to propose scope for follow on activity if required.
+They aim to study and document the requirements for video over IP/Ethernet within plant (i.e.: video, audio, ancillary data, bundles, timing, sequencing, identities and latency) in order to research over current and proposed solutions so that to report on gaps between requirements and existing solutions (especially regarding existing SMPTE 2022 Standards) and finally to propose scope for follow on activity, if required.
 
-On another hand, the wide adoption of low-delay encoding (e.g.: JPEG2K, AVC, AVCi, VC-2) for high- quality video stream could represent a new opportunity to reduce the bandwidth consumption in several scenarios. Likewise, high-compression mechanism as MPEG4 H264 or HEVC could be
+On another hand, the wide adoption of low-delay encoding (e.g.: JPEG2K, AVC, AVCi, VC-2) for high quality video stream could represent a new opportunity to reduce the bandwidth consumption in several scenarios. Likewise, high-compression mechanism as MPEG4 H264 or HEVC could be
 useful to transport media content through very limited network resources scenarios (as Internet or cloud-based systems).
 
-Moreover, specific efforts have risen to arrange specific challenges such as a networked media interface by Sony to carry a virtually lossless UHD/4K (12 Gbps non-compressed) over a single 10 GBE interface, limited proofs of concept or specific implementations facing the switching-point issue. All of these are a useful starting point for future enhancements towards a global operational framework. (RESOURCES/REFERENCES??? LINK5)
+Moreover, specific efforts have risen to arrange specific challenges such as a networked media interface by Sony to carry a virtually lossless UHD/4K (12 Gbps non-compressed) over a single 10 GBE interface or specific implementations facing the switching-point issue. All of these are a useful starting point for future enhancements towards a global operational framework. (RESOURCES/REFERENCES??? LINK5)
 
-Another important issue is the automation of the system to enhance flexibility for deployment set-up and maintenance. Here, some solutions as Zero-configuration networking (-- REFERENCE - LINK6 ) could contribute using well-known protocols as DHCP or DNS-SD to enable auto-configuration and streaming announcement, but to be implemented in an operational scenario a common approach should be
-defined.
+Another important issue is the automation of the system to enhance flexibility for deployment set-up and maintenance. Here, some solutions as Zero-configuration networking (-- REFERENCE - LINK6 ) could contribute using well-known protocols as DHCP or DNS-SD to enable auto-configuration and streaming announcement, but to be implemented in an operational scenario a common approach should be defined.
 
-In the media plane, protocols as RTSP for end-to-end session control or SDP for service description provide capabilities for the stream management. Complementary, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time (e.g.: MXF LINK7), but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility, performance \ldots The MXF (a SMPTE standard) is a “container” format which supports a number of different streams of coded based, encoded in any of a variety of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file enable interoperability
-between different platforms. Also DDS (a machine-to-machines middleware standard from OMG --REFERENCE--) could be used to enable interoperable media exchange between actors. At the same time, EBU has launched the FIMS (Framework for Interoperable Media Services --REFERENCE--) which intends to answer to different interoperability issues between SOA proprietary systems by defining an open, consensual framework with standardised interfaces.
+In the media plane, protocols as RTSP for end-to-end session control or SDP for service description provide capabilities for the stream management. Furthermore, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time (e.g.: MXF --REFERENCE-->>>LINK7), but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility and performance. The MXF (a SMPTE standard) is a “container” format, which supports a number of different streams of coded based by enabling interoperability between different platforms. This is by encoding in any type of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file. Also DDS, a machine-to-machines middleware standard from OMG (--REFERENCE--), could be used to enable interoperable media exchange between actors. At the same time, EBU has launched the FIMS (Framework for Interoperable Media Services --REFERENCE--) which intends to answer to different interoperability issues between SOA proprietary systems by defining an open, consensual framework with standardised interfaces.
 
-Regarding the measurement of media transport over IP, VSF published in 2006 a document (RVOIM LINK8 ) to define the recommended metrics for Video over IP transport. The aim of the document is help in the monitoring, troubleshooting, equipment performance compliance to standards and specifications, verifying and measuring the delivered services statistics and equipment analysis and debug, but basically with a distribution approach, not focused on live production as the current project aims.
+Regarding the measurement of media transport over IP, VSF published in 2006 a document (RVOIM LINK8 ) to define the recommended metrics for Video over IP transport. The aim of the document is help in the monitoring, troubleshooting and equipment performance compliance to standards and specifications, verifying and measuring the delivered services statistics and equipment analysis and debug.
 
-As could be inferred from the above statements, there are no current common approach to solve the whole challenge yet and to face this issue some initiatives have appeared lately. Many outstanding research initiatives are on the way but an interesting one was carried out by the BBC (--REFERENCE - LINK9) which tried to provide an operational framework for a live studio within their environment.
+As could be inferred from the above statements, there are no current common approach to solve the whole challenge yet. To face this issue some initiatives have appeared lately. Many outstanding research initiatives are on the way but an interesting one was carried out by the BBC (--REFERENCE - LINK9) which tried to provide an operational framework for a live studio within their environment.
 
-Likewise, in 2013 SMPTE, VSF and EBU created the JT-NM task force (JTNM) to drive the broadcasting industry towards a full IP adoption by providing guidelines to enable a successful migration. Currently, the JT-NM is working to develop a reference architecture (phase 2) to help all involved layers to agree on all cross issues whereas defining specific requirements over concrete use cases to uncover missing definitions to address the general scenario (--REFERENCE -- LINK10).
+Likewise, in 2013 SMPTE, VSF and EBU created the JT-NM task force (JTNM) to drive the broadcasting industry towards a full IP adoption by providing guidelines to enable a successful migration. Currently, the JT-NM is working to develop a reference architecture to help all involved layers to agree on all cross issues whereas defining specific requirements over concrete use cases to uncover missing definitions to address the general scenario (--REFERENCE -- LINK10).
 
 \section{Migration to cloud}
 
-This section is a continuation of the previous one but showing how other topics related to IP convergence are giving new chances to improve audio-visual media production at any possible production environment, concretely within the cloud concept. 
+This section is a continuation of the previous one but focusing on how OTT content topics are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
+
+!ADD GARTNERS HYPE CYCLE FIGURE AND COMMENTS ABOUT ITS STATE AND TENDENCE!
 
 \subsection{Cloud computing}
 
-Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So for reasons of flexibility, security, data protection, agility and cost, many organisations are embracing cloud computing. 
+Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So for reasons of flexibility, security, data protection, agility and cost, many organisations are migrating to cloud computing environments. 
 
 Nowadays, cloud computing is defined by three fundamental models that are organized through application/service, platform and infrastructure layers.
 
@@ -82,17 +82,17 @@ Nowadays, cloud computing is defined by three fundamental models that are organi
 \end{center}
 \end{figure}
 
-Moreover, there are different deployment models depending on the "product" behind and which are the resources from the entity that is offering or using such product. Main deployment models might be:
+Moreover, there are different deployment models depending on the product behind (e.g.: specific service or application), which are the resources from the entity that is offering or using such product. Main deployment models might be:
 
 \begin{itemize}
 \item Public: when applications/services run over a network that is open for public use, which may be free. The fact of being public/opened implies much more complexity in terms of security issues.
 \item Private: when infrastructure is operated solely for a single organization, whether managed internally or by a third-party, and hosted either internally or externally. This cloud type might be similar in terms of architecture design from the public one.
-\item Hybrid: when a composition of two or more clouds (private or public ones) are treated as distinct entities but are bound together, offering the benefits of multiple deployment models. Hybrid cloud allows to extend either the capacity or the capability of a cloud service, by aggregation, integration or customization with another cloud service.
+\item Hybrid: when a composition of two or more clouds (private or public ones) are treated as distinct entities but are bound together, offering the benefits of multiple deployment models. Hybrid cloud allows to extend the capabilities of a cloud service by aggregation, integration or customization with another cloud service.
 \end{itemize}
 
-To point out that high-performance computing (e.g.: GPU based clouds --REFERENCE--) and software-defined networking (SDN) could shape where cloud is evolving and it could improve solutions to current cloud issues such as security (-- REFERENCE - National Security Agency and PRISM scandal), processing performance, full processing chaing control through specific SLAs, \ldots
+To point out that high-performance computing (e.g.: GPU based clouds --REFERENCE--) and software-defined networking (SDN) could shape where cloud is evolving and it could improve solutions to current cloud issues such as security (-- REFERENCE - National Security Agency and PRISM scandal), processing performance, full processing chain control through specific SLAs among others.
 
-In many terms, the cloud concept is key solution to help media producers create better content more quickly and there are lots of examples to focus on, but lets introduce the ones that tends to flexible and scalable ways to access the benefits that cloud computing brings to media production:
+In many terms, the cloud concept is a key solution to help media producers create better content more quickly and there are lots of examples to focus on, but lets introduce the ones that tends to flexible and scalable ways to access the benefits that cloud computing brings to media production:
 
 \begin{itemize}
 \item Low-cost initial expenditures \hfill 
@@ -101,7 +101,7 @@ Media production tends to require an enormous initial investment in technology i
 
 \item Cost forecasting\hfill 
 
-Infrastructure as a Service (Iaas) prices are predictable and granularly treated. It allows prediction on a per project basis with detailed cost analysis precision. As done by many IaaS providers (e.g..: Amazon, Woowza, \ldots), each resource used in a media production workflow is metered, and companies pay only for what they use.
+Infrastructure as a Service (Iaas) prices are predictable and granularly treated. It allows prediction on a per project basis with detailed cost analysis precision. As done by many IaaS providers (e.g.: Amazon and Woowza), each resource used in a media production workflow is metered, and companies pay only for what they use.
 
 \item Dynamic infrastructure deployment \hfill 
 
@@ -129,13 +129,13 @@ And, expected overall outcomes might be:
 \item Improved cross collaboration
 \end{itemize}
 
-As a corollary, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but it also refers to this project's topics in order. These are virtualization, monitoring and media/coding.
+As a subchapter corollary, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but it also refers to this project's layers in order. These are virtualization [\ref{SOA:Virtualization}], monitoring [\ref{SOA:monitoring}] and the service that is going to be deployed and tested which is implemented using the LiveMediaStreamer framework [\ref{SOA:LMS}].
 
-\subsection{Virtualization}
+\subsection{Virtualization}\label{SOA:Virtualization}
 
 Virtualization, under computing environments, means creating a virtual version of any possible piece of actual hardware or software so that we can use system resources effectively. Besides hardware and desktop virtualization, which are the most known commercial concepts, it can be explained and organized in two different concepts:
 
-(TO EXPLAIN EACH SUBITEM)
+(TO EXPLAIN EACH SUBITEM???)
 \begin{itemize}
 \item Types
 \begin{itemize}
@@ -156,10 +156,12 @@ Virtualization, under computing environments, means creating a virtual version o
 
 Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization.
 
-As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, and others can only be traced back a few years, such as virtualized applications.
+As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, and others can only be traced back a few years, such as virtualized applications (--REFERENCE-- LINK11).
+
+Intro per portar a parlar dels containers i kvm -> es busca màxima flexibilitat, control, rapidesa d'actuació, etc. Parlar de PIRÀMIDE típica de cloud+virtualització i com altres mètodes poden modificar aquest "stack"
 
 INTERESTS AND COMPARISONS (TENDENCES) -> TALK ABOUT KVM AND LXC
-Containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others in the rush to speed up the pace of container adoption. A recent study by DevOps.com and ClusterHQ showed that over 90% of organizations have either looked at or plan to look at containers in the near future.
+Containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others in the rush to speed up the pace of container adoption. A recent study by DevOps.com and ClusterHQ showed that over 90\% of organizations have either looked at or plan to look at containers in the near future.
 
 
 
@@ -175,19 +177,56 @@ Enable centralized management.
 Build a true Software-Defined Data Center.
 
 
+\subsection{Monitoring}\label{SOA:monitoring}
 
+Strongly related to cloud reliability is the monitoring concept. In order to reach maximum cloud reliability it's important to observe and check the progress and/or quality of key parameters over certain periods of time and to keep them under systematic review in order to create proper reactions, if required.
 
-\subsection{Monitoring}
+Therefore, this implies monitoring the cloud infrastructure (e.g.: servers, virtual or physical) and related services (e.g.: applications). Here appears the QoS (Quality of Service) and QoE (Quality of Experience) terms, respectively.
 
-monitoring: mrtg (tobias oeticker - rrdb), cactix,...
+QoS is the monitoring and network-centric of underlying infrastructure components such as servers, routers and its network traffic. QoS metrics are generally device (e.g.: CPU and memory load, CPU temperature, disk space or HDD health) or transport-oriented (e.g.: packet loss, delay, bandwidth usage or jitter). 
 
-\subsection{Media streaming}
+Although QoS can be fully affordable due to the robustness and redundancy of current infrastructures (e.g.: back-up services, network rerouting and error correction), this doesn't mean that any end user might be feeling comfortable by using deployed services (e.g.: searching on a e-commerce webpage) over a high QoS infrastructure. Then, QoE monitoring evaluate the quality delivered to a user and it's done by analysing parameters when connecting to the service like a user. Therefore, QoE performance indicators are user-centric (e.g.: webpages response time and measuring video and audio quality (MOS)).
 
-CHECK wikipedia -> advanced television system committee standards
+Common network monitoring protocols for distributed infrastructures management are:
 
-transcoding, codecs, codification (nowadays), 
+(TO DEVELOP EACH ITEM)
+\begin{itemize}
+\item SNMP:
+\item WMI: WBEM and CMI standards compatible implementation
+\item NetFlow:
+\end{itemize}  
 
-\section{LiveMediaStreamer (LMS) framework}
+Usually, these protocols are used to measure QoS, but there are complex algorithms that processes those QoS measurements parameters of interest in order to measure the QoE too. Nevertheless, there are specific applications to define and perform specific QoE measurements. This are known as bots or robots (EXAMPLE APPLICATION FOR SPECIFIC QOE MEASURES).
+
+Going to what this project is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience, mainly because these contents are compressed and coded, and have low entropy. Therefore, when designing systems for referenced analysis several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the encoding system, transport network, access network, home network to end device).
+
+There is also the referenceless analysis that is based on the idea that end users don't know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
+
+Typically, the evaluation of the QoE for audiovisual content provides users with a range of potential choices (i.e.: low, medium and high quality levels) that are currently widely accepted.
+
+Obviously, the automation of critical cloud performance monitoring tasks is crucial for ensuring availability, providing efficient services and reducing common errors, costs and complexity. So, the use of OTT applications that processes such bank of data flows and displays outcome parameters of interest are crucial. PODEN SER DISTRIBUITS O CENTRALITZATS...
+
+There are many applications and services that offer monitoring capabilities to be integrated to any kind new applications and infrastructures:
+
+(FER TAULA SI SÓN APP O SERVEI I SI SON OBERTS O TANCATS)
+\begin{itemize}
+\item mrtg (tobias oeticker - rrdb) - prtg
+\item cactix
+\item opsview
+\item monitis
+\item new relic
+\item zabbix
+\item collectd + graphite
+\item riemann 
+\end{itemize}
+
+So, thanks to monitoring evaluation service providers and network operators have the capability to minimize the storage and network resources by allocating only the resources that are required.
+
+\subsection{Media}
+
+transcoding, codecs, codification (nowadays) --> said at \ref{S:sessionPresentationApplicatio}
+
+\section{LiveMediaStreamer (LMS) framework}\label{SOA:LMS}
 
 
 
