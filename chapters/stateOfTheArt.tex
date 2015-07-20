@@ -64,15 +64,13 @@ Likewise, in 2013 SMPTE, VSF and EBU created the JT-NM task force (JTNM) to driv
 
 \section{Migration to cloud}
 
-This section is a continuation of the previous one but focusing on how OTT content topics are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
-
-!ADD GARTNERS HYPE CYCLE FIGURE AND COMMENTS ABOUT ITS STATE AND TENDENCE!
+This section is a continuation of the previous one but focusing on how OTT content technologies are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
 
 \subsection{Cloud computing}
 
-Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So for reasons of flexibility, security, data protection, agility and cost, many organisations are migrating to cloud computing environments. 
+Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So for reasons many reasons like flexibility, scalability, security, data protection, agility and cost many organisations are migrating to cloud computing environments. 
 
-Nowadays, cloud computing is defined by three fundamental models that are organized through application/service, platform and infrastructure layers.
+Nowadays, cloud computing defines three fundamental models that are organized through application/service, platform and infrastructure layers.
 
 \begin{figure}[htb]
 \begin{center}
@@ -90,9 +88,9 @@ Moreover, there are different deployment models depending on the product behind 
 \item Hybrid: when a composition of two or more clouds (private or public ones) are treated as distinct entities but are bound together, offering the benefits of multiple deployment models. Hybrid cloud allows to extend the capabilities of a cloud service by aggregation, integration or customization with another cloud service.
 \end{itemize}
 
-To point out that high-performance computing (e.g.: GPU based clouds --REFERENCE--) and software-defined networking (SDN) could shape where cloud is evolving and it could improve solutions to current cloud issues such as security (-- REFERENCE - National Security Agency and PRISM scandal), processing performance, full processing chain control through specific SLAs among others.
+To point out that high-performance computing (e.g.: GPU based clouds --REFERENCE--) and software-defined networking (SDN) could improve solutions to current cloud issues such as security, processing performance, full processing chain control through specific SLAs, among others.
 
-In many terms, the cloud concept is a key solution to help media producers create better content more quickly and there are lots of examples to focus on, but lets introduce the ones that tends to flexible and scalable ways to access the benefits that cloud computing brings to media production:
+So, in many terms, the cloud concept is a key solution to help media producers create better content more quickly and there are lots of examples to focus on, but lets introduce the ones that tends to flexible and scalable ways to access the benefits that cloud computing brings to media production:
 
 \begin{itemize}
 \item Low-cost initial expenditures \hfill 
@@ -129,53 +127,53 @@ And, expected overall outcomes might be:
 \item Improved cross collaboration
 \end{itemize}
 
-As a subchapter corollary, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but it also refers to this project's layers in order. These are virtualization [\ref{SOA:Virtualization}], monitoring [\ref{SOA:monitoring}] and the service that is going to be deployed and tested which is implemented using the LiveMediaStreamer framework [\ref{SOA:LMS}].
+As a subchapter corollary, figure \ref{F:cloudComputingLayers} describes generic cloud computing layers, but it also refers to this project's topics in order. These are virtualization, monitoring concepts and the service that is going to be deployed and tested which is implemented using the LiveMediaStreamer framework.
 
 \subsection{Virtualization}\label{SOA:Virtualization}
 
-Virtualization, under computing environments, means creating a virtual version of any possible piece of actual hardware or software so that we can use system resources effectively. Besides hardware and desktop virtualization, which are the most known commercial concepts, it can be explained and organized in two different concepts:
+Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization. As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, but others can only be traced back a few years, such as virtualized applications (--REFERENCE-- LINK11).
 
-(TO EXPLAIN EACH SUBITEM???)
+Specifically, virtualization under computing environments means creating a virtual version of any possible piece of actual hardware or software so that we can use system resources effectively. Despite of many ways to define current virtualization methods, the following statement is proposed and it's defined by types and levels:
+
 \begin{itemize}
-\item Types
+\item Types: based on specific computer/server resources virtualization. These are: 
 \begin{itemize}
-\item Data virtualization
-\item Memory virtualization
-\item Network virtualization
-\item Storage virtualization
-\item Security virtualization
+\item Data virtualization: when an application is able to retrieve and manipulate data without requiring technical details of such data.
+\item Memory virtualization: when, in a cluster, volatile random access memory (i.e.: RAM) resources are decoupled from physical machines in order to be aggregated with other RAM resources and to become a virtualized memory pool.
+\item Network virtualization: when combining hardware and software network resources and network functionalities into a single and software-based management entity.
+\item Storage virtualization: when pooling data from multiple and different storage devices into a virtual device that is managed from a central console.
 \end{itemize}
-\item Levels
+\item Levels: based on abstract and generic virtualization concepts. These are:
 \begin{itemize}
-\item Application virtualization
-\item Environment virtualization
-\item Operating System (OS) virtualization
-\item Networking virtualization
+\item Application virtualization: when encapsulating an application software from the underlying operating system on which it is executed. It involves separating the physical client device from the management of the application itself.
+\item Environment virtualization: when virtualizing at operating system level. It's a virtualization method where the kernel of an operating system allows for multiple isolated user-space instances, instead of just one. 
+\item Hardware virtualization: when hiding the physical characteristics of a computing platform from a user point of view and showing another abstract computing platform. It means computer or operating system virtualization by creating virtual machines.  Nowadays, the software that manages virtualization is called hypervisor or virtual machine monitor.
 \end{itemize}
 \end{itemize}
 
-Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization.
+Therefore, in terms of cloud computing benefits virtualization can increase agility, flexibility, and scalability while creating significant cost savings. Workloads might be deployed faster, performance and availability increases and operations become automated, resulting in a cloud with ease to be managed. 
 
-As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, and others can only be traced back a few years, such as virtualized applications (--REFERENCE-- LINK11).
+Although the virtualization types that are defined, this subchapter is focusing on the virtualization layers state of the art, which are of interest for this project development.
 
-Intro per portar a parlar dels containers i kvm -> es busca màxima flexibilitat, control, rapidesa d'actuació, etc. Parlar de PIRÀMIDE típica de cloud+virtualització i com altres mètodes poden modificar aquest "stack"
+So, starting from the upper layer, application virtualization's current technologies are (--REFERENCE--):
 
-INTERESTS AND COMPARISONS (TENDENCES) -> TALK ABOUT KVM AND LXC
-Containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others in the rush to speed up the pace of container adoption. A recent study by DevOps.com and ClusterHQ showed that over 90\% of organizations have either looked at or plan to look at containers in the near future.
+\begin{itemize}
+\item Desktop virtualization: when separating part or all of the desktop environment and associated applications from the physical client device that is used to access remotelly or locally it. This improves portability, manageability and compatibility of a personal computer's desktop environment. A common implementation of this approach is to host multiple desktop operating system instances on a server hardware platform running a hypervisor. This is generally referred to as Virtual Desktop Infrastructure (i.e.: VDI). Some commercial examples are RemoteApp of Microsoft and the Seamless Windows of Citrix. 
+\item Application streaming: when delivering pieces of the application's code, data, and settings when they're first needed, instead of the entire application being delivered before startup. Running the packaged application may require the installation of a lightweight client application. Packages are usually delivered over a protocol such as HTTP, CIFS or RTSP. Some examples are Microsoft App-V and Citrix XenApp Streaming.
+\end{itemize}
 
+Next layer is the intermediate layer of environment virtulization. Pioneer implementation was FreeBSD jails mechanism allowing system administrators to partition a FreeBSD-based computer system into several independent mini-systems called jails. There are many other examples of environment virtualization, but all of them are OS-based virtualization with differences like its kernel operating system (i.e.: FreeBSD, Solaris, Unix-like, and Windows) and the level of isolation in terms of resources utilization (i.e.: types of virtualization, above explained), security and ease of delegation. 
 
+Nowadays, the environment virtualization method of Linux containers (LXCs) are widely enhancing application/services development, testing, packaging, deployment and managing methodologies. Specifically, containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others. A recent study by DevOps.com and ClusterHQ showed that over 90\% of organizations have either looked at or plan to look at containers in the near future (--REFERENCE--).
 
-FINALLY:
-Virtualization can increase IT agility, flexibility, and scalability while creating significant cost savings. Workloads get deployed faster, performance and availability increases and operations become automated, resulting in IT that's simpler to manage and less costly to own and operate.
-Reduce capital and operating costs.
-Deliver high application availability.
-Minimize or eliminate downtime.
-Increase IT productivity, efficiency, agility and responsiveness.
-Speed and simplify application and resource provisioning.
-Support business continuity and disaster recovery.
-Enable centralized management.
-Build a true Software-Defined Data Center.
+Finally, the lower environment virtualization layer is the hardware-centric one. Different methods can be distinguished as follows:
 
+\begin{itemize}
+\item Full virtualization: when simulating enough hardware to allow using an isolated guest operating system in a virtual machine. There are many examples of implementation like Parallels, VirtualBox, OracleVM, VMware and QEMU among other platforms.
+\item Hardware-assisted virtualization: is a full virtualization enhancement that uses specific hardware capabilities by improving hardware simulation efficiency. There many implementations' examples like Linux KVM and Xen among others platforms. 
+\item Partial virtualization: was the previous virtualization technology of the full virtualization. Main differences resides on the address space virtualization, in which each virtual machine consists of an independent address space. This fact implies that a full operating system is not able to run in a virtual machine but many of its applications. 
+\item Paravirtualization: when a virtual machine does not implement full hardware virtualization, but offers a special API for a guest with a modified version of the operating system. This type of virtualization is also implemented in most of the widely used virtualization platforms like VMware, Parallels and Xen.
+\end{itemize}
 
 \subsection{Monitoring}\label{SOA:monitoring}
 
@@ -183,52 +181,52 @@ Strongly related to cloud reliability is the monitoring concept. In order to rea
 
 Therefore, this implies monitoring the cloud infrastructure (e.g.: servers, virtual or physical) and related services (e.g.: applications). Here appears the QoS (Quality of Service) and QoE (Quality of Experience) terms, respectively.
 
-QoS is the monitoring and network-centric of underlying infrastructure components such as servers, routers and its network traffic. QoS metrics are generally device (e.g.: CPU and memory load, CPU temperature, disk space or HDD health) or transport-oriented (e.g.: packet loss, delay, bandwidth usage or jitter). 
+QoS is the network-centric monitoring of underlying infrastructure components such as servers, routers and its network traffic. QoS metrics are generally device (e.g.: CPU and memory load, CPU temperature, disk space or HDD health) or transport-oriented (e.g.: packet loss, delay, bandwidth usage or jitter). 
 
-Although QoS can be fully affordable due to the robustness and redundancy of current infrastructures (e.g.: back-up services, network rerouting and error correction), this doesn't mean that any end user might be feeling comfortable by using deployed services (e.g.: searching on a e-commerce webpage) over a high QoS infrastructure. Then, QoE monitoring evaluate the quality delivered to a user and it's done by analysing parameters when connecting to the service like a user. Therefore, QoE performance indicators are user-centric (e.g.: webpages response time and measuring video and audio quality (MOS)).
+Although QoS can be fully affordable due to the robustness and redundancy of current infrastructures (e.g.: back-up services, network rerouting and error correction), this doesn't mean that any end user might be feeling comfortable by using deployed services (e.g.: searching on a e-commerce webpage) over a high QoS infrastructure. Then, QoE monitoring term evaluates the quality delivered to a user and it's done by analysing parameters when connecting to such services like a user. Therefore, QoE performance indicators are user-centric (e.g.: webpages response time or measuring video and audio quality (MOS)).
 
 Common network monitoring protocols for distributed infrastructures management are:
 
-(TO DEVELOP EACH ITEM)
 \begin{itemize}
-\item SNMP:
-\item WMI: WBEM and CMI standards compatible implementation
-\item NetFlow:
+\item SNMP: Simple Network Management Protocol is a widely known and used Internet standard protocol for managing IP-capable devices (i.e.: devices that implements SNMP)
+\item WMI: Windows Management Instrumentations is a Microsoft's implementation of the Web-Based Enterprise Management (WBEM) and Common Information Model (CIM) standards from the Distributed Management Task Force (DMTF).
+\item NetFlow: a Cisco protocol for network switches and routers.
 \end{itemize}  
 
-Usually, these protocols are used to measure QoS, but there are complex algorithms that processes those QoS measurements parameters of interest in order to measure the QoE too. Nevertheless, there are specific applications to define and perform specific QoE measurements. This are known as bots or robots (EXAMPLE APPLICATION FOR SPECIFIC QOE MEASURES).
+Usually, these protocols are used to measure QoS, but there are complex algorithms that processes those QoS measurements parameters of interest in order to measure the QoE too. Nevertheless, there are specific applications to define and perform specific QoE measurements. This are known as bots or robots.
 
-Going to what this project is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience, mainly because these contents are compressed and coded, and have low entropy. Therefore, when designing systems for referenced analysis several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the encoding system, transport network, access network, home network to end device).
+Going to what this project is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience. This is mainly because these contents are compressed and coded, and have low entropy. Moreover, when designing systems, for referenced analysis, several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the transcoding system, transport network, access network, home network to end device).
 
-There is also the referenceless analysis that is based on the idea that end users don't know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
+On the other hand, the referenceless analysis is based on the idea that end users don't know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
 
 Typically, the evaluation of the QoE for audiovisual content provides users with a range of potential choices (i.e.: low, medium and high quality levels) that are currently widely accepted.
 
-Obviously, the automation of critical cloud performance monitoring tasks is crucial for ensuring availability, providing efficient services and reducing common errors, costs and complexity. So, the use of OTT applications that processes such bank of data flows and displays outcome parameters of interest are crucial. PODEN SER DISTRIBUITS O CENTRALITZATS...
+Obviously, the automation of critical cloud performance monitoring tasks is crucial for ensuring availability, providing efficient services and reducing common errors, costs and complexity. So, the use of OTT applications that processes such quantities of data flows and displays outcome parameters of interest are crucial. 
 
-There are many applications and services that offer monitoring capabilities to be integrated to any kind new applications and infrastructures:
+There are many tools that offer monitoring capabilities to be integrated and of-the-shelf. Such monitoring capabilities can be organized as:
 
-(FER TAULA SI SÓN APP O SERVEI I SI SON OBERTS O TANCATS)
 \begin{itemize}
-\item mrtg (tobias oeticker - rrdb) - prtg
-\item cactix
-\item opsview
-\item monitis
-\item new relic
-\item zabbix
-\item collectd + graphite
-\item riemann 
+\item System monitoring \hfill
+
+Single server/computer/instance resources monitoring (e.g.: CPU and memory loads or processes utilization). Typical examples are the system monitoring tools that each operating system comes with by default.
+\item Network monitoring \hfill
+
+Related to previous item, but specific to network resources monitoring (e.g.: monitoring input and output accumulated bytes of a single computer network interface or monitoring specific network hardware like accumulated incoming UDP packets of a router in a LAN). Most of related tools are based on network monitoring protocols implementations in order to perform as a distributed monitoring unit.
+\item Infrastructure monitoring \hfill
+
+When coupled system and network monitoring together by adding specific tools and interfaces to monitor distributed resources within the infrastructure.
 \end{itemize}
 
-So, thanks to monitoring evaluation service providers and network operators have the capability to minimize the storage and network resources by allocating only the resources that are required.
+The associated database model for collecting such amount of data is the widely known Round Robin Database, which stores data in a circular buffer based database where the system storage remains permanent by handling time-series data. 
 
-\subsection{Media}
-
-transcoding, codecs, codification (nowadays) --> said at \ref{S:sessionPresentationApplicatio}
+So, thanks to monitoring evaluation services and tools, network managers have the capability to minimize the storage and network resources by allocating only the resources that are required.
 
 \section{LiveMediaStreamer (LMS) framework}\label{SOA:LMS}
 
+This chapter is devoted to the framework which the service (i.e.: audio and video mixer software) to be analysed is implemented with. 
 
+This framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--ANNEXX--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance. Moreover, Live555 library ease implementions of any RTP and RTSP module, standard or not, among specific audio and video RTP payload formats support like H264, HEVC, .
+\ldots to be continued
 
 
 
