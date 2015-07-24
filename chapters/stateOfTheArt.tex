@@ -211,23 +211,37 @@ There are many tools that offer monitoring capabilities to be integrated and of-
 Single server/computer/instance resources monitoring (e.g.: CPU and memory loads or processes utilization). Typical examples are the system monitoring tools that each operating system comes with by default.
 \item Network monitoring \hfill
 
-Related to previous item, but specific to network resources monitoring (e.g.: monitoring input and output accumulated bytes of a single computer network interface or monitoring specific network hardware like accumulated incoming UDP packets of a router in a LAN). Most of related tools are based on network monitoring protocols implementations in order to perform as a distributed monitoring unit.
+Related to previous item, but specific to network resources monitoring (e.g.: monitoring input and output accumulated bytes of a single computer network interface or monitoring specific network hardware like accumulated incoming UDP packets of a router in a LAN). Most of related tools are based on network monitoring protocols implementations in order to perform as a distributed monitoring unit. But, there are many examples of tools and services for network monitoring which goes from desktop applications (e.g.: netstat or iptraf) to specific router and switch daemons (e.g.: MRTG).
 \item Infrastructure monitoring \hfill
 
-When coupled system and network monitoring together by adding specific tools and interfaces to monitor distributed resources within the infrastructure.
+When coupled system and network monitoring together by adding specific tools and interfaces to monitor distributed resources within the infrastructure. There are many examples of tools  (e.g.: cactix or monitis) and services (e.g.: new relic or pingdom) at this monitoring level.
 \end{itemize}
 
-The associated database model for collecting such amount of data is the widely known Round Robin Database, which stores data in a circular buffer based database where the system storage remains permanent by handling time-series data. 
+The associated database model for collecting such amount of data is the widely known Round Robin Database, which stores data in a circular buffer based database where the system storage remains fixed by handling time-series data. 
 
-So, thanks to monitoring evaluation services and tools, network managers have the capability to minimize the storage and network resources by allocating only the resources that are required.
+So that network managers have the capability to minimize the storage and network resources by allocating only the resources that are required thanks to monitoring evaluation services and tools, .
 
 \section{LiveMediaStreamer (LMS) framework}\label{SOA:LMS}
 
 This chapter is devoted to the framework which the service (i.e.: audio and video mixer software) to be analysed is implemented with. 
 
-This framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--ANNEXX--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance. Moreover, Live555 library ease implementions of any RTP and RTSP module, standard or not, among specific audio and video RTP payload formats support like H264, HEVC, .
-\ldots to be continued
+This framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--ANNEXX--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and further developments. Moreover, Live555 library ease implementations of any RTP and RTSP module, standard or not, among specific audio and video RTP payload formats support like H264 or HEVC for video and G711, OPUS or AAC for audio.
 
+The idea behind this framework is to be able to manipulate multiple audio and video streams in real-time in many ways. It is designed following a pipeline pattern so that it consists in a number of filters (i.e.: encoders, decoders, receivers, transmitters, dashers, mixers and resamplers) that can be concatenated or connected with each other in order to process a data flow. The framework is developed in a Linux environment, currently being the only supported platform, using C++ standard libraries and it makes use of several mature media related libraries such as:
+
+ libavcodec, x264, OpenCV, etc. 
+ 
+ This software is licensed under a GPL license and the source code is published in Github here. The framework is designed to be managed remotely through a simple network interface. Further information on how to use it and install it can be found here and here. 
+
+liveMediaStreamer can be used in many different ways, for real-time RTP streaming in performing arts (see here) using mixing features or as a “simple” streamer transcoding sources to MPEG-DASH as it could be needed for an HbbTV application with live streaming. In each scenario is needed to configure the appropriate media processing pipe in order to get the desired functionality. For an MPEG-DASH transcoder the configuration could be achieved with a configuration as the one described below.
+
+Filters in the pipe:
+
+Receiver: This is a network streams receiver, up to now only RTP/RTSP sessions are supported in plain raw coded data. Demuxing features (RTMP or Transport Stream) are on the way, expected to be included in the next beta release 0.3.
+Decoder: This filter decodes incoming frames to some RAW format (usually YUV 420 or YUV 422 in H264).
+Resampler: This filter adapts the colour space and the resolution of the incoming frames to the specified values.
+Encoder: This filter encodes incoming frames to H264 or HEVC.
+Dasher: This filter aggregates incoming frames into ISO Base Media File Format segments for MPEG-DASH and produces the related manifest file, all written to a configurable folder in the hard-disk.
 
 
 
