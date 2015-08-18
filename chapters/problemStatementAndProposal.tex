@@ -4,14 +4,12 @@ As this title's chapter sample, the aim of this section is to provide a structur
 
 Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific microservices that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
 
---------- splitting the current interface of HTTP requests to TCP socket messages, this means creating the API middleware service that will let configure specific LiveMediaStreamer instances  that loads the audio and video mixer scenario-----------
-
 \section{Architecture study}
 
 Therefore, above all it's required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deploy layer), such architecture should contain the different high level layers as shown next:
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.4\textwidth]{./images/generalArch.png}
+\includegraphics[width=0.5\textwidth]{./images/generalArch.png}
 \caption{Generic platform architecture}
 \label{F:genericPlatArch}
 \end{center}
@@ -53,7 +51,7 @@ Usually, KVM runs with the QEMU (Quick Emulator) which is a complete and standal
 KVM with QEMU is able to offer virtualization for x86, PowerPC, and S/390 guests. For instance, when the target architecture is the same as the host architecture, QEMU can make use of KVM particular features in order to do not emulate CPU nor memory.
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.5\textwidth]{./images/KVM.png}
+\includegraphics[width=0.9\textwidth]{./images/KVM.png}
 \caption{QEMU with KVM or hypervisor type2 to type1}
 \label{F:KVMandQEMU}
 \end{center}
@@ -70,7 +68,7 @@ Linux kernel itself provides the cgroups functionality that allows limitation an
 Nowadays virtualization tendencies are focusing on the Docker project, which is a platform that provides an additional layer of abstraction and automation of operating-system-level virtualization on Linux, Mac OS and Windows.
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.5\textwidth]{./images/LXC.png}
+\includegraphics[width=0.9\textwidth]{./images/LXC.png}
 \caption{Docker with LXC}
 \label{F:DockerAndLXC}
 \end{center}
