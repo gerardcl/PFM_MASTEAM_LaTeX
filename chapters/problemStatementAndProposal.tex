@@ -2,16 +2,16 @@
 
 As this title's chapter sample, the aim of this section is to provide a structured vision of the specific problems of each issue to be developed during this project.
 
-Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing tools in order to create specific microservices that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind.
+Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific microservices that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
 
 --------- splitting the current interface of HTTP requests to TCP socket messages, this means creating the API middleware service that will let configure specific LiveMediaStreamer instances  that loads the audio and video mixer scenario-----------
 
 \section{Architecture study}
 
-Therefore, it's required to define an architecture of the platform to prototype in order to have a global and generic insight. Such architecture should contain the different high level layers as shown next:
+Therefore, above all it's required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deploy layer), such architecture should contain the different high level layers as shown next:
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.35\textwidth]{./images/generalArch.png}
+\includegraphics[width=0.4\textwidth]{./images/generalArch.png}
 \caption{Generic platform architecture}
 \label{F:genericPlatArch}
 \end{center}
@@ -19,26 +19,26 @@ Therefore, it's required to define an architecture of the platform to prototype 
 
 The "LiveMediaStreamer API REST" layer will contain the service that will be offered to different and external applications in order to manage the "LiveMediaStreamer instance" layer by creating different audio and video production scenarios. Both layers are the core layers of the platform.
 
-Moreover, in order to offer a centralized monitoring system, the "Statistics collector and display" layer becomes as the box for this requirement.
+Moreover, in order to offer a centralized monitoring system, the "Statistics collector and display" layer becomes as the generic box for this requirement.
 
 Finally, it is also required to provide an orchestrator that manages the deployment and distribution of the possible configurations for the previous introduced layers. This will be done thanks to the "Virtualization manager" layer.
 
 \subsection{Virtualization}
 
-This subsection aims to introduce the possibilities that different virtualization technologies could offer for this project requirements and to decide one of them.
+This subsection aims to introduce the possibilities that different virtualization technologies could offer for this project requirements and to decide between one of them.
 
-First of all, next points are showing which are the expected outcomes for using virtualization and what should fulfill the selected technology:
+First of all, next points are showing which are the expected outcomes for using virtualization and what should fulfil the selected technology:
 
 \begin{itemize}
-\item To manage and maintain a system of small pieces of services
-\item To have flexibility in order to quickly load required instances (e.g.: to assure real-time scalability)
+\item To manage and maintain a system of small pieces of services (assure a microservice architecture based pattern)
+\item To have flexibility in order to quickly load (e.g.: start, restart, stop) required instances (e.g.: to assure real-time scalability) and to deploy any possible required scenario/configuration.
 \item To offer ease to continuous develop and deploy the different parts of the architecture
 \item To have version like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same API REST service)
 \item To assure full compatibility for the core layers' operating system (right now only Linux environments are supported)
 \item To assure full compatibility for the hardware to work with (mainly x86 processors are in the scope)
 \end{itemize}
 
-Therefore, it is required to use an as much lightweight as possible technology.
+Therefore, it is also required to use an as much lightweight as possible technology.
 
 Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind.
 
@@ -51,8 +51,15 @@ It's a FreeBSD and Linux kernel module that offers a full virtualization solutio
 Usually, KVM runs with the QEMU (Quick Emulator) which is a complete and standalone emulating suite that performs hardware virtualization.
 
 KVM with QEMU is able to offer virtualization for x86, PowerPC, and S/390 guests. For instance, when the target architecture is the same as the host architecture, QEMU can make use of KVM particular features in order to do not emulate CPU nor memory.
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{./images/KVM.png}
+\caption{QEMU with KVM or hypervisor type2 to type1}
+\label{F:KVMandQEMU}
+\end{center}
+\end{figure}
 
---- IMATGE QEMU+KVM---
+Previous figure \ref{F:KVMandQEMU} showcases how KVM can convert a type2 hypervisor (i.e.: QEMU) into a type1 hypervisor (known as a bare metal hypervisor) which increases overall application performances. 
 
 \item LXC (Linux Containers) \hfill
 
@@ -60,15 +67,25 @@ It's an operating-system-level virtualization environment for running multiple i
 
 Linux kernel itself provides the cgroups functionality that allows limitation and prioritization of resources (CPU, memory, block I/O, network, etc.) without the need for starting any virtual machines, and namespace isolation functionality that allows complete isolation of an applications' view of the operating environment, including process trees, networking, user IDs and mounted file systems.
 
-Then, the Docker project provides an additional layer of abstraction and automation of operating-system-level virtualization on Linux, Mac OS and Windows.
+Nowadays virtualization tendencies are focusing on the Docker project, which is a platform that provides an additional layer of abstraction and automation of operating-system-level virtualization on Linux, Mac OS and Windows.
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{./images/LXC.png}
+\caption{Docker with LXC}
+\label{F:DockerAndLXC}
+\end{center}
+\end{figure}
 
-LXC with Docker is able to 
-
---- IMATGE DOCKER + LXC ---
+LXC with Docker mean resource isolation features of the Linux kernel to allow independent containers to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. Moreover, Docker project automates the deployment of applications inside software containers and offers different tools to manage them (i.e.: CLI, API and file configurations), as shown in figure \ref{F:DockerAndLXC} 
 \end{itemize}
 
+Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
 
 \subsection{Monitoring layer}
+
+\subsection{Application layer}
+
+
 \section{Architecture proposal}
 \section{Task planning}
 

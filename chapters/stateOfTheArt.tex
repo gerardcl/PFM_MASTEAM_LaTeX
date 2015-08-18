@@ -68,7 +68,7 @@ This section is a continuation of the previous one but focusing on how OTT conte
 
 \subsection{Cloud computing}
 
-Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So for reasons many reasons like flexibility, scalability, security, data protection, agility and cost many organisations are migrating to cloud computing environments. 
+Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So, for many reasons like flexibility, scalability, security, data protection, agility and cost many organisations are migrating to cloud computing environments. 
 
 Nowadays, cloud computing defines three fundamental models that are organized through application/service, platform and infrastructure layers.
 
@@ -106,7 +106,7 @@ Infrastructure as a Service (Iaas) prices are predictable and granularly treated
 Cloud computing helps production entities take advantage by the on demand basis applied deployments. Media production companies can quickly provision servers to meet the demands of specific projects and shut them down when they are no longer needed.
 \end{itemize}
 
-Moreover, cloud computing can improve media production at many different media services requirements planes such as:
+Moreover, cloud computing can improve media production at many different media services requirements planes, such as:
 
 \begin{itemize}
 \item Media asset management
@@ -131,7 +131,7 @@ As a subchapter corollary, figure \ref{F:cloudComputingLayers} describes generic
 
 \subsection{Virtualization}\label{SOA:Virtualization}
 
-Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization. As well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, but others can only be traced back a few years, such as virtualized applications (--REFERENCE-- LINK11).
+Cloud computing is usually strongly related and implemented with different kinds of virtualization. Many virtualization methods are commonly implemented at datacenters where platforms and services are going to be deployed over different infrastructure architectures. Nevertheless, deploying virtualization at data centers doesn’t automatically mean running over a cloud and it’s possible to deploy clouds without virtualization. Furthermore, as well as cloud computing concept started to be widely used from 2000's, virtualization  technologies can be traced back to the 1960’s such as virtual desktops, but others can only be traced back a few years, such as virtualized applications (--REFERENCE-- LINK11).
 
 Specifically, virtualization under computing environments means creating a virtual version of any possible piece of actual hardware or software so that we can use system resources effectively. Despite of many ways to define current virtualization methods, the following statement is proposed and it's defined by types and levels:
 
@@ -151,9 +151,9 @@ Specifically, virtualization under computing environments means creating a virtu
 \end{itemize}
 \end{itemize}
 
-Therefore, in terms of cloud computing benefits virtualization can increase agility, flexibility, and scalability while creating significant cost savings. Workloads might be deployed faster, performance and availability increases and operations become automated, resulting in a cloud with ease to be managed. 
+Therefore, in terms of cloud computing benefits, virtualization can increase agility, flexibility, and scalability while creating significant cost savings. Workloads might be deployed faster, performance and availability increases and operations can become fully automated, resulting in a cloud with ease to be managed. 
 
-Although the virtualization types that are defined, this subchapter is focusing on the virtualization layers state of the art, which are of interest for this project development.
+Although the virtualization types that are defined, this subchapter is focusing on the previous defined virtualization layers, which are of interest for this project development.
 
 So, starting from the upper layer, application virtualization's current technologies are (--REFERENCE--):
 
@@ -164,7 +164,7 @@ So, starting from the upper layer, application virtualization's current technolo
 
 Next layer is the intermediate layer of environment virtulization. Pioneer implementation was FreeBSD jails mechanism allowing system administrators to partition a FreeBSD-based computer system into several independent mini-systems called jails. There are many other examples of environment virtualization, but all of them are OS-based virtualization with differences like its kernel operating system (i.e.: FreeBSD, Solaris, Unix-like, and Windows) and the level of isolation in terms of resources utilization (i.e.: types of virtualization, above explained), security and ease of delegation. 
 
-Nowadays, the environment virtualization method of Linux containers (LXCs) are widely enhancing application/services development, testing, packaging, deployment and managing methodologies. Specifically, containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others. A recent study by DevOps.com and ClusterHQ showed that over 90\% of organizations have either looked at or plan to look at containers in the near future (--REFERENCE--).
+Currently, the environment virtualization method of Linux containers (LXCs) are widely enhancing application/services development, testing, packaging, deployment and managing methodologies. Specifically, containers represent one of the leading trends in computing today. With companies such as Docker, CoreOS, ClusterHQ joining industry giants like IBM, Red Hat, MIcrosoft and others. A recent study by DevOps.com and ClusterHQ showed that over 90\% of organizations have either looked at or plan to look at containers in the near future (--REFERENCE--).
 
 Finally, the lower environment virtualization layer is the hardware-centric one. Different methods can be distinguished as follows:
 
@@ -219,11 +219,34 @@ When coupled system and network monitoring together by adding specific tools and
 
 The associated database model for collecting such amount of data is the widely known Round Robin Database, which stores data in a circular buffer based database where the system storage remains fixed by handling time-series data. 
 
-So that network managers have the capability to minimize the storage and network resources by allocating only the resources that are required thanks to monitoring evaluation services and tools, .
+Finally, to remark that network managers have the capability to minimize the storage and network resources by allocating only the resources that are required thanks to monitoring evaluation services and tools.
+
+\subsection{Application}\label{SOA:coreService}
+
+Before going into the specific service that this project is focusing on, it is required to briefly showcase nowadays applications architecture patterns before designing a proper platform prototype.
+
+\subsubsection{Services based architecture}\label{SOA:appArch}
+
+There are two main architecture patterns of interest for services architecture definitions over networks.
+
+\begin{itemize}
+\item Service Oriented Architecture (SOA) \hfill
+
+SOA is software architecture pattern where application components provide services between other components (services) through different types of communications protocols. Services can be combined to provide the functionality of a full software application.
+This pattern defines the services as logical representations of a repeatable business activity with specific goals (i.e.: statistics monitoring)
+
+\item Microservices architecture \hfill
+
+Microservices is a software architecture pattern in which complex applications are composed of small, independent processes communicating with each other using language-agnostic APIs. These services are small, highly decoupled and focus on doing a small task, facilitating a modular approach to system-building. 
+Microservices is rather different than SOA perspective: microservices are always independently deployable in their own processes  (-- REFERENCE FORVES--)
+
+\end{itemize}
+
+Without going too deeply on both architecture patterns (check out the references), it seems that for this project requirements, a microservices pattern give more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with middleware APIs).
 
 \section{LiveMediaStreamer (LMS) framework}\label{SOA:LMS}
 
-This chapter is devoted to the framework which the service (i.e.: audio and video mixer software) to be analysed is implemented with. 
+This subsection is devoted to the framework which the core service (i.e.: audio and video mixer software) to be analysed is implemented with. 
 
 This framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--ANNEXX--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and further developments. Moreover, Live555 library ease implementations of any RTP and RTSP module, standard or not, among specific audio and video RTP payload formats support like H264 or HEVC for video and G711, OPUS or AAC for audio.
 
@@ -244,5 +267,9 @@ Encoder: This filter encodes incoming frames to H264 or HEVC.
 Dasher: This filter aggregates incoming frames into ISO Base Media File Format segments for MPEG-DASH and produces the related manifest file, all written to a configurable folder in the hard-disk.
 
 
+\subsection{Existing similar solutions}\label{SOA:similarSolutions}
+
+
+--ADD BRIEF COMPARISON WITH EXISTING SIMILAR SOLUTIONS--
 
 
