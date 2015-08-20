@@ -193,7 +193,7 @@ Common network monitoring protocols for distributed infrastructures management a
 \item NetFlow: a Cisco protocol for network switches and routers.
 \end{itemize}  
 
-Usually, these protocols are used to measure QoS, but there are complex algorithms that processes those QoS measurements parameters of interest in order to measure the QoE too. Nevertheless, there are specific applications to define and perform specific QoE measurements. This are known as bots or robots.
+Usually, these protocols are used to measure QoS, but there are complex algorithms that processes those QoS measurements parameters of interest in order to measure the QoE too. Nevertheless, there are specific applications to define and perform specific QoE measurements. These are known as bots or robots.
 
 Going to what this project is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience. This is mainly because these contents are compressed and coded, and have low entropy. Moreover, when designing systems, for referenced analysis, several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the transcoding system, transport network, access network, home network to end device).
 
@@ -223,11 +223,11 @@ Finally, to remark that network managers have the capability to minimize the sto
 
 \subsection{Application}\label{SOA:coreService}
 
-Before going into the specific service that this project is focusing on, it is required to briefly showcase nowadays applications architecture patterns before designing a proper platform prototype.
+This subsection aims to remark the importance of designing and deploy a well structured application/service architecture over the cloud. Therefore, it's important to showcase most common and current application architecture patterns before designing a proper platform prototype.
 
-\subsubsection{Services based architecture}\label{SOA:appArch}
+\subsubsection{Services based architectures}\label{SOA:appArch}
 
-There are two main architecture patterns of interest for services architecture definitions over networks.
+There are two main architecture patterns of interest for services architecture definitions over networks. 
 
 \begin{itemize}
 \item Service Oriented Architecture (SOA) \hfill
@@ -237,13 +237,15 @@ This pattern defines the services as logical representations of a repeatable bus
 
 \item Microservices architecture \hfill
 
-Microservices is a software architecture pattern in which complex applications are composed of small, independent processes communicating with each other using language-agnostic APIs. These services are small, highly decoupled and focus on doing a small task, facilitating a modular approach to system-building. 
+Microservices is a software architecture pattern in which complex applications are composed of small, independent processes communicating with each (microservices) other using language-agnostic APIs. These services are small, highly decoupled and focus on doing a small task, facilitating a modular approach to system-building. 
 Microservices is rather different than SOA perspective: microservices are always independently deployable in their own processes  (-- REFERENCE FORVES--)
 
 \end{itemize}
 
-Without going too deeply on both architecture patterns (check out its references), it seems that for this project requirements a microservices pattern offers more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with APIs).
+Without going too deeply on both architecture patterns (check out its references --ANNEXES--), it seems that for this project requirements a microservices pattern offers more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with APIs) when required. 
 
+The prototype to be proposed should be seen as a complex application (the production platform) that requires defining specific microservices that can run independently and require to be flexible in terms of creating different interconnections per each possible configuration.
+ 
 \section{LiveMediaStreamer}\label{SOA:LMS}
 
 This section is devoted to the framework which the core service (i.e.: audio and video mixer software) to be analysed is implemented with, the LiveMediaStreamer (LMS) framework. 

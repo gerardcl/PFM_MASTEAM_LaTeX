@@ -49,7 +49,8 @@ It's a FreeBSD and Linux kernel module that offers a full virtualization solutio
 Usually, KVM runs with the QEMU (Quick Emulator) which is a complete and standalone emulating suite that performs hardware virtualization.
 
 KVM with QEMU is able to offer virtualization for x86, PowerPC, and S/390 guests. For instance, when the target architecture is the same as the host architecture, QEMU can make use of KVM particular features in order to do not emulate CPU nor memory.
-\begin{figure}[htb]
+
+\begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{./images/KVM.png}
 \caption{QEMU with KVM or hypervisor type2 to type1}
@@ -57,7 +58,7 @@ KVM with QEMU is able to offer virtualization for x86, PowerPC, and S/390 guests
 \end{center}
 \end{figure}
 
-Previous figure \ref{F:KVMandQEMU} showcases how KVM can convert a type2 hypervisor (i.e.: QEMU) into a type1 hypervisor (known as a bare metal hypervisor) which increases overall application performances. 
+Figure \ref{F:KVMandQEMU} showcases how KVM can convert a type2 hypervisor (i.e.: QEMU) into a type1 hypervisor (known as a bare metal hypervisor) which increases overall application performances. 
 
 \item LXC (Linux Containers) \hfill
 
@@ -66,7 +67,7 @@ It's an operating-system-level virtualization environment for running multiple i
 Linux kernel itself provides the cgroups functionality that allows limitation and prioritization of resources (CPU, memory, block I/O, network, etc.) without the need for starting any virtual machines, and namespace isolation functionality that allows complete isolation of an applications' view of the operating environment, including process trees, networking, user IDs and mounted file systems.
 
 Nowadays virtualization tendencies are focusing on the Docker project, which is a platform that provides an additional layer of abstraction and automation of operating-system-level virtualization on Linux, Mac OS and Windows.
-\begin{figure}[htb]
+\begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{./images/LXC.png}
 \caption{Docker with LXC}
@@ -79,7 +80,94 @@ LXC with Docker mean resource isolation features of the Linux kernel to allow in
 
 Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
 
+Finally, it's important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
+
 \subsection{Monitoring layer}
+
+Monitoring layer section aims to provide an insight of what are the minimum requirements for what monitoring is required in this project and which are the available tools of interest.
+
+Following the same criteria as this project tends to, the tools that are going to be focused on are the ones that have an open-source philosophy behind. So, most of the tools and services around the Internet are directly ruled out.
+
+As done in the virtualization problem statement section, it is required to showcase main requirements for the monitoring layer implementation:
+
+\begin{itemize}
+\item To ease its networkability.
+\item To offer full control for specific configuration requirements and to not depend on external/enterprise services. To be fully deployable.
+\item To be as lightweight as possible in terms of:
+\begin{itemize}
+\item Processing capacity
+\item Memory utilization
+\item Network throughput
+\end{itemize}
+\item To fit into a microservice architecture pattern.
+\item To be supported under a Linux environment.
+\item To offer much more capabilities than the required for future requirements (this is a requirement because this platform development is supposed to be continued after this project)
+\item To support RRD (Round Robin Database) as a DBMS (Database Management System) in order to assure data storage size from the beginning.
+\end{itemize}
+
+Next list to showcase takes into account the data that should be gathered:
+
+\begin{itemize}
+\item CPU and memory usage per process which is part of the platform.
+\item Network usage (per process involved and per media)
+\item Internal core service performance parameters (i.e.: LiveMediaStreamer core performance):
+\begin{itemize}
+\item Processing time
+\item Losses ratio
+\end{itemize}
+\end{itemize}
+
+Moreover, in order to be fitted into a microservices pattern, it's required to split the monitoring layer. The proposal, as usually done in many monitoring systems is as follows:
+\begin{itemize}
+\item Gathering layer \hfill
+
+It only will be responsible of the gathering, distribution and storing of the metrics.
+
+\item Display layer
+
+It only will be responsible of the data display as a function of user-specific queries.
+
+\end{itemize}
+To point out that a possible alert layer is treated as a future work because it becomes out of scope. The main reason is that this project is focused on measuring and demonstrating that such platform is feasible, next steps would be to compose a set of alarms and actuators system in order to become as automated as possible.
+
+Once previous steps have been shown, it's time to analyse technologies of interest in order to decide between one of them.
+
+So, the following list shows some of the analysed tools that might fit project's requirement as previously exposed:
+
+\begin{itemize}
+\item Munin \hfill
+
+Cross-platform web-based network monitoring and graphing tool designed as a front-end application. Written in Perl.
+
+\item RRDTool \hfill
+
+Known as an industry standard, high performance data logging and graphing system for time series data. Written in C and runs under GNU/Linux, Windows and AIX platforms.
+
+\item Collectd \hfill
+
+Small daemon which collects system information periodically and provides mechanisms to store and monitor the values in a variety of ways. Written in C and support any unix-like O.S.
+
+\item Graphite \hfill
+
+Tool for monitoring and graphing the performance of computer systems, which collects, stores, and displays time series data in real time.
+
+\end{itemize}
+
+Many other solutions have been discarded due to depend on enterprises roadmap or due to not fit under the exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
+
+Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker. 
+
+Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
+
+So, the monitoring layer is proposed to be designed as shown next:
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{./images/mlap.png}
+\caption{Monitoring layer architecture proposal}
+\label{F:MLAP}
+\end{center}
+\end{figure}
 
 \subsection{Application layer}
 
