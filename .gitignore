@@ -1,3 +1,6 @@
+.DS_store
+*.txt
+*.pptx
 *.aux
 *.glo
 *.idx
