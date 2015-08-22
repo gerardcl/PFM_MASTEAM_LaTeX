@@ -9,7 +9,7 @@ Main issues are about to prepare and/or adapt current technologies to be ready f
 Therefore, above all it's required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deploy layer), such architecture should contain the different high level layers as shown next:
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.5\textwidth]{./images/generalArch.png}
+\includegraphics[width=0.6\textwidth]{./images/generalArch.png}
 \caption{Generic platform architecture}
 \label{F:genericPlatArch}
 \end{center}
@@ -155,7 +155,7 @@ Tool for monitoring and graphing the performance of computer systems, which coll
 
 Many other solutions have been discarded due to depend on enterprises roadmap or due to not fit under the exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
 
-Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker. 
+Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in a O.S.). 
 
 Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
 
@@ -171,9 +171,95 @@ So, the monitoring layer is proposed to be designed as shown next:
 
 \subsection{Application layer}
 
+This subsection aims to compile the minimum requirements that the core service (i.e.: the LiveMediaStreamer framework) should implement to fit within the platform. This means assuring that it can be demonstrated as an efficient real-time cloud production platform, as a prototype.
+
+First of all, let's showcase main topics application's (i.e.: LiveMediaStreamer framework) developments should take into account:
+
+\begin{itemize}
+	\item To assure minimal performance (i.e.: computational) cost when measuring internal metrics in order to not take effect on the overall performance of the framework, whatever the scenario setup
+	\item To calculate specific metrics of interest. Common metrics should be:
+	\begin{itemize}
+		\item For network usage statistics
+		\begin{itemize}
+			\item Bandwidth usage per incoming and outgoing streams
+			\item Packet losses per per incoming and outgoing streams
+			\item Jitter per incoming and outgoing streams
+			\item Delay per incoming and outgoing streams
+		\end{itemize}
+		\item For media statistics
+		\begin{itemize}
+			\item Frame losses (to measure how many frames are lost at each filter)
+			\item Pipeline delay (to measure the overall time a frame is processed inside pipeline). It could be said as "Frame processing time" too. 
+		\end{itemize}
+	\end{itemize}
+	\item To compile the metrics in an efficient manner in order to let them be gathered for Collectd or any other application.
+\end{itemize}
+
+Current LiveMediaStreamer framework's version does not implement any metrics gathering neither logging.
+
+Regarding network usage statistics, current LiveMediaStreamer's version does not support any internal metrics gathering at network modules (i.e.: receiver and transmitter) where the Live555 library is implemented. However, Live555 library lend to quickly implement network statistics measurements (i.e.: bandwidth, losses, jitter, delay). 
+
+Thanks to Live555 examples (i.e.: the testProgs folder inside the source code library path) it becomes easy to understand how to gather network statistics at input side. But, regarding output network statistics, it is not so obvious which is the optimal solution. This fact is mainly due to having two options which imply to implement the metrics gathering by doing some methods' re-implementation of the RTP or the RTCP main classes, but this specific problem statement will be treated at chapter 5 ANCHOR CHAPTER 5.
+
+Regarding media statistics, current LiveMediaStreamers' version of the framework does not implement any metrics gathering. So, in order to minimize computational cost of such measurements what is proposed to implement is shown next:
+
+\begin{itemize}
+\item To implement specific method per each filter to measure processing delays.
+\item To implement specific method per each filter to measure frame losses.
+\end{itemize}
+
+Both items' implementation solution are treated on chapter 5.
+
+Then, a main issue have to be taken into account regarding how to implement the metrics presentations in order to let them be logged for external applications. This is regarding current middleware API, which is not at all an API but a web GUI API for an specific scenario (i.e.: AVMixer scenario), which means that it is required to implement a new middleware API to let external applications to log the LMS internal metrics as API (--REFERENCE--) definition reclaims. 
+
+Therefore, the proposal for this issue is to develop a RESTfull API in order to present the metrics. This implementation is an opportunity to develop a full API REST for managing the LiveMediaStreamer framework.  Moreover, such middleware will ease to develop new applications over the LMS framework by evolving it as a SaaS. 
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.95\textwidth]{./images/appArch.png}
+\caption{LiveMediaStreamer framework statistics gathering and logging proposal}
+\label{F:appArch}
+\end{center}
+\end{figure}
+
+Figure \ref{F:appArch} showcases how previous statements are proposed to be implemented. As shown in the state of the art's subchapter \ref{SOA:LMS}, each filter can have one or more readers and writers (both are inheritors of the IOInterface class) and concretely at the reader level there is the optimal point to detect frame losses and processing delays. This means measuring from the last writer (i.e.: a queue and the filter itself) when flushing frames (when the frame is supposed to be ready). Therefore, this fact implies having the chance to measure the delays at time-stamp level and the lost frames at sequence number level. 
+
+On the other hand, the Pipelinemanager class instance is the responsible class to compile the metrics filter by filter when they are requested by the Controller class instance. 
+
+On chapter 5 (ANCHOR) the final implementation of how previous statements are solved is shown in a more specific manner.
 
 \section{Architecture proposal}
+
+Once the problem statement has been focused per each defined layer (i.e.: virtualization, monitoring and application) of the platform, an overall architecture can be proposed. This is shown in figure \ref{F:overallArchProp}.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.95\textwidth]{./images/overallArchProp.png}
+\caption{Proposal of the platform architecture}
+\label{F:overallArchProp}
+\end{center}
+\end{figure}
+
+Figure \ref{F:overallArchProp} tries to be as generic as possible in order to showcase the possibilities of the platform. As seen, there are different physical servers presented in order to demonstrate the aim to also support flexibility and scalability. However, following chapters (concretely the conclusions chapter \ref{H:platformDeploymentAndDemonstrations}) will demonstrate if it is feasible. 
+Moreover, each physical server has different types of containers where are shown different and possible combinations and configurations of the technologies that might be deployed and used for specific use cases (scenarios).
+
+For example, a possible and specific architecture configuration could be a transcoder scenario:
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.7\textwidth]{./images/exampleArch.png}
+\caption{Example of specific platform deployment}
+\label{F:exampleArch}
+\end{center}
+\end{figure}
+
+Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the API REST that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, lost frames, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different O.S.. 
+
+Finally, to point out that what will be deployed in order to demonstrate the platform feasibility is an specific but as generic as possible scenario. However, this topic will be treated in chapter \ref{H:platformDeploymentAndDemonstrations}.
+
+
 \section{Task planning}
 
+Finally, it is required to organize the tasks to be done in terms of developments and demonstrations. This is done in the this task planning section.
 
 
