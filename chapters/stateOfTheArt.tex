@@ -252,7 +252,7 @@ This section is devoted to the framework which the core service (i.e.: audio and
 
 \subsection{LMS framework}\label{SOA:LMSframework}
 
-LMS framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--ANNEXX--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and ease further developments. Live555 library enables implementing any RTP and RTSP module, standard or not, among offering out of the box specific audio and video RTP payload formats support like H264, HEVC or VP9 for video codecs and G711, OPUS or AAC for audio codecs.
+LMS framework has been developed with my team work since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--REFERENCE--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and ease further developments. Live555 library enables implementing any RTP and RTSP module, standard or not, among offering out of the box specific audio and video RTP payload formats support like H264, HEVC or VP9 for video codecs and G711, OPUS or AAC for audio codecs.
 
 The aim of LiveMediaStreamer framework is to offer multiple audio and video streams manipulation in real-time in many ways. It is designed following a pipeline pattern so that it consists in a number of filters (i.e.: encoders, decoders, receivers, transmitters, dashers, mixers and resamplers) that can be concatenated or connected with each other in order to process a data flow. The framework is developed under a Linux environment, currently being the only supported platform, using C++ standard libraries and it makes use of several mature media related libraries, which are: 
 
@@ -270,16 +270,24 @@ The aim of LiveMediaStreamer framework is to offer multiple audio and video stre
  
 The framework is designed to be managed remotely through a simple network interface based on JSON formatted TCP socket messages. 
 
-Currently, the framework has a web API based middleware, that loads and manages an audio and video mixer scenario, written in Ruby programming language and it implements Sinatra framework for the web service.
+Currently, the framework does not have a RESTful API, but has a web API based middleware, that loads and manages an audio and video mixer scenario, written in Ruby programming language and it implements Sinatra framework for the web service interface side.
+
+It's recommended to check the ANNEX X for more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
 
 \subsection{Existing similar solutions}\label{SOA:similarSolutions}
 
 Finally, it is important to showcase the current state of the art regarding similar technologies.
 
-Most notable audio and video production technologies over networks are:
+Most notable audio and video production-like technologies over networks are:
 
 \begin{itemize}
 \item Wowza \hfill
+ 
+
+\item Red5 \hfill
+
+
+\item Adobe Flash Media Server \hfill
 
 
 \item vMix \hfill
@@ -296,6 +304,24 @@ Most notable audio and video production technologies over networks are:
 
 \item Livestream \hfill
 
-
 \end{itemize}
 
+There are other technology/application combinations that lend to deploy a media production platform.
+
+POTSER FER UNA TAULA
+
+\begin{table}[htb]
+\caption{Exemple de taula}
+\begin{center}
+\begin{tabular}{|c|l|r|}
+\hline
+{\bf Títol de la Columna 1} & {\bf Títol de la Columna 2} & {\bf Títol de la Columna 3}  \\ \hline \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+\end{tabular}
+\label{T:prova}
+\end{center}
+\end{table}

@@ -1,4 +1,5 @@
 .DS_store
+*.psd
 *.txt
 *.pptx
 *.aux

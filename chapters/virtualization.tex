@@ -1,8 +1,44 @@
 \chapter{Virtualization}\label{D:virtualization}
 
+Virtualization chapter focuses on the implementations done in order to prepare generic solutions for a media production platform prototype with the tools already introduced. This is preparing containers for each generic microservice:
 
-dir que desktop virtualization requereix de molts recursos per poder encapsular una app... no es requereix que sigui a nivell gràfic... explicar prèviamanet les caracteristiques del software i l'arquitectura que hauria de seguir.
+\begin{itemize}
+\item The core container with a LiveMediaStreamer instance already deployed inside and ready to use.
+\item The HTTP REST API container with the middleware interface inside and ready to use
+\item Both last items with Collectd inside
+\end{itemize}
+
+Therefore, let's introduce how Docker is prepared. First of all, the host operating system is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS and its related environment are developed. 
+
+A
+
+
+
+\begin{verbatim}
+\begin{table}[htb]
+\begin{center}
+\begin{tabular}{|c|l|r|}
+\hline
+{\bf Títol de la Columna 1} & {\bf Títol de la Columna 2} & 
+{\bf Títol de la Columna 3}  \\ \hline \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+centrada        & a l'esquerra    & a la dreta       \\ \hline
+\end{tabular}
+\caption{Exemple de taula}
+\label{T:prova}
+\end{center}
+\end{table}
+\end{verbatim}
+
+
+
+
+CONCLUSIONS CHAPTER
 
 comentar que docker és com un git però de containers, on a dins els containers hi pots tenir un git també hehe
 
 explicar que es prepara cada container de tal forma que sigui collectd ready (potser hi hauran dos tipus, collectdDocker o collectd dins container -multiple processes-)
+

@@ -15,11 +15,13 @@ Therefore, above all it's required to define the platform's architecture to prot
 \end{center}
 \end{figure}
 
-The "LiveMediaStreamer API REST" layer will contain the service that will be offered to different and external applications in order to manage the "LiveMediaStreamer instance" layer by creating different audio and video production scenarios. Both layers are the core layers of the platform.
+The "LiveMediaStreamer REST API" layer will contain the service that will be offered to different and external applications (communicating over HTTP) in order to manage the "LiveMediaStreamer instance" layer by creating different audio and video production scenarios. Both layers are the core layers of the platform. 
 
 Moreover, in order to offer a centralized monitoring system, the "Statistics collector and display" layer becomes as the generic box for this requirement.
 
-Finally, it is also required to provide an orchestrator that manages the deployment and distribution of the possible configurations for the previous introduced layers. This will be done thanks to the "Virtualization manager" layer.
+Then, it is also required to provide an orchestrator that manages the deployment and distribution of the possible configurations for the previous introduced layers. This will be done thanks to the "Virtualization manager" layer.
+
+Finally, to point out that how the communication between each layer is going to be carried out is treated in next chapters.
 
 \subsection{Virtualization}
 
@@ -31,12 +33,12 @@ First of all, next points are showing which are the expected outcomes for using 
 \item To manage and maintain a system of small pieces of services (assure a microservice architecture based pattern)
 \item To have flexibility in order to quickly load (e.g.: start, restart, stop) required instances (e.g.: to assure real-time scalability) and to deploy any possible required scenario/configuration.
 \item To offer ease to continuous develop and deploy the different parts of the architecture
-\item To have version like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same API REST service)
+\item To have version like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same REST API service)
 \item To assure full compatibility for the core layers' operating system (right now only Linux environments are supported)
 \item To assure full compatibility for the hardware to work with (mainly x86 processors are in the scope)
 \end{itemize}
 
-Therefore, it is also required to use an as much lightweight as possible technology.
+Moreover, it is also required to use an as much lightweight as possible technology, and this fact is also because of this project aims to virtualize each piece of the platform architecture.
 
 Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind.
 
@@ -153,9 +155,9 @@ Tool for monitoring and graphing the performance of computer systems, which coll
 
 \end{itemize}
 
-Many other solutions have been discarded due to depend on enterprises roadmap or due to not fit under the exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
+Many other solutions have been discarded due to depend on specific enterprises' roadmap or due to not fit under previously exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
 
-Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in a O.S.). 
+Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in an O.S.). 
 
 Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
 
@@ -169,7 +171,7 @@ So, the monitoring layer is proposed to be designed as shown next:
 \end{center}
 \end{figure}
 
-\subsection{Application layer}
+\subsection{Application layer}\label{B:appLayerCH2}
 
 This subsection aims to compile the minimum requirements that the core service (i.e.: the LiveMediaStreamer framework) should implement to fit within the platform. This means assuring that it can be demonstrated as an efficient real-time cloud production platform, as a prototype.
 
@@ -210,9 +212,9 @@ Regarding media statistics, current LiveMediaStreamers' version of the framework
 
 Both items' implementation solution are treated on chapter 5.
 
-Then, a main issue have to be taken into account regarding how to implement the metrics presentations in order to let them be logged for external applications. This is regarding current middleware API, which is not at all an API but a web GUI API for an specific scenario (i.e.: AVMixer scenario), which means that it is required to implement a new middleware API to let external applications to log the LMS internal metrics as API (--REFERENCE--) definition reclaims. 
+Then, a main issue have to be taken into account regarding how to implement the metrics presentations in order to let them be logged for external applications. This is regarding current middleware API, which is not at all an API but a web GUI API for an specific scenario (i.e.: AVMixer scenario, as said in state of the art's chapter \ref{SOA:LMSframework}), which means that it is required to implement a more generic middleware API to let external applications to log the LMS internal metrics as API (--REFERENCE--) definition reclaims. 
 
-Therefore, the proposal for this issue is to develop a RESTfull API in order to present the metrics. This implementation is an opportunity to develop a full API REST for managing the LiveMediaStreamer framework.  Moreover, such middleware will ease to develop new applications over the LMS framework by evolving it as a SaaS. 
+Therefore, the proposal for this issue is to develop a RESTfull API in order to present the metrics from the LMS instance. This implementation is an opportunity to develop a full API for managing the LiveMediaStreamer framework over HTTP.  Moreover, such middleware will ease to develop new applications over the LMS framework by evolving it as a SaaS, which means a proper enhancement to fit in a cloud environment. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -253,7 +255,7 @@ For example, a possible and specific architecture configuration could be a trans
 \end{center}
 \end{figure}
 
-Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the API REST that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, lost frames, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different O.S.. 
+Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the REST API that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, lost frames, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different O.S.. 
 
 Finally, to point out that what will be deployed in order to demonstrate the platform feasibility is an specific but as generic as possible scenario. However, this topic will be treated in chapter \ref{H:platformDeploymentAndDemonstrations}.
 
