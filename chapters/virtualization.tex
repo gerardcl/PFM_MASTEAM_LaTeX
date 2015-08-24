@@ -8,11 +8,23 @@ Virtualization chapter focuses on the implementations done in order to prepare g
 \item Both last items with Collectd inside
 \end{itemize}
 
-Therefore, let's introduce how Docker is prepared. First of all, the host operating system is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS and its related environment are developed. 
+First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this fact will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer behaves inside a containerised environment.
 
-A
+To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
+So, some procedures must be taken into account in order to properly install and assure best fit possible of the Docker technology inside the O.S (and also to be ready for a cloud environment). These procedures imply:
 
+\begin{itemize}
+\item Create a docker group
+\item Adjust memory and swap accounting
+\item Enable UFW forwarding
+\item Configure a DNS server for use by Docker
+\item Configure Docker to start on boot
+\end{itemize}
+
+To concretely know how this configurations are done check documentation web page of the official Docker project site (--REFERENCE--).
+
+Once Docker is properly installed as a service let's focus on interesting possibilities that this technology offers in order to create and manage containers.
 
 \begin{verbatim}
 \begin{table}[htb]
