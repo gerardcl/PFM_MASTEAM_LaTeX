@@ -1,50 +1,158 @@
 \chapter{Virtualization}\label{D:virtualization}
 
-Virtualization chapter focuses on the implementations done in order to prepare generic solutions for a media production platform prototype with the tools already introduced. This is preparing containers for each generic microservice:
+Virtualization chapter focuses on the implementations done in order to prepare generic solutions for a media production platform prototype with technologies and tools already introduced. Minimal containerized tools might be the following ones:
 
 \begin{itemize}
 \item The core container with a LiveMediaStreamer instance already deployed inside and ready to use.
 \item The HTTP REST API container with the middleware interface inside and ready to use
-\item Both last items with Collectd inside
 \end{itemize}
 
 First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this fact will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer behaves inside a containerised environment.
 
 To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
-So, some procedures must be taken into account in order to properly install and assure best fit possible of the Docker technology inside the O.S (and also to be ready for a cloud environment). These procedures imply:
+So, some procedures must be taken into account in order to properly install and assure a best fit possible of the Docker technology inside the O.S (and also to be ready for a cloud environment). These procedures imply:
 
 \begin{itemize}
-\item Create a docker group
-\item Adjust memory and swap accounting
-\item Enable UFW forwarding
-\item Configure a DNS server for use by Docker
-\item Configure Docker to start on boot
+\item To create a docker group: in order to avoid user permission issues.
+\item To adjust memory and swap accounting: in order to not suffer memory overhead and performance degradation.
+\item To enable UFW forwarding: if UFW is enabled it's required to properly configure its forwarding policy (if UFW's enabled it will drop all forwarding and incoming traffic).
+\item To configure a DNS server: because Docker defaults to using an external DNS nameserver because it can't use the local one.
 \end{itemize}
 
-To concretely know how this configurations are done check documentation web page of the official Docker project site (--REFERENCE--).
+To concretely know how this configurations can be done it is strongly recommended to check documentation's web page of the official Docker project site (--REFERENCE--). There is a lot of documentation and references in order to understand and learn how Docker works.
 
-Once Docker is properly installed as a service let's focus on interesting possibilities that this technology offers in order to create and manage containers.
+Once Docker is properly installed as a daemon in the O.S. let's focus on interesting possibilities that this technology offers in order to create and manage containers:
+
+\begin{itemize}
+\item Creating containers
+	\begin{itemize}
+	\item Using a Docker file \hfill
+	
+	This is the main configuration file for a Docker container set up. It can be seen as an initial script to build a specific docker container. Also, it's like setting up a local git repository to later distribute it, but at a container level instead of software level. There you can define many configuration parameters in order to install and properly configure required dependencies and tools to run inside. 	
+	
+	\item Using Docker pull, commit and push for images
+
+	This is not recommended for creating an original container. But, it is really suitable when starting learning Docker technology. However, it is recommended to be used once an initial container has been build (from a Docker file) in order to maintain and to distribute different versions and deployments of this (as said, as a higher level git repository).	 
+It's important to note that a Docker image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image (the container itself). Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. This last fact is a key point due to its capacity of also offering deployment layers inside a container (i.e.: mora than one tool/technology inside a container).
+	
+	\end{itemize}
+\item Managing containers 
+	\begin{itemize}
+	\item Using Docker Hub service
+
+	It's a public registry of Docker images' repositories (there are also private ones with specific paying plans) from Docker official site. There is a list of basic (e.g.: CentOS, Ubuntu, Debian, ...) and complex (e.g.: CentOs + Nginx, Ubuntu + Nginx + Wordpress, Debian + Node.js + MongoDB, ...) containers containing clean and/or O.S. environments. 
+	
+	\item Using Docker Registry and Repository service
+
+	This	 listed item is a key point when looking for local management of images' repositories. This tool let's deploy an external (e.g.: private) registry if some enhancements over Docker Hub are desired (e.g.: specific user credentials, high level security layer,...).
+	
+	\item Using Docker Compose
+	
+	This tool let's create a localhost orchestrator of docker containers. This means managing/running more than one container and linking them (if required) at same time from the same point.
+	
+	\end{itemize}
+\end{itemize}
+
+For a more specific detailed list of options and possibilities from Docker containers, please check ANNEX XXX.
+
+Once previous brief of Docker possibilities to work with has been introduced let's start containerizing a single LiveMediaStreamer.
+
+As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, next is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
 
 \begin{verbatim}
-\begin{table}[htb]
-\begin{center}
-\begin{tabular}{|c|l|r|}
-\hline
-{\bf Títol de la Columna 1} & {\bf Títol de la Columna 2} & 
-{\bf Títol de la Columna 3}  \\ \hline \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-\end{tabular}
-\caption{Exemple de taula}
-\label{T:prova}
-\end{center}
-\end{table}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git cmake autoconf automake build-essential libass-dev \
+libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev libcppunit-dev yasm \ 
+libx264-dev  libmp3lame-dev  libopus-dev libvpx-dev liblog4cplus-dev \ 
+libtinyxml2-dev opencv-data libopencv-dev mercurial cmake-curses-gui vim \
+libcurl3 wget curl 
+
+RUN adduser --disabled-password --gecos '' lms && adduser lms sudo \
+	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER lms
+
+RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
+	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
+	&& make -j && sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
+	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
+	&& ./configure && make -j && sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
+	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
+	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
+	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
+	--enable-libopus --enable-libmp3lame --enable-libvpx --enable-libfdk_aac \
+	--enable-libx265 && make -j && sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget \
+	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
+	&& tar xaf live555-latest.tar.gz && cd live \
+	&& ./genMakefiles linux-with-shared-libraries && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
+	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
+	&& git checkout development && ./autogen.sh \
+	&& make -j && sudo make install && sudo ldconfig
+
+EXPOSE 5000-5017/udp
+EXPOSE 8554-8564
+EXPOSE 7777
+
+CMD ["/usr/local/bin/livemediastreamer","7777"] 
 \end{verbatim}
 
+Now, let's focus on what is done in order to explain it better: 
+
+\begin{itemize}
+\item FROM: this command indicates which is the image base to be used, in this case, as previously said, Ubuntu 14.04 is the selected environment.
+\item MAINTAINER: this command tags the maintainer/creator of such container image.
+\item RUN: specific command which runs specific bash scripts (e.g.: apt-get, mkdir, adduser and any other available system command from the base image)
+\item USER: this command is used in order to specify the system user that is going to be loaded in such container. This is mainly for security reasons (e.g.: avoiding root user).
+\item EXPOSE: this command handles the ports to be exposed from the container itself. This does not imply that later ports couldn't be exposed through the command line interface. But, it's used in order to list suitable ports to be required. 
+\item CMD: this configures the command that will be executed when running the image itself. It's important to point out that any user can later enter inside the container avoiding the execution of the default CMD defined (e.g.: executing bash for development purposes inside the container and creating a new container's version).
+\end{itemize}
+
+There are many other commands that could be used inside a Docker file (see --ANNEXX---) but they are not required in this case.
+
+Before continuing with building and testing a containerized LMS, let's prepare the REST API implemented later in chapter \ref{D:application} in order to containerize it too.
+
+
+
+
+Then, once the Docker file is defined it's time to build the image, this is done as shown next:
+
+\begin{verbatim}
+$ docker build \
+		-t <origin repository registry>/<image name>:<version tag> \
+		<Docker file folder path>
+\end{verbatim}
+
+So, last command will build the image by following the defined script inside the Docker file.
+
+
+---RUN
+
+
+Once the image is built, it's time to test the performance of the LiveMediaStreamer inside the container by comparing with executing it over the O.S. (i.e.: without containerizing/virtualizing its environment).
+
+First of all, the command to execute the image is as proposed next:
+
+\begin{verbatim}
+$ docker run --rm -p <host port>:<container port> --name single-lms \
+<origin repository registry>/<image name>:<version tag>
+\end{verbatim}
+
+This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining the running image with "single-lms" name (i.e.: \verb|--name| flag)
 
 
 
