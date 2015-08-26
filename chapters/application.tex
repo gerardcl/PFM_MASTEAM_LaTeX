@@ -175,7 +175,11 @@ To point out that this API is not implementing persistence because the state (ma
 
 Finally, in order to know how this structure and the overall middleware is implemented check ANNEX XXX to see the code. Next chapters will demonstrate it too.
 
-\section{Input network metrics}
+\section{Network metrics}
+
+Network metrics could be treated as external metrics. This is because these metrics are specially dependent from sources which transmit to LMS, the receivers from LMS and the state of the network itself. Obviously, the performance of the LMS affect to the metrics gathered too, but it is intended to be minimized, at least to the gathering and presentation of the metrics' point of view.
+
+\subsection{Input network metrics}
 
 As said in subsection \ref{B:appLayerCH2}, input network metrics are going to be implemented by carrying out methods re-implementations given by the Live555 library, which is the library implemented for managing network streams.  
 
@@ -244,7 +248,7 @@ void SCSSubsessionStats::
 \end{verbatim}
 \end{quote} 
 
-Previous algorithm prepares the metrics that are going to be presented through the state when a new state query is received. For a more detailed insight of the overall implementation see ANEXX XX. Next is listed the metrics that are presented for new state queries:
+Previous algorithm prepares the metrics that are going to be presented through the state when a new state query is received. In the code is shown how metrics from Live555 library are obtained. For a more detailed insight of the overall implementation see ANEXX XX. Next are listed the metrics that are presented per each new state query:
 
 \begin{itemize}
 \item Bitrate: maximum, minimum and average in kbps.
@@ -256,87 +260,15 @@ Previous algorithm prepares the metrics that are going to be presented through t
 Another metric that might be of interest is the time delay from the stream source but it is discarded due to not being offered from Live555 library. Moreover, to be implemented at SCSSubsessionStats class level has been discarded due to is computational cost and complexity to develop such requirement. But, to point out that it is not a high priority required metric due to take into account that this issue is out of LMS performance scope and if there are network performance problems they can be detected through other metrics already gathered.
 
 
-\section{Output network metrics}
+\subsection{Output network metrics}
 
-As said in subsection \ref{B:appLayerCH2}, output network metrics are going to be implemented by carrying out methods re-implementations given by the Live555 library, which is the library implemented for managing network streams.
+As done in previous section, output network metrics are going to be implemented by carrying out methods re-implementations given by the Live555 library, which is the library implemented for managing network streams.
 
-This implementation has been much more difficult to be achieved due to not having control of the RTPSink class of the Live555 library in the sense of when it is deleted. Previous developments before the final version where based over the RTPSink re-implementation already done per each ServerMediaSubsession, which is also re-implemented. But the implementation was still losing the specific RTPSink instance of the subsession.
+This implementation has been much more difficult to be achieved due to not having control of the RTPSink class of the Live555 library in the sense that when it is created neither deleted. Previous developments before the final version where based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
 
-In order to go on the development an e-mail was sent to the Live555 developers mailing list, concretely to the head developer of the library, as shown next:
+In order to go on the development an e-mail was sent to the Live555 developers mailing list, concretely to the head developer of the library, thanks to his replay the solution was clarified (see ANNEX \ref{emailRoss}).
 
-\begin{quote}
-\begin{verbatim}
-Sender: Gerard Castillo Lasheras <gerard.castillo@i2cat.net>
-Receiver: LIVE555 Streaming Media - development & 
-									use <live-devel@ns.live555.com> 
-Hi Ross,
-
-I'm implementing statistics on our software (liveMediaStreamer framework) 
-and I'd like to have access to the RTPTransmissionStatsDB. But, I do not
-see how to get the RTPSink object (which has the RTPTransmissionStatsDB 
-and its stats).
-
-Which should be the proper way to get the RTPSink object related to my
-OnDemandServerMediaSubsession childs? I've seen that 
-OnDemandServerMediaSubsession has a friend classe StreamState 
-which has the RTPSink associated but, anyway, 
-I'm not able to have access to it.
-
-Thanks in advance,
-
-Kind regards,
-\end{verbatim}
-\end{quote} 
-
-The reply was concrete and helpful, as shown:
-\begin{quote}
-\begin{verbatim}
-Sender: Ross Finlayson <finlayson@live555.com>
-Receiver: LIVE555 Streaming Media - development & 
-									use <live-devel@ns.live555.com> 
-									
-First of all, note that while a "OnDemandServerMediaSubsession" 
-object refers to a track of streamable media, a “RTPSink" object 
-refers to a receiving client (or possibly multiple clients if 
-"reuseFirstSource" is True).  So there’s (in general) a 
-one-to-many relationship between "OnDemandServerMediaSubsession" 
-and "RTPSink".  Thus, it doesn’t make sense to talk about 
-*the* RTPSink object for your "OnDemandServerMediaSubsession".
-
-However…
-There are at least two possible ways to get access to the 
-"RTPSink" objects:
-
-1/ Note the pure virtual function "createNewRTPSink()" that you 
-have implemented in your "OnDemandServerMediaSubsession" subclass.  
-You can use your implementation of this function to get access 
-to the "RTPTransmissionStatsDB" for the new "RTPSink", after 
-you’ve created it.
-The drawback of this approach, though, is that you don’t know when 
-the "RTPSink" object later gets deleted, so - if you’re not 
-careful - you may end up holding a reference or pointer to a 
-"RTPTransmissionStatsDB" that has been deleted.
-
-2/ Define a subclass "myRTCPInstance" of the "RTCPInstance" 
-class.  Then, in your "OnDemandServerMediaSubsession" subclass, 
-reimplement the "createRTCP()" virtual function to create a 
-"myRTCPInstance" object, rather than a "RTCPInstance" 
-object.  Note that "createRTCP()" contains a "sink" 
-parameter, pointing to a "RTPSink", from which you can 
-get the "RTPTransmissionStatsDB".
-The advantage of this approach over approach 1/ is that 
-- by defining a subclass of "RTCPInstance", you can learn when 
-the "RTPInstance" object gets deleted, and thus when the 
-"RTPSink" object gets deleted.  (The "RTCPInstance" object 
-always gets deleted immediately before the "RTPSink" 
-object.)  Thus, you can use your "myRTCPInstance" destructor 
-to figure out when the "RTPTransmissionStatsDB" should no 
-longer be used.
-									
-\end{verbatim}
-\end{quote} 
-
-So, the best options, as suggested by Ross, was to re-implement the RTCPInstance class per each inherit class of the ServerMediaSession class, concretely the inherit classes of the QueueServerMediaSubsession class. 
+So, the best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, concretely the inheriting classes of the QueueServerMediaSubsession class. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -346,7 +278,132 @@ So, the best options, as suggested by Ross, was to re-implement the RTCPInstance
 \end{center}
 \end{figure}
 
+In figure \ref{F:onms} is shown the relationship between the SinkManager class with both possible types of connections (i.e.: RTP or RTSP). Each Connetion object has a map of objects of the re-implemented RTCPInstance class, called ConnRTCPInstance (i.e.: RTCP instances per each connection). Then, each time a new specific RTP connection or any QueueServerMediaSubsession (RTSP connection, from RTSP server) is created, a ConnRTCPInstance is associated in order to start gathering the statistics offered from Live555 library. This is shown in next piece of code by showing the method which is periodically called (default periodicity value is set to 1 second), as done for the input network metrics.
 
-\section{Frame delay metrics}
+\begin{quote}
+\begin{verbatim}
+void ConnRTCPInstance::
+			periodicStatMeasurement(struct timeval const& timeNow) 
+{
+    unsigned currentNumBytes;
+    double currentElapsedTime;
 
-\section{Frame losses metrics}
+    RTPTransmissionStatsDB::Iterator 
+    							statsIter(fSink->transmissionStatsDB());
+
+    fSink->getTotalBitrate(currentNumBytes, currentElapsedTime);
+
+    avgBitrate = currentElapsedTime == 0 ? 0.0 :
+    					((8*currentNumBytes/currentElapsedTime)/1000.0);
+    if(minBitrate > avgBitrate) minBitrate = avgBitrate;
+    if(maxBitrate < avgBitrate) maxBitrate = avgBitrate;
+
+    RTPTransmissionStats* stats;
+    while((stats = statsIter.next()) != NULL){
+        SSRC = stats->SSRC();
+        packetLossRatio = stats->packetLossRatio();
+        if(minPacketLossRatio > packetLossRatio) 
+        							minPacketLossRatio = packetLossRatio;
+        if(maxPacketLossRatio < packetLossRatio) 
+        							maxPacketLossRatio = packetLossRatio;        
+        
+        roundTripDelay = stats->roundTripDelay();
+        if(minRoundTripDelay > roundTripDelay) 
+        							minRoundTripDelay = roundTripDelay;
+        if(maxRoundTripDelay < roundTripDelay) 
+        							maxRoundTripDelay = roundTripDelay;
+
+        jitter = stats->jitter();
+        if(minJitter > jitter) minJitter = jitter;
+        if(maxJitter < jitter) maxJitter = jitter;
+    }
+}
+\end{verbatim}
+\end{quote} 
+
+In this case, the delay metric is offered from the Live555 library, which is gathered.
+
+Finally, presented metrics are as shown next:
+
+\begin{itemize}
+\item Bitrate: maximum, minimum and average in kbps.
+\item Packet loss percentage (ratio): maximum, minimum and current.
+\item Round trip delay: maximum, minimum and current in milliseconds.
+\item Jitter: maximum, minimum and current inter-packet gap variation in microseconds.
+\end{itemize}
+
+\section{Pipe metrics}
+
+Following metrics are intended to be exposed as the internal metrics. It's important to point out that the measurements behind are really responsive to the overall performance of the LMS framework. Therefore, to achieve the minimum computational cost is a must. Then, as introduced in subsection \ref{B:appLayerCH2}, the optimal solutions to gather and measure such metrics is as shown next. But, first of all, let's pick up figure XXXX from ANNEX X in order to showcase the internal pipeline structure of the LMS framework. This will help understanding next two implementations.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{./images/LMSpipelineBasicOne.png}
+\caption{LMS framwork's internal pipeline structure example}
+\label{F:lmsps}
+\end{center}
+\end{figure}
+
+To point out that in figure \ref{F:lmsps} the arrows are the queues which interconnect each filter's writer with another filter's reader. Writers and readers are subclasses of the IOInterface class.
+
+\subsection{Frame delay metrics}
+
+First of all, to emphasize that this metric is related to the time which a frame takes to be processed from an origin point to an end point by an unique given path, and this is measured thanks to a given and required time: the frame's timestamps. 
+
+The delay time isn't considered to be measured per each filter in order to not affect the overall performance but each measured time involves an origin filter which resets the timestamps (i.e.: this is done by default by the Live555 library). These origins are the Head (i.e.: receiver filter) and OneToMany (i.e.: audio and video mixer filters) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
+
+So, in order to measure the delay it is important to note that a pipeline isn't composed by an unique path (see ANNEX X for clarifications) but multiple paths. This fact implies that it's not possible to measure an unique overall delay time per frame which goes over the pipeline (indeed there is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path), or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter).
+
+Next is shown the method which implements the measurement inside the Reader class:
+
+\begin{quote}
+\begin{verbatim}
+void Reader::measureDelay()
+{
+    if(lastTs.count() < 0){
+        lastTs = frame->getPresentationTime();
+    }
+
+    if (lastTs == frame->getPresentationTime()) {
+        return;
+    }
+
+    timeCounter += frame->getPresentationTime() - lastTs;
+    lastTs = frame->getPresentationTime();
+
+    if(timeCounter >= windowDelay){
+        avgDelay = delay / frameCounter;
+        timeCounter = std::chrono::microseconds(0);
+        delay = std::chrono::microseconds(0);
+        frameCounter = 0;
+    }
+    
+    delay += std::chrono::duration_cast<std::chrono::
+    						microseconds>(std::chrono::system_clock::now() 
+    											- frame->getOriginTime());
+    frameCounter++;
+}
+\end{verbatim}
+\end{quote} 
+
+So, what is done is to measure the average delay of a frame by a given window time (default is configured to 1 second). And this means measuring from the origin time, which, as said, is set by the origin filters (i.e.: the beginning of a path, starting from a writer), to each reader of the path (i.e.: each filter). But, the delay time presented is from the beginning (i.e.: initial writer of the path) until the last reader. See figure \ref{F:lmsps} where different path's examples are illustrated.
+
+\subsection{Frame losses metrics}
+
+This metric is following the same criteria as the previous one. This means that is solved by measuring at the same point and this is when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}.
+
+\begin{quote}
+\begin{verbatim}
+void Reader::measureLosses()
+{
+    if(frame->getSequenceNumber() > (lastSeqNum + 1)){
+        lostFrames += (frame->getSequenceNumber() - (lastSeqNum + 1));
+    }
+    lastSeqNum = frame->getSequenceNumber();
+}
+\end{verbatim}
+\end{quote} 
+
+Thanks to the sequence number parameter that each frame has it is really easy to get the frame losses ratio, as exposed by previous method.
+
+Therefore, at the end, the metric presented in this case is the total frames lost by a given path, per each filter.

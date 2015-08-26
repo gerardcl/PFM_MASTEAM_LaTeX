@@ -1,0 +1,75 @@
+\chapter{Exchanged e-mails with Live555 developer mailing list}\label{emailRoss}
+
+E-mail sent:
+
+\begin{quote}
+\begin{verbatim}
+Sender: Gerard Castillo Lasheras <gerard.castillo@i2cat.net>
+Receiver: LIVE555 Streaming Media - development & 
+									use <live-devel@ns.live555.com> 
+Hi Ross,
+
+I'm implementing statistics on our software (liveMediaStreamer framework) 
+and I'd like to have access to the RTPTransmissionStatsDB. But, I do not
+see how to get the RTPSink object (which has the RTPTransmissionStatsDB 
+and its stats).
+
+Which should be the proper way to get the RTPSink object related to my
+OnDemandServerMediaSubsession childs? I've seen that 
+OnDemandServerMediaSubsession has a friend classe StreamState 
+which has the RTPSink associated but, anyway, 
+I'm not able to have access to it.
+
+Thanks in advance,
+
+Kind regards,
+\end{verbatim}
+\end{quote} 
+
+The reply:
+\begin{quote}
+\begin{verbatim}
+Sender: Ross Finlayson <finlayson@live555.com>
+Receiver: LIVE555 Streaming Media - development & 
+									use <live-devel@ns.live555.com> 
+									
+First of all, note that while a "OnDemandServerMediaSubsession" 
+object refers to a track of streamable media, a "RTPSink" object 
+refers to a receiving client (or possibly multiple clients if 
+"reuseFirstSource" is True).  So there’s (in general) a 
+one-to-many relationship between "OnDemandServerMediaSubsession" 
+and "RTPSink".  Thus, it doesn’t make sense to talk about 
+*the* RTPSink object for your "OnDemandServerMediaSubsession".
+
+However…
+There are at least two possible ways to get access to the 
+"RTPSink" objects:
+
+1/ Note the pure virtual function "createNewRTPSink()" that you 
+have implemented in your "OnDemandServerMediaSubsession" subclass.  
+You can use your implementation of this function to get access 
+to the "RTPTransmissionStatsDB" for the new "RTPSink", after 
+you’ve created it.
+The drawback of this approach, though, is that you don’t know when 
+the "RTPSink" object later gets deleted, so - if you’re not 
+careful - you may end up holding a reference or pointer to a 
+"RTPTransmissionStatsDB" that has been deleted.
+
+2/ Define a subclass "myRTCPInstance" of the "RTCPInstance" 
+class.  Then, in your "OnDemandServerMediaSubsession" subclass, 
+reimplement the "createRTCP()" virtual function to create a 
+"myRTCPInstance" object, rather than a "RTCPInstance" 
+object.  Note that "createRTCP()" contains a "sink" 
+parameter, pointing to a "RTPSink", from which you can 
+get the "RTPTransmissionStatsDB".
+The advantage of this approach over approach 1/ is that 
+- by defining a subclass of "RTCPInstance", you can learn when 
+the "RTPInstance" object gets deleted, and thus when the 
+"RTPSink" object gets deleted.  (The "RTCPInstance" object 
+always gets deleted immediately before the "RTPSink" 
+object.)  Thus, you can use your "myRTCPInstance" destructor 
+to figure out when the "RTPTransmissionStatsDB" should no 
+longer be used.
+									
+\end{verbatim}
+\end{quote} 
