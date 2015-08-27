@@ -80,7 +80,7 @@ Nowadays virtualization tendencies are focusing on the Docker project, which is 
 LXC with Docker mean resource isolation features of the Linux kernel to allow independent containers to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. Moreover, Docker project automates the deployment of applications inside software containers and offers different tools to manage them (i.e.: CLI, API and file configurations), as shown in figure \ref{F:DockerAndLXC} 
 \end{itemize}
 
-Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
+Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APPENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
 
 Finally, it's important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
 
@@ -222,7 +222,7 @@ Therefore, the proposal for this issue is to develop a RESTfull API in order to 
 \end{center}
 \end{figure}
 
-Figure \ref{F:appArch} showcases how previous statements are proposed to be implemented. As it can be seen in ANNEX XX, each filter can have one or more readers and writers (both are inheritors of the IOInterface class) and concretely at the reader level there is the optimal point to detect frame losses and processing delays. This means measuring from the last writer (i.e.: a queue and the filter itself) when flushing frames (when the frame is supposed to be ready). Therefore, this fact implies having the chance to measure the delays at time-stamp level and the lost frames at sequence number level. But this will be developed in chapter \ref{D:application}.
+Figure \ref{F:appArch} showcases how previous statements are proposed to be implemented. As it can be seen in APPENDIX \ref{ANX:lmsarchfull}, each filter can have one or more readers and writers (both are inheritors of the IOInterface class) and concretely at the reader level there is the optimal point to detect frame losses and processing delays. This means measuring from the last writer (i.e.: a queue and the filter itself) when flushing frames (when the frame is supposed to be ready). Therefore, this fact implies having the chance to measure the delays at time-stamp level and the lost frames at sequence number level. But this will be developed in chapter \ref{D:application}.
 
 On the other hand, the Pipelinemanager class instance is the responsible class to compile the metrics filter by filter when they are requested by the Controller class instance. 
 

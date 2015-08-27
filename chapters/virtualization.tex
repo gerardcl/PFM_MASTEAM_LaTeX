@@ -1,13 +1,16 @@
 \chapter{Virtualization}\label{D:virtualization}
 
-Virtualization chapter focuses on the implementations done in order to prepare generic solutions for a media production platform prototype with technologies and tools already introduced. Minimal containerized tools might be the following ones:
+Virtualization chapter focuses on the implementations done in order to showcase how to prepare generic containers for a media production platform prototype with technologies and tools already introduced. 
+
+\section{Creating and managing generic containers}
+Proposed and minimal containerized entities are the following ones:
 
 \begin{itemize}
 \item The core container with a LiveMediaStreamer instance already deployed inside and ready to use.
 \item The HTTP REST API container with the middleware interface inside and ready to use
 \end{itemize}
 
-First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this fact will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer behaves inside a containerised environment.
+First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this issue will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer can be deployed inside a containerised environment.
 
 To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
@@ -54,7 +57,9 @@ It's important to note that a Docker image consists of a series of layers. Docke
 	\end{itemize}
 \end{itemize}
 
-For a more specific detailed list of options and possibilities from Docker containers, please check ANNEX XXX.
+For a more specific detailed list of options and possibilities from Docker containers, please check APPENDIX \ref{ANX:csd}.
+
+\subsection{Basic LMS container}
 
 Once previous brief of Docker possibilities to work with has been introduced let's start containerizing a single LiveMediaStreamer.
 
@@ -67,11 +72,11 @@ MAINTAINER Gerard CL <gerardcl@gmail.com>
 
 RUN apt-get update && apt-get -y upgrade
 
-RUN apt-get -y install git cmake autoconf automake build-essential libass-dev \
-libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev libcppunit-dev yasm \ 
-libx264-dev  libmp3lame-dev  libopus-dev libvpx-dev liblog4cplus-dev \ 
-libtinyxml2-dev opencv-data libopencv-dev mercurial cmake-curses-gui vim \
-libcurl3 wget curl 
+RUN apt-get -y install git cmake autoconf automake build-essential \ 
+libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
+libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
+libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
+libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
 
 RUN adduser --disabled-password --gecos '' lms && adduser lms sudo \
 	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -90,8 +95,9 @@ RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
 	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
 	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
 	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
-	--enable-libopus --enable-libmp3lame --enable-libvpx --enable-libfdk_aac \
-	--enable-libx265 && make -j && sudo make install && sudo ldconfig
+	--enable-libopus --enable-libmp3lame --enable-libvpx \
+	--enable-libfdk_aac --enable-libx265 && make -j \
+	&& sudo make install && sudo ldconfig
 
 RUN cd /home/lms && wget \
 	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
@@ -118,16 +124,11 @@ Now, let's focus on what is done in order to explain it better:
 \item MAINTAINER: this command tags the maintainer/creator of such container image.
 \item RUN: specific command which runs specific bash scripts (e.g.: apt-get, mkdir, adduser and any other available system command from the base image)
 \item USER: this command is used in order to specify the system user that is going to be loaded in such container. This is mainly for security reasons (e.g.: avoiding root user).
-\item EXPOSE: this command handles the ports to be exposed from the container itself. This does not imply that later ports couldn't be exposed through the command line interface. But, it's used in order to list suitable ports to be required. 
+\item EXPOSE: this command handles the ports to be exposed from the container itself. This does not imply that later ports couldn't be exposed through the command line interface. But, it's used in order to list suitable ports to be required. In this case, the exposed ports are a range of UDP ports where streams will be input or outputted (i.e.: RTP), a TCP range for the RTSP and the TCP port for managing the LMS framework through TCP socket messages. 
 \item CMD: this configures the command that will be executed when running the image itself. It's important to point out that any user can later enter inside the container avoiding the execution of the default CMD defined (e.g.: executing bash for development purposes inside the container and creating a new container's version).
 \end{itemize}
 
-There are many other commands that could be used inside a Docker file (see --ANNEXX---) but they are not required in this case.
-
-Before continuing with building and testing a containerized LMS, let's prepare the REST API implemented later in chapter \ref{D:application} in order to containerize it too.
-
-
-
+There are many other commands that could be used inside a Docker file (see APPENDIX \ref{ANX:csd}) but they are not required in this case.
 
 Then, once the Docker file is defined it's time to build the image, this is done as shown next:
 
@@ -137,28 +138,315 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-So, last command will build the image by following the defined script inside the Docker file.
+To point out that in order to start working with different images and managing them in different environments (i.e.: different servers/computers) a Docker Hub account has been created. So, let's define each parameter in order to name and tag each image to built during this project. In this case:
 
+\begin{itemize}
+\item Origin repository registry is "gerardcl" (see \url{https://hub.docker.com/r/gerardcl})
+\item Image name is "lms"
+\item Image version tag is "single"
+\end{itemize}
 
----RUN
+Therefore, last command will build the image by following the defined script inside the Docker file already defined.
 
-
-Once the image is built, it's time to test the performance of the LiveMediaStreamer inside the container by comparing with executing it over the O.S. (i.e.: without containerizing/virtualizing its environment).
-
-First of all, the command to execute the image is as proposed next:
+Then, the command to execute the image is as proposed next:
 
 \begin{verbatim}
-$ docker run --rm -p <host port>:<container port> --name single-lms \
-<origin repository registry>/<image name>:<version tag>
+$ docker run --rm -p <host port>:<container port> \
+		--name single-lms gerardcl/lms:single
 \end{verbatim}
 
-This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining the running image with "single-lms" name (i.e.: \verb|--name| flag)
+This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|, which has been configured in CMD method with 7777) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining (i.e.: identifying) the running image with "single-lms" name (i.e.: \verb|--name| flag). To point out that for testing purposes flags \verb|-i -t| (or \verb|-it|, it's just the same) might be also added in the command in order to run as an interactive process (this means allocating a TTY for the container process, so exposing the STDIN, STDOUT and STDERR standard streams). Therefore, it seems like executing the process over the same O.S. too.
+
+Finally in order to expose many other ports it's just required to add the -p flag as many times as ports required. Moreover, if an UDP port is also required to be exposed it is required to add the udp tag as shown:
+
+\begin{verbatim}
+$ docker run --rm -p <host port>:<container port> \
+		-p <stream1 host port>:<stream1 container port>:udp \
+		--name single-lms gerardcl/lms:single
+\end{verbatim}
 
 
+\subsection{HTTP REST API container}
 
-CONCLUSIONS CHAPTER
+Next container proposed to be built is the HTTP REST API middleware developed in chapter \ref{D:application}.  
 
-comentar que docker és com un git però de containers, on a dins els containers hi pots tenir un git també hehe
+Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. 
 
-explicar que es prepara cada container de tal forma que sigui collectd ready (potser hi hauran dos tipus, collectdDocker o collectd dins container -multiple processes-)
+Here is the Docker file:
+\begin{verbatim}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
 
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git npm
+
+RUN adduser --disabled-password --gecos '' lms \
+&& adduser lms sudo \
+&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER lms
+
+RUN cd /home/lms \
+&& git clone https://github.com/ua-i2cat/LMStoREST.git \
+/home/lms/LMStoREST && cd /home/lms/LMStoREST && npm install
+
+EXPOSE 8080
+CMD ["nodejs", "/home/lms/LMStoREST/lms-middleware.js"]
+\end{verbatim}
+
+In this case, in order to build and manage such image, these are the image parameters which defines this image:
+
+\begin{itemize}
+\item Origin repository registry is "gerardcl" (see \url{https://hub.docker.com/r/gerardcl})
+\item Image name is "lms-rest-api"
+\item Image version tag is "single"
+\end{itemize}
+
+To point out that the middleware implementation support changing the listening port of the application (default is 8080) by just adding the "-e" flag and defining the "PORT" environment variable of the container. Next an example is shown:
+
+\begin{verbatim}
+$ docker run -it -e "PORT=9000" -p 8080:9000 \
+		--name lms-rest-api --rm  gerardcl/lms-rest-api:single
+\end{verbatim}
+
+So, this last command sets the internal "PORT" environment variable to 9000 and binds it to the 8080 port of the host.
+
+\section{Linking containers}
+
+In order to play with previous containers built it is required to know how they might be interconnected (i.e.: linked).
+
+\subsection{Same O.S.}
+
+If containers are running on the same O.S. it's important to remember that each environment is isolated so its network environment too. Then, in order to let the HTTP REST API container connect to and manage the LMS instance container it is required to share the its network environment with LMS instance container. Here is how each container might be executed:
+
+\begin{verbatim}
+$ docker run -it -p 8080:8080 --name lms-rest-api \
+		--rm  gerardcl/lms-rest-api:single
+\end{verbatim}
+\begin{verbatim}
+$ docker run -it --rm --net container:lms-rest-api \
+		--name lms gerardcl/lms:single
+\end{verbatim}
+
+As shown, flag \verb|--net container:<container id>| helps solving this issue. This configures the "lms" container to use the network environment of the "lms-rest-api" container. So, both containers are on the same localhost, but isolated. The unique exposed port is the 8080, which is required to get access to REST API.
+
+To point out that in this case it's not required to expose the TCP socket API port because it is internally linked through the REST API container. This is a key point of the Docker technology, which lets isolate a container from external world. 
+
+In order to demonstrate it let's show what a \verb|$ netstat -putaneo| command  execution returns:
+\begin{itemize}
+\item Looking for port 8080: \hfill
+
+\begin{verbatim}
+Proto LocalAddress ForeignAddress State  User  PID/Program name 
+ tcp6   :::8080        :::*       LISTEN  0    21735/docker-proxy
+\end{verbatim}
+\item Looking for port 7777: \hfill
+
+No result obtained so isolation is reached on port 7777
+\end{itemize}
+
+\subsection{Separate O.S.}
+
+In order to deploy each container in separate O.S. it is required to expose required ports for achieve intercommunication. So Docker "run" command might be:
+\begin{itemize}
+\item For LMS container (only exposing TCP socket API control ports): \hfill
+
+\begin{verbatim}
+$ docker run -it --rm -p 7777:7777 --name lms gerardcl/lms:single
+\end{verbatim}
+\item For REST API container: \hfill
+
+\begin{verbatim}
+$ docker run -it -p 8080:8080 --name lms-rest-api --rm  \
+		gerardcl/lms-rest-api:single
+\end{verbatim}
+\end{itemize}
+
+Then, in order to reach connection from REST API to LMS the host to set in the connect JSON parameter is the host IP of the O.S. which is running the LMS instance containerized. And, obviously, in order to play with the REST API and control the remote LMS instance, the host URI must be the O.S. IP of the running REST API container.
+
+\section{Running multiple processes within a container}
+
+Finally, it is important to note that a Docker image is only able to run a single process through the CMD method. But, there is a solution to reach executing more than one process (i.e.: multiple services). This fact will help developing chapter \ref{G:monitoringLayer}.
+
+The solution for running multiple services inside the same container remains on a common and widely used tool, called supervisord. Supervisord is a client/server system that allows monitoring and controlling any number of processes on UNIX-like operating systems, which is meant to be used to control processes related to a project or a customer (i.e.: a Docker container), and is meant to start like any other program at boot time.
+
+An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH segments. Therefore, in order to let a browser play such segments an HTTP server is required, which serves the required files to be sent to the browser (i.e.: MPD, INIT, SEGMENT files).
+
+So, let's introduce the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx):
+\begin{verbatim}
+# LiveMediaStreamer Container
+# and Nginx server for MPEG-DASH streaming
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git cmake autoconf automake build-essential \ 
+libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
+libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
+libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
+libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
+
+RUN apt-get -y install nginx supervisor
+
+ADD ./nginx.conf /etc/nginx/nginx.conf
+ADD ./supervisord.conf /etc/supervisord.conf
+
+RUN adduser --disabled-password --gecos '' lms \
+&& adduser lms sudo \
+&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN mkdir -p /home/lms/dashSegments
+
+USER lms
+
+RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
+	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
+	&& make -j && sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
+	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
+	&& ./configure && make -j && sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
+	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
+	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
+	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
+	--enable-libopus --enable-libmp3lame --enable-libvpx \
+	--enable-libfdk_aac --enable-libx265 && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget \
+	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
+	&& tar xaf live555-latest.tar.gz && cd live \
+	&& ./genMakefiles linux-with-shared-libraries && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
+	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
+	&& git checkout development && ./autogen.sh \
+	&& make -j && sudo make install && sudo ldconfig
+
+USER root
+
+EXPOSE 5000-5017/udp
+EXPOSE 8554-8564
+EXPOSE 7777
+EXPOSE 8080
+
+CMD ["/usr/bin/supervisord","-n"] 
+\end{verbatim}
+
+So, it is quite similar to first Docker file introduced in this chapter but:
+
+\begin{itemize}
+\item Nginx and Supervisord are also installed
+\item This Docker file uses the command ADD in order to add specific configuration files for the Nginx and Supervisord servers (they are later)
+\item What is executed now is the Supervisord daemon
+\item There is also exposed the port for the Nginx server
+\item The user that is going to be used for this container is its root user due to require being used by supervisord service itself
+\end{itemize}
+
+Then, the Nginx configuration file is as shown next:
+
+\begin{verbatim}
+# this sets the user nginx will run as, 
+# and the number of worker processes
+user nobody nogroup;
+worker_processes  1;
+
+# setup where nginx will log errors to 
+# and where the nginx process id resides
+error_log  /var/log/nginx/error.log;
+pid        /var/run/nginx.pid;
+
+events {
+  worker_connections  1024;
+  # set to on if you have more than 1 worker_processes 
+  accept_mutex off;
+}
+
+http {
+  include       /etc/nginx/mime.types;
+
+  default_type application/octet-stream;
+  access_log /tmp/nginx.access.log combined;
+ 
+  # use the kernel sendfile
+  sendfile        on;
+  # prepend http headers before sendfile() 
+  tcp_nopush     on;
+
+  keepalive_timeout  5;
+  tcp_nodelay        on;
+
+  gzip  on;
+  gzip_vary on;
+  gzip_min_length 500;
+  
+  gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+  gzip_types text/plain text/xml text/css
+     text/comma-separated-values
+     text/javascript application/x-javascript
+     application/atom+xml image/x-icon;
+
+  # configure the virtual host
+  server {
+    # replace with your domain name
+    server_name localhost;
+    root /home/lms/dashSegments;
+    # port to listen for requests on
+    listen 8090;
+    # maximum accepted body size of client request 
+    client_max_body_size 4G;
+    # the server will close connections after this time 
+    keepalive_timeout 5;
+
+    location / {
+	 add_header Cache-Control no-cache;
+     add_header Access-Control-Allow-Origin: *;
+	 add_header Access-Control-Allow-Methods \
+	 						"GET, POST, PUT, DELETE, OPTIONS";
+     add_header Access-Control-Allow-Headers "Authorization";
+     add_header Access-Control-Allow-Credentials "true";
+    }
+  }
+}
+
+daemon off;
+\end{verbatim}
+
+In this configuration file, a part from typical Nginx configurations (which are out of scope of this project), some access control methods are added in order to apply common HTTP server issues like CORS (Cross-Origin Resource Sharing).
+
+Moreover, to note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too.
+
+Finally, last file to show is the supervisord.conf configuration file:
+
+\begin{verbatim}
+[supervisord]
+user=root
+nodaemon=true
+ 
+[program:livemediastreamer]
+user=lms
+autostart=true
+autorestart=true
+command=/usr/local/bin/livemediastreamer 7777
+redirect_stderr=true
+stdout_logfile=/var/log/livemediastreamer.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=10
+
+[program:nginx]
+autorestart=true
+command=/usr/sbin/nginx 
+redirect_stderr=true
+stdout_logfile=/var/log/nginx.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=10
+\end{verbatim}
+
+This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx. Moreover, it sets some logging file configurations. For example, it sets log file limits in order to not overload containers size so the O.S. disk usage.

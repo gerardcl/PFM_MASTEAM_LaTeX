@@ -27,7 +27,7 @@ Following is the software structure proposal for developing the HTTP RESTfull AP
 \begin{itemize}
 \item HTTP REST API layer \hfill
 
-This layer handles HTTP queries from external applications. It implements required routes to handle specific HTTP queries. First implementation will not implement multi LMS management but single. As shown in figure \ref{F:restAPI}.
+This layer handles HTTP queries from external applications. It implements specific routes to handle specific HTTP queries. First implementation will not implement multiple LMS management but single. As shown in figure \ref{F:restAPI}.
 
 \item Interface layer \hfill
 
@@ -35,10 +35,10 @@ This layer handles the body messages from the previous layer's HTTP queries and 
 
 \item TCP socket layer \hfill
 
-This layer is the responsible to send and receive JSON formatted TCP socket messages between the LMS targeted instance.
+This layer is the responsible to send and receive JSON formatted TCP socket messages between the LMS instance targeted.
 \end{itemize}
 
-As introduced in section {SOA:LMSframework} and deeply explained in ANNEX XX, there are two different management layers: the generic and the filter specific. So, by following this organization, the proposed API's structure is as shown next:
+As introduced in section {SOA:LMSframework} and deeply explained in APPENDIX \ref{ANX:lmsarchfull}, there are two different management layers: the generic and the filter specific. So, by following this organization, the proposed API's structure is as shown next:
 
 \begin{itemize}
 \item Generic management queries
@@ -123,7 +123,7 @@ JSON    {
 \begin{itemize}
 \item Configure an existing filter \hfill
 
-Configures an existing filter (each filter has its own actions defined, check ANNEX XXX)
+Configures an existing filter (each filter has its own actions defined, check APPENDIX \ref{ANX:lmsarchfull})
 \begin{quote}
 \begin{verbatim}
 PUT http://<host>:<port>/api/filter/:filterID
@@ -144,7 +144,7 @@ JSON    [
 \end{itemize}
 \end{itemize}
 
-So, with previous API proposal, the whole TCP socket API becomes simplified.
+So, with previous API proposal, the whole LMS's TCP socket API becomes simplified.
 
 Moreover, specific responses format to client has been proposed as shown:
 
@@ -173,11 +173,11 @@ JSON    {
 
 To point out that this API is not implementing persistence because the state (managed through 'State' method) is given by the LMS instance itself. The unique sign of persistence is regarding the LMS host and port which the middleware is connected to (managed through 'Connect' and 'Disconnect' methods). Higher levels of persistence should be implemented by external applications which implies specific scenarios and requirements (i.e.: specific persistence).
 
-Finally, in order to know how this structure and the overall middleware is implemented check ANNEX XXX to see the code. Next chapters will demonstrate it too.
+Finally, in order to know how this structure and the overall middleware is implemented check APPENDIX \ref{ANX:sourceCodes} to see the code. Next chapters will demonstrate it too.
 
 \section{Network metrics}
 
-Network metrics could be treated as external metrics. This is because these metrics are specially dependent from sources which transmit to LMS, the receivers from LMS and the state of the network itself. Obviously, the performance of the LMS affect to the metrics gathered too, but it is intended to be minimized, at least to the gathering and presentation of the metrics' point of view.
+Network metrics could be treated as external metrics. This is because these metrics are specially dependent from sources which transmit to LMS, the receivers from LMS and the state of the network itself. Obviously, the performance of the LMS affect to the metrics gathered too, but it is intended to be minimized, at least in a gathering and presentation of the metrics' point of view.
 
 \subsection{Input network metrics}
 
@@ -248,7 +248,7 @@ void SCSSubsessionStats::
 \end{verbatim}
 \end{quote} 
 
-Previous algorithm prepares the metrics that are going to be presented through the state when a new state query is received. In the code is shown how metrics from Live555 library are obtained. For a more detailed insight of the overall implementation see ANEXX XX. Next are listed the metrics that are presented per each new state query:
+Previous algorithm prepares the metrics that are going to be presented through the state when a new state query is received. In the code is shown how metrics from Live555 library are obtained. For a more detailed insight of the overall implementation see APPENDIX \ref{ANX:sourceCodes}. Next are listed the metrics that are presented per each new state query:
 
 \begin{itemize}
 \item Bitrate: maximum, minimum and average in kbps.
@@ -266,7 +266,7 @@ As done in previous section, output network metrics are going to be implemented 
 
 This implementation has been much more difficult to be achieved due to not having control of the RTPSink class of the Live555 library in the sense that when it is created neither deleted. Previous developments before the final version where based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
 
-In order to go on the development an e-mail was sent to the Live555 developers mailing list, concretely to the head developer of the library, thanks to his replay the solution was clarified (see ANNEX \ref{emailRoss}).
+In order to go on the development an e-mail was sent to the Live555 developers mailing list, concretely to the head developer of the library, thanks to his replay the solution was clarified (see APPENDIX \ref{ANX:emailRoss}).
 
 So, the best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, concretely the inheriting classes of the QueueServerMediaSubsession class. 
 
@@ -332,9 +332,9 @@ Finally, presented metrics are as shown next:
 \item Jitter: maximum, minimum and current inter-packet gap variation in microseconds.
 \end{itemize}
 
-\section{Pipe metrics}
+\section{Pipeline metrics}
 
-Following metrics are intended to be exposed as the internal metrics. It's important to point out that the measurements behind are really responsive to the overall performance of the LMS framework. Therefore, to achieve the minimum computational cost is a must. Then, as introduced in subsection \ref{B:appLayerCH2}, the optimal solutions to gather and measure such metrics is as shown next. But, first of all, let's pick up figure XXXX from ANNEX X in order to showcase the internal pipeline structure of the LMS framework. This will help understanding next two implementations.
+Following metrics are intended to be exposed as the internal metrics. It's important to point out that the measurements behind are really responsive to the overall performance of the LMS framework. Therefore, to achieve the minimum computational cost is a must. Then, as introduced in subsection \ref{B:appLayerCH2}, the optimal solutions to gather and measure such metrics is as shown next. But, first of all, let's pick up the example figure of a pipeline from APPENDIX \ref{ANX:lmsarchfull} in order to showcase the internal pipeline structure of the LMS framework. This will help understanding next two implementations.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -352,7 +352,7 @@ First of all, to emphasize that this metric is related to the time which a frame
 
 The delay time isn't considered to be measured per each filter in order to not affect the overall performance but each measured time involves an origin filter which resets the timestamps (i.e.: this is done by default by the Live555 library). These origins are the Head (i.e.: receiver filter) and OneToMany (i.e.: audio and video mixer filters) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
 
-So, in order to measure the delay it is important to note that a pipeline isn't composed by an unique path (see ANNEX X for clarifications) but multiple paths. This fact implies that it's not possible to measure an unique overall delay time per frame which goes over the pipeline (indeed there is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path), or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter).
+So, in order to measure the delay it is important to note that a pipeline isn't composed by an unique path (see APPENDIX \ref{ANX:lmsarchfull} for clarifications) but multiple paths. This fact implies that it's not possible to measure an unique overall delay time per frame which goes over the pipeline (indeed there is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path), or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter).
 
 Next is shown the method which implements the measurement inside the Reader class:
 
@@ -390,7 +390,7 @@ So, what is done is to measure the average delay of a frame by a given window ti
 
 \subsection{Frame losses metrics}
 
-This metric is following the same criteria as the previous one. This means that is solved by measuring at the same point and this is when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}.
+This metric is following the same criteria as the previous one. This means that this is solved by measuring at the same point, so it's done when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}. In order to reach minimal computational cost, the method implemented is as shown next:
 
 \begin{quote}
 \begin{verbatim}
@@ -404,6 +404,35 @@ void Reader::measureLosses()
 \end{verbatim}
 \end{quote} 
 
-Thanks to the sequence number parameter that each frame has it is really easy to get the frame losses ratio, as exposed by previous method.
+Thanks to the sequence number parameter that each frame has it is quite easy to get the frame losses ratio, as exposed by previous method's implemented.
 
-Therefore, at the end, the metric presented in this case is the total frames lost by a given path, per each filter.
+At the end, the metric presented in this case is the total frames lost and the total frames by a given path, per each filter. So, what is presented is the frame loss ratio per path.
+
+Finally, as said, Pipeline metrics are measured when flushing frames, this means when a reader is able to remove a frame from its belonging queue. Next piece of code from the Reader class is showing how it is finally done for both frame measurements:
+
+\begin{quote}
+\begin{verbatim}
+int Reader::removeFrame(int fId)
+{
+    std::lock_guard<std::mutex> guard(lck);
+
+    if (pending != 0 && requests.count(fId) > 0 && requests[fId]){
+        pending--;
+        requests[fId] = false;
+    }
+    
+    if (pending == 0){
+
+        measureDelay();
+        measureLosses();
+
+        frame = NULL;
+        requests.clear();
+        return queue->removeFrame();
+    } else {
+        return -1;
+    }
+}
+\end{verbatim}
+\end{quote}
+

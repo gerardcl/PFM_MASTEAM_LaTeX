@@ -24,7 +24,7 @@ broadcasting issues, this parading provides new possibilities to bring up new de
 Related to above statements, the recent advances in chip designs by industry leaders (e.g.: Intel, Broadcom, Xilinx and Altera) have eased a strong movement towards consolidation of complex functions (e.g.: encoding, transcoding, conversion, \ldots ) into a single device, instead
 several disparate platforms. Additionally, these hardware advances implied the chance of using software-centric frameworks, which provide for greater flexibility and customization from a business standpoint. Both advances are enabling a broader adoption of upcoming media technologies, at a reduced cost, without compromise on quality, flexibility and capability. Moreover, the disruptive nature of such advances can be seen in the mobile telephony market, such as the entry of open source mobile phone software (e.g.: Google’s Android OS) which, when coupled with low cost but powerful chipsets, has democratised the market allowing millions of people access to mobile phones and with it the Internet.
 
-In parallel, regarding the specific timing and synchronising requirements of live media production, the standard IEEE 1588-2008 (--REFERENCE--), commonly known as PTPv2(--REFERENCE--), appeared covering several profiles to be used through several network environments. For instance, SMPTE(--REFERENCE--) published a draft profile SMPTE ST 2059 (1 and 2) (--REFERENCE--) defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo LINK4 --> Check also annex with ieee presentation!).
+In parallel, regarding the specific timing and synchronising requirements of live media production, the standard IEEE 1588-2008 (--REFERENCE--), commonly known as PTPv2(--REFERENCE--), appeared covering several profiles to be used through several network environments. For instance, SMPTE(--REFERENCE--) published a draft profile SMPTE ST 2059 (1 and 2) (--REFERENCE--) defining a reference alignment to SMPTE epoch and there are studies analysing the application of PTP to broadcast environments under different circumstances (check this demo LINK4 --> Check also APPENDIX with ieee presentation!).
 
 \subsection{Network and Transport layers}
 
@@ -68,7 +68,7 @@ This section is a continuation of the previous one but focusing on how OTT conte
 
 \subsection{Cloud computing}
 
-Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE ANNEX X OR REFERENCE--). So, for many reasons like flexibility, scalability, security, data protection, agility and cost many organisations are migrating to cloud computing environments. 
+Cloud computing describes the delivery of shared computing resources (software and/or data) on demand through the Internet and its benefits can be foreseen as it is defined by the NIST recommendations (--SEE APPENDIX X OR REFERENCE--). So, for many reasons like flexibility, scalability, security, data protection, agility and cost many organisations are migrating to cloud computing environments. 
 
 Nowadays, cloud computing defines three fundamental models that are organized through application/service, platform and infrastructure layers.
 
@@ -242,7 +242,7 @@ Microservices is rather different than SOA perspective: microservices are always
 
 \end{itemize}
 
-Without going too deeply on both architecture patterns (check out its references --ANNEXES--), it seems that for this project requirements a microservices pattern offers more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with APIs) when required. 
+Without going too deeply on both architecture patterns (check out its references --APPENDIXES--), it seems that for this project requirements a microservices pattern offers more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with APIs) when required. 
 
 The prototype to be proposed should be seen as a complex application (the production platform) that requires defining specific microservices that can run independently and require to be flexible in terms of creating different interconnections per each possible configuration.
  
@@ -272,7 +272,7 @@ The framework is designed to be managed remotely through a simple network interf
 
 Currently, the framework does not have a RESTful API, but has a web API based middleware, that loads and manages an audio and video mixer scenario, written in Ruby programming language and it implements Sinatra framework for the web service interface side.
 
-It's recommended to check the ANNEX X for more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
+It's recommended to check APPENDIX \ref{ANX:lmsarchfull} for more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
 
 \subsection{Existing similar solutions}\label{SOA:similarSolutions}
 
