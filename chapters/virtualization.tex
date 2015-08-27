@@ -205,6 +205,14 @@ In this case, in order to build and manage such image, these are the image param
 \item Image version tag is "single"
 \end{itemize}
 
+So, the building command should be as shown next:
+
+\begin{verbatim}
+$ docker build \
+		-t gerardcl/lms-rest-api:single \
+		<Docker file folder path>
+\end{verbatim}
+
 To point out that the middleware implementation support changing the listening port of the application (default is 8080) by just adding the "-e" flag and defining the "PORT" environment variable of the container. Next an example is shown:
 
 \begin{verbatim}
@@ -273,7 +281,7 @@ Finally, it is important to note that a Docker image is only able to run a singl
 
 The solution for running multiple services inside the same container remains on a common and widely used tool, called supervisord. Supervisord is a client/server system that allows monitoring and controlling any number of processes on UNIX-like operating systems, which is meant to be used to control processes related to a project or a customer (i.e.: a Docker container), and is meant to start like any other program at boot time.
 
-An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH segments. Therefore, in order to let a browser play such segments an HTTP server is required, which serves the required files to be sent to the browser (i.e.: MPD, INIT, SEGMENT files).
+An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH segments. Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser (i.e.: MPD, INIT and SEGMENT files).
 
 So, let's introduce the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx):
 \begin{verbatim}
@@ -344,7 +352,7 @@ So, it is quite similar to first Docker file introduced in this chapter but:
 
 \begin{itemize}
 \item Nginx and Supervisord are also installed
-\item This Docker file uses the command ADD in order to add specific configuration files for the Nginx and Supervisord servers (they are later)
+\item This Docker file uses the command ADD in order to add specific configuration files for the Nginx and Supervisord container's servers (they are later showcased)
 \item What is executed now is the Supervisord daemon
 \item There is also exposed the port for the Nginx server
 \item The user that is going to be used for this container is its root user due to require being used by supervisord service itself
@@ -404,14 +412,17 @@ http {
     client_max_body_size 4G;
     # the server will close connections after this time 
     keepalive_timeout 5;
-
+    
+    add_header Access-Control-Allow-Origin "*";
+    add_header Access-Control-Allow-Methods "GET, OPTIONS";
+    add_header Access-Control-Allow-Headers "origin, authorization, accept";
+    add_header Cache-Control no-cache;
+    
     location / {
-	 add_header Cache-Control no-cache;
-     add_header Access-Control-Allow-Origin: *;
-	 add_header Access-Control-Allow-Methods \
-	 						"GET, POST, PUT, DELETE, OPTIONS";
-     add_header Access-Control-Allow-Headers "Authorization";
-     add_header Access-Control-Allow-Credentials "true";
+        add_header Access-Control-Allow-Origin "*";
+        add_header Access-Control-Allow-Methods "GET, OPTIONS";
+        add_header Access-Control-Allow-Headers "origin, authorization, accept";
+        add_header Cache-Control no-cache;
     }
   }
 }
@@ -419,9 +430,9 @@ http {
 daemon off;
 \end{verbatim}
 
-In this configuration file, a part from typical Nginx configurations (which are out of scope of this project), some access control methods are added in order to apply common HTTP server issues like CORS (Cross-Origin Resource Sharing).
+In this configuration file, a part from typical Nginx configurations (which are out of scope of this project), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing).
 
-Moreover, to note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too.
+Moreover, to note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
 
 Finally, last file to show is the supervisord.conf configuration file:
 
@@ -450,3 +461,22 @@ stdout_logfile_backups=10
 \end{verbatim}
 
 This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx. Moreover, it sets some logging file configurations. For example, it sets log file limits in order to not overload containers size so the O.S. disk usage.
+
+Then, as done with previous Docker files, let's show how it should be built:
+
+\begin{verbatim}
+$ docker build \
+		-t gerardcl/lms:dash \
+		<Docker file folder path>
+\end{verbatim}
+
+And, an example command to run this container's image is as shown next:
+
+\begin{verbatim}
+$ docker run -p 8090:8090 -p 7777:7777 -p 5004:5004/udp -it \
+		--rm --name lms-dash gerardcl/lms:dash 
+\end{verbatim}
+
+So, this container will serve the MPEG-DASH files on http://host:8090/, it will also be listening on port 7777 in order to get TCP socket configuration messages and it will be listening on port 5004 in order to receive an audio or a video on that port.
+
+Finally, to remark that this last container will be demonstrated (among others) in chapter \ref{H:platformDeploymentAndDemonstrations}.
