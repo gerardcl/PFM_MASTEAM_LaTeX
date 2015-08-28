@@ -299,9 +299,13 @@ libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
 libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
 
 RUN apt-get -y install nginx supervisor
+RUN mkdir -p /var/lock/nginx /var/run/nginx \
+	/var/lock/livemediastreamer /var/run/livemediastreamer \
+	/var/log/supervisor
 
 ADD ./nginx.conf /etc/nginx/nginx.conf
-ADD ./supervisord.conf /etc/supervisord.conf
+ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 
 RUN adduser --disabled-password --gecos '' lms \
 && adduser lms sudo \
@@ -345,13 +349,14 @@ EXPOSE 8554-8564
 EXPOSE 7777
 EXPOSE 8080
 
-CMD ["/usr/bin/supervisord","-n"] 
+CMD ["/usr/bin/supervisord"] 
 \end{verbatim}
 
 So, it is quite similar to first Docker file introduced in this chapter but:
 
 \begin{itemize}
 \item Nginx and Supervisord are also installed
+\item Specific /var/run and /var/log folders are created per each Supervidord process inside the supervisord.conf file
 \item This Docker file uses the command ADD in order to add specific configuration files for the Nginx and Supervisord container's servers (they are later showcased)
 \item What is executed now is the Supervisord daemon
 \item There is also exposed the port for the Nginx server
@@ -438,29 +443,16 @@ Finally, last file to show is the supervisord.conf configuration file:
 
 \begin{verbatim}
 [supervisord]
-user=root
 nodaemon=true
- 
+
 [program:livemediastreamer]
-user=lms
-autostart=true
-autorestart=true
 command=/usr/local/bin/livemediastreamer 7777
-redirect_stderr=true
-stdout_logfile=/var/log/livemediastreamer.log
-stdout_logfile_maxbytes=10MB
-stdout_logfile_backups=10
 
 [program:nginx]
-autorestart=true
 command=/usr/sbin/nginx 
-redirect_stderr=true
-stdout_logfile=/var/log/nginx.log
-stdout_logfile_maxbytes=10MB
-stdout_logfile_backups=10
 \end{verbatim}
 
-This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx. Moreover, it sets some logging file configurations. For example, it sets log file limits in order to not overload containers size so the O.S. disk usage.
+This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx.  
 
 Then, as done with previous Docker files, let's show how it should be built:
 
@@ -479,4 +471,16 @@ $ docker run -p 8090:8090 -p 7777:7777 -p 5004:5004/udp -it \
 
 So, this container will serve the MPEG-DASH files on http://host:8090/, it will also be listening on port 7777 in order to get TCP socket configuration messages and it will be listening on port 5004 in order to receive an audio or a video on that port.
 
-Finally, to remark that this last container will be demonstrated (among others) in chapter \ref{H:platformDeploymentAndDemonstrations}.
+But, it's important to remark that this section is just an example when running multiple services inside a container is a must (i.e.: when there are no other options). And, this is said because it could be solved by using the "volumes" feature that Docker offers. This means that this last container could be splitted into two: one specific container for a Nginx server (with same configuration as given before) and the other the previous single LMS container. Then, the 
+
+MOSTRAR NGINX BUILD
+
+EXECUCIÓ EN ORDRE TAL COM:
+
+ docker run -v /home/gerardcl/dashSegments:/home/lms/dashSegments -p 7777:7777 -p 5004:5004/udp -it --rm --name lmsdash gerardcl/lms:single
+ 
+ docker run -it -p 8090:8090 --rm --name nginx --volumes-from lmsdash gerardcl/lms-nginx:single 
+ 
+  docker run -it -p 8090:8090 --rm --name nginx --volumes-from lmsdash:ro gerardcl/lms-nginx:single 
+  
+TOT AIXÒ MILLORA SEGURETAT I RENDIMENT I ESCALABILITAT, SEMPRE PENSANT EN DIVIDIR AL MÀXIM (també recomanat per DOcker...)

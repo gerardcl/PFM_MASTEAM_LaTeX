@@ -25,3 +25,5 @@ next steps afegir processing time collector per filter
 
 comentar que docker és com un git però de containers, on a dins els containers hi pots tenir un git també hehe
 
+Security Considerations
+Running a website this way does not completely isolate your site from the security considerations of running it directly via Nginx on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon’s API does not require any kind of authentication. It is important to make sure that you have good firewall in place to isolate the host machine from the outside world, or anyone might be able to control your Docker daemon. Also take into account that Docker’s bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, just as these features do with traditional virtualization. Of course. the topic of container security is a massive subject, but keep in mind not to keep the security of LXC and Docker for granted.
