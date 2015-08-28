@@ -471,16 +471,60 @@ $ docker run -p 8090:8090 -p 7777:7777 -p 5004:5004/udp -it \
 
 So, this container will serve the MPEG-DASH files on http://host:8090/, it will also be listening on port 7777 in order to get TCP socket configuration messages and it will be listening on port 5004 in order to receive an audio or a video on that port.
 
-But, it's important to remark that this section is just an example when running multiple services inside a container is a must (i.e.: when there are no other options). And, this is said because it could be solved by using the "volumes" feature that Docker offers. This means that this last container could be splitted into two: one specific container for a Nginx server (with same configuration as given before) and the other the previous single LMS container. Then, the 
+\section{Best practices}
 
-MOSTRAR NGINX BUILD
+As illustrated in the official Docker documentation web site (\url{https://docs.docker.com/articles/dockerfile_best-practices/}), one of the best practices that should be taken into account is to avoid creating complex images and try to split as much as possible them.
 
-EXECUCIÓ EN ORDRE TAL COM:
+For example, previous section is just an example of when running multiple services inside a container is a must (i.e.: when there are no other options or the solution becomes much complex or the customer demands it), which should be avoided.
 
- docker run -v /home/gerardcl/dashSegments:/home/lms/dashSegments -p 7777:7777 -p 5004:5004/udp -it --rm --name lmsdash gerardcl/lms:single
+So, let's try to showcase a best practice for solving previous use case. By using the "volumes" feature that Docker offers this last container with multiple services inside could be splitted into two: one specific container for a Nginx server (with same configuration file as shown before) and the other the single LMS container introduced at the beginning of this chapter. 
+
+Therefore, let's showcase which is the Docker file generated for the Nginx container:
+
+\begin{verbatim}
+# Nginx Container - LMS special one
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get install --fix-missing \
+	&& apt-get -y upgrade
+
+RUN apt-get -y install nginx 
+
+ADD ./nginx.conf /etc/nginx/nginx.conf
+
+RUN adduser --disabled-password --gecos '' lms \
+	&& adduser lms sudo \
+	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN mkdir -p /home/lms/dashSegments
+
+EXPOSE 8090
+
+CMD ["/usr/sbin/nginx"]  
+\end{verbatim}
+
+Then, the build command might be as follows:
+
+\begin{verbatim}
+$ docker build \
+		-t gerardcl/lms-nginx:single \
+		<Docker file folder path>
+\end{verbatim}
+
+Finally, let's show which should be the run commands, in order:
+
+\begin{verbatim}
+$ docker run -v <host volume folder>:/home/lms/dashSegments \
+		-p 7777:7777 -p 5004:5004/udp -it --rm \
+		--name lmsdash gerardcl/lms:single
+\end{verbatim}
+
+\begin{verbatim}
+$ docker run -it -p 8090:8090 --rm --name nginx \
+		--volumes-from lmsdash:ro gerardcl/lms-nginx:single 
+\end{verbatim}
+
+With \verb|-v| flag is specified the "host volume folder", which is the host folder shared with the internal folder which LMS container will write the MPEG-DASH files (i.e.: "/home/lms/dashSegments"). If not specified, default permissions are read and write. Then, the Nginx container will use the \verb|--volumes-from <container id>:<permissions mode>| flag by specifying the containers from which will share its volume and its file permissions. In this case file permissions are specified to be in read-only mode in order to not avoid file modifications from the server/container side.  
  
- docker run -it -p 8090:8090 --rm --name nginx --volumes-from lmsdash gerardcl/lms-nginx:single 
- 
-  docker run -it -p 8090:8090 --rm --name nginx --volumes-from lmsdash:ro gerardcl/lms-nginx:single 
-  
-TOT AIXÒ MILLORA SEGURETAT I RENDIMENT I ESCALABILITAT, SEMPRE PENSANT EN DIVIDIR AL MÀXIM (també recomanat per DOcker...)
+So, scalability, performance, maintenance and security of the set of containers are assured by applying best practices like the last one.
