@@ -27,3 +27,20 @@ comentar que docker és com un git però de containers, on a dins els containers
 
 Security Considerations
 Running a website this way does not completely isolate your site from the security considerations of running it directly via Nginx on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon’s API does not require any kind of authentication. It is important to make sure that you have good firewall in place to isolate the host machine from the outside world, or anyone might be able to control your Docker daemon. Also take into account that Docker’s bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, just as these features do with traditional virtualization. Of course. the topic of container security is a massive subject, but keep in mind not to keep the security of LXC and Docker for granted.
+
+The fallacies[edit]
+The fallacies are summarized below:[1]
+The network is reliable.
+Latency is zero.
+Bandwidth is infinite.
+The network is secure.
+Topology doesn't change.
+There is one administrator.
+Transport cost is zero.
+The network is homogeneous.
+Effects of the fallacies[edit]
+Ignorance of network latency, and of the packet loss it can cause, induces application- and transport-layer developers to allow unbounded traffic, greatly increasing dropped packets and wasting bandwidth.
+Complacency regarding network security results in being blindsided by malicious users and programs that continually adapt to security measures.[2]
+Multiple administrators, as with subnets for rival companies, may institute conflicting policies of which senders of network traffic must be aware in order to complete their desired paths.
+The "hidden" costs of building and maintaining a network or subnet are non-negligible and must consequently be noted in budgets to avoid vast shortfalls.
+Ignorance of bandwidth limits on the part of traffic senders can result in bottlenecks over frequency-multiplexed media.

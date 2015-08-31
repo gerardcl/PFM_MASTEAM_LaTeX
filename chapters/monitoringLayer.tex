@@ -2,18 +2,22 @@
 
 As already discussed, in order to properly manage a cloud computing environment it is strongly required to use monitoring tools in order to gather information of interest by improving the environment itself or by finding out issues and solving them as fast as possible.
 
-This chapter aims to showcase how the selected monitoring tools could fit in the architecture type that has been proposed. And, how they can be used. This means, preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
+This chapter aims to showcase how the selected monitoring tools can fit in the architecture type that has been proposed. And, how they can be used. This means, preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
 
-Moreover, to point out that such tools are helpful to demonstrate that LiveMediaStreamer framework could be deployed as the core of a real-time media production platform.
+Moreover, to point out that such tools are helpful to demonstrate that LiveMediaStreamer framework could be deployed as the core of a real-time media production platform (see chapter \ref{H:platformDeploymentAndDemonstrations}).
 
-So, before start developing this chapter let's remark that the fact of creating small and reusable containers is the main goal of this chapter and, of course, the goal of this platform architecture to prototype.
+So, before start developing this chapter let's remark that the fact of creating small and reusable containers is the main goal of this chapter and, of course, the goal of this platform architecture to prototype. And, thanks to the selected monitoring tools, which are lightweight and ease configuration flexibility, this issue might be properly solved.
 
 \section{Monitoring containers}
 
 This section is based on how Collectd can be configured and deployed in order to monitor and properly gather metrics of interest.
 
 \subsection{From O.S. point of view}
+
+The fact of using Collectd means a wide community behind that probably have already created the plugin required. And this is the case. In order to monitor each of the containers that the host O.S. might be running the plugin 
+
 collectd special plguin for monitoring dockers
+https://github.com/lebauce/docker-collectd-plugin
 
 \subsection{From container point of view}
 
