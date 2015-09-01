@@ -153,12 +153,111 @@ $ docker run -it -e "LMS_NAME=lms" \
 	-p 25826:25826/udp gerardcl/lms-collectd-client
 \end{verbatim}
 
-This will start immediately sending the defined container stats to the Graphite container specified by the environment parameters.
+This will start immediately sending the defined container stats to the Graphite container specified by the environment parameters. Following section showcases the Graphite side to be deployed.
 
-So, this example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture.
+So, this example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
 
 \section{Showcasing monitoring}
 
 container amb graphite + collectd server
 
 mostrar com es genera tot (referències a fitxers externs??) i imatges del graphite o escenari sencer. amb exemples concrets mostrant potencial de graphite!!!
+
+This section is focused on the storage and presentation side of the metrics already logged and gathered.
+
+So, as already introduced, this is proposed to be done within a container built with a Collectd server (network data inputs served to Graphite) and a Graphite system (storing and presenting stats).
+
+As commonly said by the Collectd and Graphite community, installing and configuring Graphite isn't at all so easy than installing and configuring Collectd. This fact is shown in the following Docker file in order to build such container, as shown in figure \ref{F:maex}:
+
+\begin{verbatim}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update
+RUN apt-get install -y python-cairo collectd-core libgcrypt11 \
+python-virtualenv build-essential python-dev supervisor sudo
+
+RUN adduser --system --group --no-create-home collectd \
+&& adduser --system --home /opt/graphite graphite
+
+RUN sudo -u graphite virtualenv --system-site-packages ~graphite/env
+
+RUN echo "django \n \
+  python-memcached \n \
+  django-tagging \n \
+  twisted \n \
+  gunicorn \n \
+  whisper \n \
+  carbon \n \
+  graphite-web" > /tmp/graphite_reqs.txt
+
+RUN sudo -u graphite HOME=/opt/graphite /bin/sh -c ". \
+~/env/bin/activate && pip install -r /tmp/graphite_reqs.txt"
+
+ADD collectd/collectd.conf /etc/collectd/
+ADD supervisor/ /etc/supervisor/conf.d/
+ADD graphite/settings.py /opt/graphite/webapp/graphite/
+ADD graphite/local_settings.py /opt/graphite/webapp/graphite/
+ADD graphite/mkadmin.py /opt/graphite/webapp/graphite/
+ADD graphite/storage-schemas.conf /opt/graphite/conf/
+
+RUN cp /opt/graphite/conf/carbon.conf.example \
+/opt/graphite/conf/carbon.conf
+RUN cp /opt/graphite/conf/graphite.wsgi.example \
+/opt/graphite/webapp/graphite/graphite_wsgi.py
+RUN cp /opt/graphite/conf/graphite.wsgi.example \
+/opt/graphite/conf/graphite.wsgi
+RUN cp /opt/graphite/conf/storage-aggregation.conf.example \
+/opt/graphite/conf/storage-aggregation.conf
+
+RUN sed -i "s#^\(SECRET_KEY = \).*#\1\"`python -c 'import os; import base64; \
+print(base64.b64encode(os.urandom(40)))'`\"#" \
+/opt/graphite/webapp/graphite/app_settings.py
+RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
+/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python manage.py syncdb --noinput"
+RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
+/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python mkadmin.py"
+
+EXPOSE 8080 25826/udp
+
+CMD exec supervisord -n
+\end{verbatim}
+
+In this case, specific "collectd" and "graphite" users are created (among other environment configurations ans shown).
+Then, a bunch of different and specific configuration files for graphite are ADDed to their specific configuration folders. And, finally, specific command executions for database synchronization (sqlite3) and other final configurations required for Graphite are also done (--REFERENCE-- intalling graphite). Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as follows:
+
+\begin{verbatim}
+Hostname "localhost"
+FQDNLookup true
+Interval 1
+
+LoadPlugin syslog
+LoadPlugin network
+LoadPlugin write_graphite
+
+<Plugin syslog>
+	LogLevel "info"
+	NotifyLevel "OKAY"
+</Plugin>
+
+<Plugin network>
+	Listen "*" "25826"
+	ReportStats true
+</Plugin>
+
+<Plugin write_graphite>
+	<Node "graphing">
+		Host "localhost"
+		Port "2003"
+		Protocol "tcp"
+		LogSendErrors true
+		Prefix "collectd."
+		StoreRates true
+		AlwaysAppendDS false
+		EscapeCharacter "_"
+	</Node>
+</Plugin>
+\end{verbatim}
+
+So, here, Collectd is configured as a server by listening from anywhere at the common port for Collectd clustering. Moreover, the "write_graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which is the storage backend of a Graphite installation.
