@@ -260,7 +260,7 @@ LoadPlugin write_graphite
 </Plugin>
 \end{verbatim}
 
-So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the "write graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which is the storage backend of a Graphite installation.
+So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the "write graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
 
 In this case, it is required to configure this container to be able to run multiple processes (i.e.: Graphite and Collectd). Therefore, by following previous section of how to run multiple processes inside a container in chapter \ref{D:virtualization}, the Supervisord system is used. This time it's configured by splitting the processes configurations into two parts, the Collectd and the Graphite. This last is configuring the Graphite web application and the Graphite's Carbon cache.
 
