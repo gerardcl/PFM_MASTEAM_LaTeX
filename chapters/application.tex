@@ -346,11 +346,11 @@ Following metrics are intended to be exposed as the internal metrics. It's impor
 
 To point out that in figure \ref{F:lmsps} the arrows are the queues which interconnect each filter's writer with another filter's reader. Writers and readers are subclasses of the IOInterface class.
 
-\subsection{Frame delay metrics}
+\subsection{Delay}
 
-First of all, to emphasize that this metric is related to the time which a frame takes to be processed from an origin point to an end point by an unique given path, and this is measured thanks to a given and required time: the frame's timestamps. 
+First of all, to emphasize that this metric is related to the time which data (i.e.: a video frame, an audio sample,\ldots) takes to be processed from an origin point to an end point by an unique given path, and this is measured thanks to a given and required time: the data's timestamps. Data inside the LMS source code is known as a "frame", which can be an audio frame (i.e.: sample), a H264 NAL unit, a raw frame, \ldots 
 
-The delay time isn't considered to be measured per each filter in order to not affect the overall performance but each measured time involves an origin filter which resets the timestamps (i.e.: this is done by default by the Live555 library). These origins are the Head (i.e.: receiver filter) and OneToMany (i.e.: audio and video mixer filters) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
+The delay time isn't considered to be measured per each filter in order to not affect the overall performance but each measured time involves an origin filter which resets the timestamps. These origins are the Head (i.e.: receiver filter) and OneToMany (i.e.: audio and video mixer filters) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
 
 So, in order to measure the delay it is important to note that a pipeline isn't composed by an unique path (see APPENDIX \ref{ANX:lmsarchfull} for clarifications) but multiple paths. This fact implies that it's not possible to measure an unique overall delay time per frame which goes over the pipeline (indeed there is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path), or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter).
 
@@ -388,51 +388,13 @@ void Reader::measureDelay()
 
 So, what is done is to measure the average delay of a frame by a given window time (default is configured to 1 second). And this means measuring from the origin time, which, as said, is set by the origin filters (i.e.: the beginning of a path, starting from a writer), to each reader of the path (i.e.: each filter). But, the delay time presented is from the beginning (i.e.: initial writer of the path) until the last reader. See figure \ref{F:lmsps} where different path's examples are illustrated.
 
-\subsection{Frame losses metrics}
+\subsection{Losses}
 
-This metric is following the same criteria as the previous one. This means that this is solved by measuring at the same point, so it's done when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}. In order to reach minimal computational cost, the method implemented is as shown next:
+This metric is following a similar criteria as the previous one. This is solved by measuring at the same point, but it's done when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}). In order to reach minimal computational cost, the measurement is just a counter of the overall data losses when calling the flush methods. What is done is a method encapsulation by defining a parent method that is just incrementing its reader counter and then it calls the specific flush implementation per each data/frame type.
 
-\begin{quote}
-\begin{verbatim}
-void Reader::measureLosses()
-{
-    if(frame->getSequenceNumber() > (lastSeqNum + 1)){
-        lostFrames += (frame->getSequenceNumber() - (lastSeqNum + 1));
-    }
-    lastSeqNum = frame->getSequenceNumber();
-}
-\end{verbatim}
-\end{quote} 
+Then, in order to properly present it to external applications it is required to be presented at a path level as done for the delay metrics. So, in this case it is only required to sum up the overall losses of the path's readers.
 
-Thanks to the sequence number parameter that each frame has it is quite easy to get the frame losses ratio, as exposed by previous method's implemented.
+To point out, that this metric is not referenced to a total data processed or at any time point, but specific problem detections are achieved thanks to measuring its continuity. This means that if this value is incrementing gradually then the system is not working properly. Such detections might imply fast increments on its continuity (differential increase). 
 
-At the end, the metric presented in this case is the total frames lost and the total frames by a given path, per each filter. So, what is presented is the frame loss ratio per path.
 
-Finally, as said, Pipeline metrics are measured when flushing frames, this means when a reader is able to remove a frame from its belonging queue. Next piece of code from the Reader class is showing how it is finally done for both frame measurements:
-
-\begin{quote}
-\begin{verbatim}
-int Reader::removeFrame(int fId)
-{
-    std::lock_guard<std::mutex> guard(lck);
-
-    if (pending != 0 && requests.count(fId) > 0 && requests[fId]){
-        pending--;
-        requests[fId] = false;
-    }
-    
-    if (pending == 0){
-
-        measureDelay();
-        measureLosses();
-
-        frame = NULL;
-        requests.clear();
-        return queue->removeFrame();
-    } else {
-        return -1;
-    }
-}
-\end{verbatim}
-\end{quote}
-
+Finally, as a section corollary, Pipeline metrics are measured when flushing frames (discarding) or when a reader is able to remove a frame from its belonging queue. 
