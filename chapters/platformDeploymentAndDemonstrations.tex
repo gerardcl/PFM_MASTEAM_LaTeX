@@ -9,7 +9,7 @@ In order to demonstrate how LMS suits to become a proper tool it's proposed to d
 \begin{itemize}
 \item Isolated deployment \hfill
 
-The main goal of this deployment is to demonstrate how LMS performs inside a Docker container by comparing its performance in the same O.S. and machine but without running inside a container (i.e.: system installation).
+The main goal of this deployment is to demonstrate how LMS performs inside a Docker container by comparing its performance in the same O.S. but without running inside a container (i.e.: system installation).
 
 In this scenario deployment LMS is configured to act as a transcoder service. This means applying one pipeline per stream type (i.e.: one video and one audio paths).
 
@@ -18,7 +18,19 @@ In this scenario deployment LMS is configured to act as a transcoder service. Th
 This scenario deployment aims to showcase a suitable and a as much generic as possible cloud real-time media production scenario. Therefore, it is proposed to configure LMS to receive eight streams (i.e.: four audio and four video streams), mix them and transmit them through RTP/RTSP and MPEG-DASH. 
 \end{itemize}
 
+EXPLICAR L'ENTORN ON ES FARAN ELS DESPLEGAMENTS (MÀQUINA, CPU, RAM, OS,....)
+
 \subsection{Isolated demonstrations}
+
+In order to demonstrate results of interest what is done is to implement a C/C++ script which configures the LMS framework as shown in figure XXX. Moreover, in order to test how it performs the pipeline metrics are logged once per second (i.e.: pipeline losses and delay) and gathered by a Collectd client container properly configured. Then the Collectd client sends the data to the Graphite container. 
+
+FIGURE XXX (MOSTRAR CODECS I PARÀMETRES, IDS, ETC...)
+
+The Collectd client container, which reads from the volume where the LMS container is logging its metrics, is using the "tail" plugin (previously explained in chapter \ref{G:monitoringLayer}) with specific regular expressions, as shown next:
+
+COLLECTD CLIENT CONFIGURATION
+
+
 
 
 \subsection{Generic scenario demonstration}
