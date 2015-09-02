@@ -1,20 +1,25 @@
 \chapter{Platform deployment and demonstrations}\label{H:platformDeploymentAndDemonstrations}
 
-In order to demonstrate that the LiveMediaStreamer is a suitable tool to be used as the core framework of a cloud real-time media production platform it's required to showcase how it performs over the cloud. Therefore, it's important to demonstrate how it performs over the proposed architecture.
+In order to demonstrate that the LiveMediaStreamer is a suitable tool to be used as the core framework of a cloud real-time media production platform it's required to showcase how it performs over the cloud. Therefore, it's important to demonstrate how it performs over the proposed architecture. So, previous chapters will implicitly help to deploy and demonstrate it.
 
 \section{Platform deployment}
 
-primer es compara els single containers contra el mateix O.S. per a tenir resultats comparatius entre ÚS de containers o O.S.
+In order to demonstrate how LMS suits to become a proper tool it's proposed to deploy two scenarios with different complex degrees.
 
-Dir que abans de desplegar l'escenari s'analitzen per separat els containers, comparant amb O.S. execucions directes i es mostra la imatge del prototyp d'escenari per a demostrar la viabilitat del LMS com a eina nucli per a realització al nuvol.
+\begin{itemize}
+\item Isolated deployment \hfill
+
+The main goal of this deployment is to demonstrate how LMS performs inside a Docker container by comparing its performance in the same O.S. and machine but without running inside a container (i.e.: system installation).
+
+In this scenario deployment LMS is configured to act as a transcoder service. This means applying one pipeline per stream type (i.e.: one video and one audio paths).
+
+\item Generic scenario deployment \hfill
+
+This scenario deployment aims to showcase a suitable and a as much generic as possible cloud real-time media production scenario. Therefore, it is proposed to configure LMS to receive eight streams (i.e.: four audio and four video streams), mix them and transmit them through RTP/RTSP and MPEG-DASH. 
+\end{itemize}
 
 \subsection{Isolated demonstrations}
 
 
-AFEGIR CONTROL DE CPUS DOCKER!!!!
+\subsection{Generic scenario demonstration}
 
-AFEGIR IMATGE DE L'ESCENARI GLOBAL I LES ESTADÍSTIQUES DE GRAPHITE!!!
-
-\subsection{Scenario demonstration}
-
-es crea un binari que conté un escenari fixat i va treient els stats per a collectd, a  més a més es pot atacar els estats a través de la API.
