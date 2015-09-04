@@ -24,50 +24,6 @@ Figure \ref{F:maex} showcases the relationship between different containers and 
 
 This section is based on how Collectd can be configured and deployed in order to monitor and properly gather metrics of interest.
 
-\subsection{From O.S. point of view}
-
-The fact of using Collectd means a wide community behind, which probably have already developed required functionalities (i.e.: plugins). And this is the case: in order to monitor each of the containers that a host O.S. might have it can be solved by configuring already existing plugins for Collectd from Docker community. 
-
-The selected plugin is using the stats API introduced since Docker 1.5 version. And, concretely, the reported container's stats are:
- 
-\begin{itemize}
-\item Network bandwidth
-\item Memory usage
-\item CPU usage
-\item Block IO
-\end{itemize}
-
-The pluguin is called "docker-collectd-pluguin" and can be found in \href{https://github.com/lebauce/docker-collectd-plugin}{GitHub} (--REFERENCE--).
-
-Therefore, the O.S. system requires having a basic collectd daemon running and to be configured in order to send gathered metrics to a centralized collectd server (as proposed in figure \ref{F:maex}).
-
-So, from O.S. point of view, next example of this specific Collectd's plugins configuration showcases how to load and configure such plugins:
-
-\begin{verbatim}
-
-TypesDB "/usr/share/collectd/docker-collectd-plugin/dockerplugin.db"
-LoadPlugin python
-
-<Plugin python>
-  ModulePath "/usr/share/collectd/docker-collectd-plugin"
-  Import "dockerplugin"
-
-  <Module dockerplugin>
-    BaseURL "unix://var/run/docker.sock"
-    Timeout 3
-  </Module>
-</Plugin>
-
-LoadPlugin network
-<Plugin network>
-  Server "graphite-host-address" "graphite-host-port"
-  ReportStats true
-</Plugin>
-
-\end{verbatim}
-
-Previous Collectd configuration file sets the python (i.e.: docker-collectd-plugin) plugin as an input from the O.S. Docker API daemon and the network plugin as an output to the Collectd server.
-
 \subsection{From container point of view}
 
 From a container point of view and by following the premise to build containers as reusable as possible what is proposed to implement is a container that has the goal to gather the logged stats from an LMS container. This, as shown in figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network plugin as done in previous Collectd client configuration.
@@ -157,11 +113,54 @@ This will start immediately sending the defined container stats to the Graphite 
 
 So, this example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
 
+\subsection{From O.S. point of view}
+
+The fact of using Collectd means a wide community behind, which probably have already developed required functionalities. And this is the case: in order to monitor each of the containers that a host O.S. might have it can be solved by configuring already existing plugins or similar tools for Collectd from Docker community. 
+
+The selected tool is using the stats API introduced since Docker 1.5 version. And, concretely, the reported container's stats are:
+ 
+\begin{itemize}
+\item Network
+\item Memory usage
+\item CPU usage
+\end{itemize}
+
+The pluguin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same O.S. it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
+
+\begin{verbatim}
+<Plugin network>
+  Server "{{ GRAPHITE_HOST }}" "{{ GRAPHITE_PORT | default("25826") }}"
+  Listen "*" "25827"
+  Forward true
+  ReportStats true
+</Plugin>
+\end{verbatim}
+
+Therefore, it is not a plugin itself but a Docker container, which listens the docker daemon socket of the system (as proposed in figure \ref{F:maex}) and monitors each one of the containers running.
+
+This container implements the same envtpl python package in order to define specific environment parameters such as the collectd server host and port (check its documentation for a detailed configuration explanation). So, in order to showcase how this and the previous Collect client are interconnected the following Docker run commands are shown:
+
+\begin{itemize}
+\item Collectd tail client (from the container point of view):
+\begin{verbatim}
+docker run -it --rm --name cc -v /home/gerardcl/logs/:/home/lms/logs \
+-p 25826:25826/udp -e "LMS_NAME=lmsAVMixingStats" \
+-e "GRAPHITE_HOST=192.168.1.140" \
+gerardcl/lms-collectd-client
+\end{verbatim}
+\item Collectd docker socket API reader (from the O.S. point of view):
+\begin{verbatim}
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+-e GRAPHITE_HOST=127.0.0.1 -e COLLECTD_HOST=lmsOS \
+-e COLLECTD_DOCKER_APP=lmsAVMixStats -e GRAPHITE_PORT=25827 \
+-it --rm --name collector --net="container:cc"  \
+gerardcl/lms-collectd-collector
+\end{verbatim}
+\end{itemize}
+
+So, here, what is done in order to avoid port binding issues is to setup the Docker collectd collector container to use the same network environment of the Collectd tail client.
+
 \section{Showcasing monitoring}
-
-container amb graphite + collectd server
-
-mostrar com es genera tot (referències a fitxers externs??) i imatges del graphite o escenari sencer. amb exemples concrets mostrant potencial de graphite!!!
 
 This section is focused on the storage and presentation side of the metrics already logged and gathered.
 
