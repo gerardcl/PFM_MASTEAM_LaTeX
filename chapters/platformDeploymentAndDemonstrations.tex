@@ -15,7 +15,7 @@ In this scenario deployment LMS is configured to act as a transcoder service. Th
 
 \item Generic scenario deployment \hfill
 
-This scenario deployment aims to showcase a suitable and a as much generic as possible cloud real-time media production scenario. Therefore, it is proposed to configure LMS to receive eight streams (i.e.: four audio and four video streams), mix them and transmit them through RTP/RTSP and MPEG-DASH. 
+This scenario deployment aims to showcase a suitable and a as much generic as possible cloud real-time media production scenario. Therefore, it is proposed to configure LMS to receive eight streams (i.e.: four audio and four video streams), mix them and transmit them through RTP/RTSP. 
 \end{itemize}
 
 The environment where the deployments are done has the following characteristics:
@@ -37,7 +37,7 @@ Docker version        & 1.6.8  \\ \hline
 \end{center}
 \end{table}
 
-As seen, the deployment hasn't been carried out in any type of specific server or high performance environment. This is mainly due to demonstrate characteristics such as flexibility on the deployment (i.e.: in a laptop) and portability of the platform (not only the cloud itself). And, all of these characteristics are achieved thanks to the performance of the platform itself and, concretely, the LMS (the core).
+As seen, the deployment hasn't been carried out in any type of specific server or high performance cluster environment. This is mainly due to demonstrate flexibility on the deployment (i.e.: in a laptop) and portability of the platform (not only the cloud itself). And, all of these characteristics are achieved thanks to the performance of the platform itself and, concretely, the LMS (the core).
 
 \subsection{Isolated demonstrations}
 
@@ -55,15 +55,23 @@ The Collectd client container, which reads from the volume where the LMS contain
 
 So, both isolated scenarios are the same but one is running the LMS on the system and the other is running the same configure LMS but containerized.
 
-EXPLICACIÓ ESCENARI (les fonts venen del mateix pc player - un mac amb linux) I 
-RESULTATS
+The other O.S. running is the one which runs the Docker container with the Collectd+Graphite tools. Moreover, this O.S. acts as the receiver of the transcoded streams through RTSP protocol.
+
+Here the results of interest (check APPENDIX XXX for a detailed list) with both LMS deployments to compare:
+
+\subsubsection{Containerized}
+
+IMATGES
+
+\subsubsection{System installation}
+
+IMATGES
+
 
 
 \subsection{Generic scenario demonstration}
 
-This last scenario aims to be a generic and basic example demonstration of audio and video production in a cloud environment. Figure \ref{F:gdsc}
-
-
+This last scenario aims to be a generic and basic example demonstration of audio and video production in a cloud environment. Figure \ref{F:gdsc} showcases how the scenario is configured.
 
 \begin{figure}[htb]
 \begin{center}
@@ -72,3 +80,23 @@ This last scenario aims to be a generic and basic example demonstration of audio
 \label{F:gdsc}
 \end{center}
 \end{figure}
+
+This demonstration is quite similar than the other but this time LMS is only configured and running inside a container. This LMS configuration is also a C/C++ script which congiures the framework as shown in figure \ref{F:gdsc} inside the LMS container, specifically.
+
+So, in this case what is deployed is an audio and video mixer which receives four audio streams and four video streams encoded with OPUS and H264 codecs, respectively, which are streamed through its standard RTP encapsulation (i.e.: specific payload headers).
+
+Regarding the audio mixing, all input streams are mixed with logarithmic mixing algorithm in order to not saturate the signal of the resulting audio stream. Then, regarding the video mixing, the HD inputs (i.e.: 1280x720 pixels of resolution) are mixed as shown next:
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.90\textwidth]{./images/outAVmix.png}
+\caption{Output of the video mixing}
+\label{F:outVMix}
+\end{center}
+\end{figure}
+
+All video inputs are resized (through the previous resampler filter of the video mixer, see \ref{F:gdsc}) to the half of its size in order to fill into a resulting HD video stream as shown.
+
+Here the results of interest (check APPENDIX XXX for a detailed list):
+
+IMATGES
