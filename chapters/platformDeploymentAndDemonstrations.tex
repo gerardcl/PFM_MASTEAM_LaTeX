@@ -9,7 +9,7 @@ In order to demonstrate how LMS suits to become a proper tool it's proposed to d
 \begin{itemize}
 \item Isolated deployment \hfill
 
-The main goal of this deployment is to demonstrate how LMS performs inside a Docker container by comparing its performance in the same O.S. but without running inside a container (i.e.: system installation).
+The main goal of this deployment is to demonstrate how LMS performs inside a Docker container by comparing its performance in the same OS but without running inside a container (i.e.: system installation).
 
 In this scenario deployment LMS is configured to act as a transcoder service. This means applying one pipeline per stream type (i.e.: one video and one audio paths).
 
@@ -57,7 +57,7 @@ The Collectd client container, which reads from the volume where the LMS contain
 
 So, both isolated scenarios are the same but one is running the LMS on the system and the other is running the same configured LMS but containerized.
 
-The second O.S. running is the one which runs the Docker container with the Collectd+Graphite tools. Moreover, this O.S. acts as the receiver of the transcoded streams through RTSP protocol and also as the transmitter of the source stream.
+The second OS running is the one which runs the Docker container with the Collectd+Graphite tools. Moreover, this OS acts as the receiver of the transcoded streams through RTSP protocol and also as the transmitter of the source stream.
 
 Therefore, let's group and show the results of interest which are mainly focused on the pipeline performance metrics (i.e.: internal LMS performance):
 

@@ -147,7 +147,7 @@ Known as an industry standard, high performance data logging and graphing system
 
 \item Collectd \hfill
 
-Small daemon which collects system information periodically and provides mechanisms to store and monitor the values in a variety of ways. Written in C and support any unix-like O.S.
+Small daemon which collects system information periodically and provides mechanisms to store and monitor the values in a variety of ways. Written in C and support any unix-like OS
 
 \item Graphite \hfill
 
@@ -157,7 +157,7 @@ Tool for monitoring and graphing the performance of computer systems, which coll
 
 Many other solutions have been discarded due to depend on specific enterprises' roadmap or due to not fit under previously exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
 
-Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in an O.S.). 
+Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in an OS). 
 
 Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
 
@@ -251,7 +251,7 @@ For example, a possible and specific architecture configuration could be a trans
 \end{center}
 \end{figure}
 
-Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the REST API that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, data losses, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different O.S.. 
+Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the REST API that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, data losses, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different OS. 
 
 Finally, to point out that what will be deployed in order to demonstrate the platform feasibility is an specific but as generic as possible scenario. However, this topic will be treated in chapter \ref{H:platformDeploymentAndDemonstrations}.
 

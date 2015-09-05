@@ -113,9 +113,9 @@ This will start immediately sending the defined container stats to the Graphite 
 
 So, this example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
 
-\subsection{From O.S. point of view}
+\subsection{From OS point of view}
 
-The fact of using Collectd means a wide community behind, which probably have already developed required functionalities. And this is the case: in order to monitor each of the containers that a host O.S. might have it can be solved by configuring already existing plugins or similar tools for Collectd from Docker community. 
+The fact of using Collectd means a wide community behind, which probably have already developed required functionalities. And this is the case: in order to monitor each of the containers that a host OS might have it can be solved by configuring already existing plugins or similar tools for Collectd from Docker community. 
 
 The selected tool is using the stats API introduced since Docker 1.5 version. And, concretely, the reported container's stats are:
  
@@ -125,7 +125,7 @@ The selected tool is using the stats API introduced since Docker 1.5 version. An
 \item CPU usage
 \end{itemize}
 
-The pluguin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same O.S. it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
+The pluguin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
 
 \begin{verbatim}
 <Plugin network>
@@ -148,7 +148,7 @@ docker run -it --rm --name cc -v /home/gerardcl/logs/:/home/lms/logs \
 -e "GRAPHITE_HOST=192.168.1.140" \
 gerardcl/lms-collectd-client
 \end{verbatim}
-\item Collectd docker socket API reader (from the O.S. point of view):
+\item Collectd docker socket API reader (from the OS point of view):
 \begin{verbatim}
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
 -e GRAPHITE_HOST=127.0.0.1 -e COLLECTD_HOST=lmsOS \

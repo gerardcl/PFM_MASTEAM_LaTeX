@@ -14,7 +14,7 @@ First of all, let's introduce how and where Docker is installed. The host operat
 
 To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
-So, some procedures must be taken into account in order to properly install and assure a best fit possible of the Docker technology inside the O.S (and also to be ready for a cloud environment). These procedures imply:
+So, some procedures must be taken into account in order to properly install and assure a best fit possible of the Docker technology inside the OS (and also to be ready for a cloud environment). These procedures imply:
 
 \begin{itemize}
 \item To create a docker group: in order to avoid user permission issues.
@@ -25,7 +25,7 @@ So, some procedures must be taken into account in order to properly install and 
 
 To concretely know how this configurations can be done it is strongly recommended to check documentation's web page of the official Docker project site (--REFERENCE--). There is a lot of documentation and references in order to understand and learn how Docker works.
 
-Once Docker is properly installed as a daemon in the O.S. let's focus on interesting possibilities that this technology offers in order to create and manage containers:
+Once Docker is properly installed as a daemon in the OS let's focus on interesting possibilities that this technology offers in order to create and manage containers:
 
 \begin{itemize}
 \item Creating containers
@@ -44,7 +44,7 @@ It's important to note that a Docker image consists of a series of layers. Docke
 	\begin{itemize}
 	\item Using Docker Hub service
 
-	It's a public registry of Docker images' repositories (there are also private ones with specific paying plans) from Docker official site. There is a list of basic (e.g.: CentOS, Ubuntu, Debian, ...) and complex (e.g.: CentOs + Nginx, Ubuntu + Nginx + Wordpress, Debian + Node.js + MongoDB, ...) containers containing clean and/or O.S. environments. 
+	It's a public registry of Docker images' repositories (there are also private ones with specific paying plans) from Docker official site. There is a list of basic (e.g.: CentOS, Ubuntu, Debian, ...) and complex (e.g.: CentOs + Nginx, Ubuntu + Nginx + Wordpress, Debian + Node.js + MongoDB, ...) containers containing clean and/or OS environments. 
 	
 	\item Using Docker Registry and Repository service
 
@@ -155,7 +155,7 @@ $ docker run --rm -p <host port>:<container port> \
 		--name single-lms gerardcl/lms:single
 \end{verbatim}
 
-This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|, which has been configured in CMD method with 7777) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining (i.e.: identifying) the running image with "single-lms" name (i.e.: \verb|--name| flag). To point out that for testing purposes flags \verb|-i -t| (or \verb|-it|, it's just the same) might be also added in the command in order to run as an interactive process (this means allocating a TTY for the container process, so exposing the STDIN, STDOUT and STDERR standard streams). Therefore, it seems like executing the process over the same O.S. too.
+This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|, which has been configured in CMD method with 7777) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining (i.e.: identifying) the running image with "single-lms" name (i.e.: \verb|--name| flag). To point out that for testing purposes flags \verb|-i -t| (or \verb|-it|, it's just the same) might be also added in the command in order to run as an interactive process (this means allocating a TTY for the container process, so exposing the STDIN, STDOUT and STDERR standard streams). Therefore, it seems like executing the process over the same OS too.
 
 Finally in order to expose many other ports it's just required to add the -p flag as many times as ports required. Moreover, if an UDP port is also required to be exposed it is required to add the udp tag as shown:
 
@@ -226,9 +226,9 @@ So, this last command sets the internal "PORT" environment variable to 9000 and 
 
 In order to play with previous containers built it is required to know how they might be interconnected (i.e.: linked).
 
-\subsection{Same O.S.}
+\subsection{Same OS}
 
-If containers are running on the same O.S. it's important to remember that each environment is isolated so its network environment too. Then, in order to let the HTTP REST API container connect to and manage the LMS instance container it is required to share the its network environment with LMS instance container. Here is how each container might be executed:
+If containers are running on the same OS it's important to remember that each environment is isolated so its network environment too. Then, in order to let the HTTP REST API container connect to and manage the LMS instance container it is required to share the its network environment with LMS instance container. Here is how each container might be executed:
 
 \begin{verbatim}
 $ docker run -it -p 8080:8080 --name lms-rest-api \
@@ -256,9 +256,9 @@ Proto LocalAddress ForeignAddress State  User  PID/Program name
 No result obtained so isolation is reached on port 7777
 \end{itemize}
 
-\subsection{Separate O.S.}
+\subsection{Separate OS}
 
-In order to deploy each container in separate O.S. it is required to expose required ports for achieve intercommunication. So Docker "run" command might be:
+In order to deploy each container in separate OS it is required to expose required ports for achieve intercommunication. So Docker "run" command might be:
 \begin{itemize}
 \item For LMS container (only exposing TCP socket API control ports): \hfill
 
@@ -273,7 +273,7 @@ $ docker run -it -p 8080:8080 --name lms-rest-api --rm  \
 \end{verbatim}
 \end{itemize}
 
-Then, in order to reach connection from REST API to LMS the host to set in the connect JSON parameter is the host IP of the O.S. which is running the LMS instance containerized. And, obviously, in order to play with the REST API and control the remote LMS instance, the host URI must be the O.S. IP of the running REST API container.
+Then, in order to reach connection from REST API to LMS the host to set in the connect JSON parameter is the host IP of the OS which is running the LMS instance containerized. And, obviously, in order to play with the REST API and control the remote LMS instance, the host URI must be the OS IP of the running REST API container.
 
 \section{Running multiple processes within a container}
 

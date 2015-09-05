@@ -56,54 +56,31 @@ There is a last point to take into account about Graphite, which is its capabili
 
 Regarding this virtualization system implemented, it has demonstrated to be a proper tool to encapsulate each one of the required pieces of the platform in order to develop, test, distribute and play with them.
 
-Moreover, Docker ease this platform to become a multiplatform tool, which means that any piece of this prototype can be executed in any O.S. which Docker gives support (i.e.: currently supported O.S. are Linux/Unix, MacOSX and Windows).
+Moreover, Docker ease this platform to become a multiplatform tool, which means that any piece of this prototype can be executed in any OS which Docker gives support (i.e.: currently supported OS are Linux/Unix, MacOSX and Windows).
 
 To point out that thanks to this tool, this platform becomes fast to scale due to its fast startup, restart and shutdown times. And this is also due to its ease to quickly replicate any containerized application or service, if required. 
 
 Despite its strengths, it's not still a mature technology (the company behind, called dotCloud, and Docker project itself were born in 2013) but it's evolving really fast. And, this is demonstrated by the high growth that its community is taking place year by year. 
 
-An example to be considered, which should be solved by Docker itself or through external solutions, is about security issues. This is mainly due to the fact that when running a containerized LMS this container does not completely isolate LMS from the security considerations of running it directly on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon's API does not require any kind of authentication. It is important to make sure to have good firewall configured to isolate the host machine from outside the host, or it might be controllable from externals. Also, to take into account that Docker's bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is a massive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
+An example to be considered, which should be solved by Docker itself or through external solutions, is about security issues. This is mainly due to the fact that when running a containerized LMS this container does not completely isolate LMS from the security considerations of running it directly on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon's API does not require any kind of authentication. It is important to make sure to have good firewall configured to isolate the host machine from outside the host, or it might be controllable from externals. 
+
+Also, to take into account that Docker's bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is an extensive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
 
 \section{Platform}
 
-Although previous tools might work properly the problem isn't at all solved. 
+Although previous tools might work properly and fit in a cloud environment the problem isn't at all solved. 
 
-PARLAR INFRASTRUCTURES I XARXA...
-Flexibilitat
-SDN
-i altres millores pendents
-
-APIs
-
-
-The fallacies[edit]
-The fallacies are summarized below:[1]
-The network is reliable.
-Latency is zero.
-Bandwidth is infinite.
-The network is secure.
-Topology doesn't change.
-There is one administrator.
-Transport cost is zero.
-The network is homogeneous.
-Effects of the fallacies[edit]
-Ignorance of network latency, and of the packet loss it can cause, induces application- and transport-layer developers to allow unbounded traffic, greatly increasing dropped packets and wasting bandwidth.
-Complacency regarding network security results in being blindsided by malicious users and programs that continually adapt to security measures.[2]
-Multiple administrators, as with subnets for rival companies, may institute conflicting policies of which senders of network traffic must be aware in order to complete their desired paths.
-The "hidden" costs of building and maintaining a network or subnet are non-negligible and must consequently be noted in budgets to avoid vast shortfalls.
-Ignorance of bandwidth limits on the part of traffic senders can result in bottlenecks over frequency-multiplexed media.
+What has been developed and tested is what can be called the tip of the iceberg of a cloud real-time media production platform. Therefore, the outcomes of this project are specific tools/solutions which are suitable to be used together or separated, which lead to implement new specific and higher level tools. 
 
 
 \section{Next steps}
 
-Although previous tools might work properly the problem isn't at all solved. This means that there are a lot of new functionalities to be implemented and lot of issues to be solved, which are implicitly related to this prototype or external.
+Once this project finishes new user requirements will be gathered and new developments will be proposed. However, the main premise will remain to continue evolving as a set of tools as much configurable as possible.
 
+Also, in order to improve some filter steps it is already proposed to work over GPGPUs. In this case, OpenCV is already offering specific APIs to work over CUDA which are of interest. Moreover, such implementations will lead to develop UHD video pipelines.
 
+Regarding the network side and thanks to the implemented APIs it seems feasible to analyse possibilities to deploy these project tools within SDN environments which should improve management and resource optimization.
 
+Next steps are also related to implement new codec and new media formats in order to be up to date.
 
-SDN
-monitorització - next steps about different monitoring profiles (debug, active, passive,...)
-vGPU -OpenCV GPU mixing
-
-
-
+Finally, to point out that in order to follow the premise to be as open as possible it's proposed to create a web site of the LMS framework in order to start building a community of users and developers.
