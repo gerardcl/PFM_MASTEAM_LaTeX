@@ -164,24 +164,24 @@ Then,the audio and video average pipeline delay introduced for this scenario's c
   \begin{center}
     \begin{subfigmatrix}{2}
       \subfigure[Audio paths]
-         {\includegraphics{./images/testAVMix/AVMixAudioAVGdelay.png}\label{SF:S1}} 
+         {\includegraphics{./images/testAVMix/AVMixAudioAVGdelay.png}\label{SF:S5}} 
       \subfigure[Video paths]
-         {\includegraphics{./images/testAVMix/AVMixVideoAVGdelay.png}\label{SF:S2}} 
+         {\includegraphics{./images/testAVMix/AVMixVideoAVGdelay.png}\label{SF:S6}} 
     \end{subfigmatrix}
     \caption{Generic scenario - paths average processing time}
     \label{F:gsavgpt}
   \end{center}
 \end{figure}
 
-So, the average delay introduced for the audio "receiver to mixer" paths averages is about 8,6 milliseconds and the audio "mixer to transmitter" path average delay is about 23.1 milliseconds, which gives a total average value of 31,7 milliseconds of average processing time regarding the audio pipeline. Then, regarding the same calculus but about the video pipeline path's, an average of 9,89 milliseconds is obtained by averaging the "receiver to mixer" video paths average processing times. And, by adding the average of the "mixer to transmitter" path processing time of 318,6 milliseconds a total average of 328,49 milliseconds of delay introduced for the video pipeline is obtained.
+So, the average delay introduced for the audio "receiver to mixer" paths averages is about 8,6 milliseconds and the audio "mixer to transmitter" path average delay is about 23.1 milliseconds. Then, by adding the maximum average path (16,2), a total average value of 39,3 milliseconds of average processing time regarding the audio pipeline is achieved. Then, regarding the same calculus but about the video pipeline path's, an average of 9,89 milliseconds is obtained by averaging the "receiver to mixer" video paths average processing times. And, by adding the average of the "mixer to transmitter" path processing time of 67 milliseconds to the maximum average obtained in the "receiver to mixer" path (12,8 ms) a total average of 79,8 milliseconds of delay introduced for the video pipeline is obtained.
 
 \begin{figure}[!htb]
   \begin{center}
     \begin{subfigmatrix}{2}
       \subfigure[Audio paths]
-         {\includegraphics{./images/testAVMix/AVMixAudioLostBlocs.png}\label{SF:S1}} 
+         {\includegraphics{./images/testAVMix/AVMixAudioLostBlocs.png}\label{SF:S7}} 
       \subfigure[Video paths]
-         {\includegraphics{./images/testAVMix/AVMixVideoLostBlocs.png}\label{SF:S2}} 
+         {\includegraphics{./images/testAVMix/AVMixVideoLostBlocs.png}\label{SF:S8}} 
     \end{subfigmatrix}
     \caption{Generic scenario - paths accumulated lost blocs}
     \label{F:gsalb}
