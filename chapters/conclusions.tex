@@ -62,10 +62,7 @@ To point out that thanks to this tool, this platform becomes fast to scale due t
 
 Despite its strengths, it's not still a mature technology (the company behind, called dotCloud, and Docker project itself were born in 2013) but it's evolving really fast. And, this is demonstrated by the high growth that its community is taking place year by year. 
 
-Security Considerations!!!!!!!!!!!!!!!!!!
-Running a website this way does not completely isolate your site from the security considerations of running it directly via Nginx on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon’s API does not require any kind of authentication. It is important to make sure that you have good firewall in place to isolate the host machine from the outside world, or anyone might be able to control your Docker daemon. Also take into account that Docker’s bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, just as these features do with traditional virtualization. Of course. the topic of container security is a massive subject, but keep in mind not to keep the security of LXC and Docker for granted.
-
-comentar que docker és com un git però de containers, on a dins els containers hi pots tenir un git també 
+An example to be considered, which should be solved by Docker itself or through external solutions, is about security issues. This is mainly due to the fact that when running a containerized LMS this container does not completely isolate LMS from the security considerations of running it directly on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon's API does not require any kind of authentication. It is important to make sure to have good firewall configured to isolate the host machine from outside the host, or it might be controllable from externals. Also, to take into account that Docker's bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is a massive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
 
 \section{Platform}
 
@@ -107,8 +104,6 @@ Although previous tools might work properly the problem isn't at all solved. Thi
 SDN
 monitorització - next steps about different monitoring profiles (debug, active, passive,...)
 vGPU -OpenCV GPU mixing
-
-\section{Environmental impact}
 
 
 
