@@ -2,7 +2,7 @@
 
 As already discussed, in order to properly manage a cloud computing environment it is strongly required to use monitoring tools in order to gather information of interest by improving the environment itself or by finding out issues and solving them as fast as possible.
 
-This chapter aims to showcase how the selected monitoring tools can fit in the architecture type that has been proposed. And, how they can be used. This means, preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
+This chapter aims to showcase how the selected monitoring tools can fit in the architecture type that has been proposed and how they can be used. This means, preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
 
 Moreover, to point out that such tools are helpful to demonstrate that LiveMediaStreamer framework could be deployed as the core of a real-time media production platform (see chapter \ref{H:platformDeploymentAndDemonstrations}).
 
@@ -28,28 +28,9 @@ This section is based on how Collectd can be configured and deployed in order to
 
 From a container point of view and by following the premise to build containers as reusable as possible what is proposed to implement is a container that has the goal to gather the logged stats from an LMS container. This, as shown in figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network plugin as done in previous Collectd client configuration.
 
-But, first of all, it is also required to be built in a container. So, this is the Docker file:
+But, first of all, it is also required to be built in a container. This specific Docker file is shown in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
 
-\begin{verbatim}
-
-FROM    ubuntu:14.04
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-ENV     DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update
-RUN apt-get -y install collectd curl python-dev python-pip
-
-ADD collectd.conf.tpl /etc/collectd/collectd.conf.tpl
-
-RUN pip install envtpl
-ADD start_container /usr/bin/start_container
-RUN chmod +x /usr/bin/start_container
-CMD start_container
-
-\end{verbatim}
-
-The, what is done in this case is to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
+Then, what is done in this case is to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
 \begin{verbatim}
 #!/bin/bash
 envtpl /etc/collectd/collectd.conf.tpl
@@ -70,32 +51,7 @@ this is to set the address of the remote/local container where the Collectd serv
 this is the port where the Collect server and Graphite's tools container is listening to.
 \end{itemize}
 
-And these parameters are set in the Collectd configuration file as shown next (among the specific plugins):
-
-\begin{verbatim}
-Hostname "{{ LMS_NAME }}"
-FQDNLookup true
-
-Interval 1
-Timeout 4
-ReadThreads 5
-
-LoadPlugin syslog
-LoadPlugin cpu
-LoadPlugin load
-LoadPlugin memory
-LoadPlugin network
-
-<Plugin "syslog">
-  LogLevel "info"
-  NotifyLevel "OKAY"
-</Plugin>
-
-<Plugin network>
-  Server "{{ GRAPHITE_HOST }}" "{{ GRAPHITE_PORT | default("25826") }}"
-  ReportStats true
-</Plugin>
-\end{verbatim}
+And these parameters are set in the Collectd configuration file as shown in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
 
 This Collectd configuration example file is loading specific system loggers plugins as inputs to be sent through the network plugin to the Collectd server.
 
@@ -125,7 +81,7 @@ The selected tool is using the stats API introduced since Docker 1.5 version. An
 \item CPU usage
 \end{itemize}
 
-The pluguin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
+The plugin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
 
 \begin{verbatim}
 <Plugin network>
@@ -166,98 +122,9 @@ This section is focused on the storage and presentation side of the metrics alre
 
 So, as already introduced, this is proposed to be done within a container built with a Collectd server (network data inputs served to Graphite) and a Graphite system (storing and presenting stats).
 
-As commonly said by the Collectd and Graphite community, installing and configuring Graphite isn't at all so easy than installing and configuring Collectd. This fact is shown in the following Docker file in order to build such container, as shown in figure \ref{F:maex}:
+As commonly said by the Collectd and Graphite community, installing and configuring Graphite isn't at all so easy than installing and configuring Collectd. This fact is shown in the Docker file of the \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles6} in order to build such container, as shown in figure \ref{F:maex}.
 
-\begin{verbatim}
-# LiveMediaStreamer Container
-FROM ubuntu:14.04
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-RUN apt-get update
-RUN apt-get install -y python-cairo collectd-core libgcrypt11 \
-python-virtualenv build-essential python-dev supervisor sudo
-
-RUN adduser --system --group --no-create-home collectd \
-&& adduser --system --home /opt/graphite graphite
-
-RUN sudo -u graphite virtualenv --system-site-packages ~graphite/env
-
-RUN echo "django \n \
-  python-memcached \n \
-  django-tagging \n \
-  twisted \n \
-  gunicorn \n \
-  whisper \n \
-  carbon \n \
-  graphite-web" > /tmp/graphite_reqs.txt
-
-RUN sudo -u graphite HOME=/opt/graphite /bin/sh -c ". \
-~/env/bin/activate && pip install -r /tmp/graphite_reqs.txt"
-
-ADD collectd/collectd.conf /etc/collectd/
-ADD supervisor/ /etc/supervisor/conf.d/
-ADD graphite/settings.py /opt/graphite/webapp/graphite/
-ADD graphite/local_settings.py /opt/graphite/webapp/graphite/
-ADD graphite/mkadmin.py /opt/graphite/webapp/graphite/
-ADD graphite/storage-schemas.conf /opt/graphite/conf/
-
-RUN cp /opt/graphite/conf/carbon.conf.example \
-/opt/graphite/conf/carbon.conf
-RUN cp /opt/graphite/conf/graphite.wsgi.example \
-/opt/graphite/webapp/graphite/graphite_wsgi.py
-RUN cp /opt/graphite/conf/graphite.wsgi.example \
-/opt/graphite/conf/graphite.wsgi
-RUN cp /opt/graphite/conf/storage-aggregation.conf.example \
-/opt/graphite/conf/storage-aggregation.conf
-
-RUN sed -i "s#^\(SECRET_KEY = \).*#\1\"`python -c 'import os; import base64; \
-print(base64.b64encode(os.urandom(40)))'`\"#" \
-/opt/graphite/webapp/graphite/app_settings.py
-RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
-/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python manage.py syncdb --noinput"
-RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
-/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python mkadmin.py"
-
-EXPOSE 8080 25826/udp
-
-CMD exec supervisord -n
-\end{verbatim}
-
-In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown).
-Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database synchronization (sqlite3) and other final configurations required for Graphite are also done (--REFERENCE-- intalling graphite). Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as follows:
-
-\begin{verbatim}
-Hostname "localhost"
-FQDNLookup true
-Interval 1
-
-LoadPlugin syslog
-LoadPlugin network
-LoadPlugin write_graphite
-
-<Plugin syslog>
-	LogLevel "info"
-	NotifyLevel "OKAY"
-</Plugin>
-
-<Plugin network>
-	Listen "*" "25826"
-	ReportStats true
-</Plugin>
-
-<Plugin write_graphite>
-	<Node "graphing">
-		Host "localhost"
-		Port "2003"
-		Protocol "tcp"
-		LogSendErrors true
-		Prefix "collectd."
-		StoreRates true
-		AlwaysAppendDS false
-		EscapeCharacter "_"
-	</Node>
-</Plugin>
-\end{verbatim}
+In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database (i.e.: sqlite3) synchronization and other final configurations required for Graphite are also done (--REFERENCE-- intalling graphite). Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as shown in \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
 
 So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the "write graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
 

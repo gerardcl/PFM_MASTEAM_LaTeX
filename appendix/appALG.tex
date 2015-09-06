@@ -1,0 +1,127 @@
+\chapter{Specific application metric methods}\label{ANX:appALG}
+
+\section{Input network metric method}\label{inmm}
+\begin{quote}
+\begin{verbatim}
+void SCSSubsessionStats::
+			periodicStatMeasurement(struct timeval const& timeNow) 
+{
+    unsigned secsDiff = timeNow.tv_sec - measurementEndTime.tv_sec;
+    int usecsDiff = timeNow.tv_usec - measurementEndTime.tv_usec;
+    double timeDiff = secsDiff + usecsDiff/1000000.0;
+    measurementEndTime = timeNow;
+
+    RTPReceptionStatsDB::Iterator statsIter(fSource->receptionStatsDB());
+
+    RTPReceptionStats* stats = statsIter.next(True);
+    if (stats != NULL) {
+        double kBytesTotalNow = stats->totNumKBytesReceived();
+        double kBytesDeltaNow = kBytesTotalNow - kBytesTotal;
+        kBytesTotal = kBytesTotalNow;
+
+        double kbpsNow = timeDiff == 0.0 ? 0.0 : 8*kBytesDeltaNow/timeDiff;
+        if (kbpsNow < 0.0) kbpsNow = 0.0; // in case of roundoff error
+        if (kbpsNow < kbitsPerSecondMin) kbitsPerSecondMin = kbpsNow;
+        if (kbpsNow > kbitsPerSecondMax) kbitsPerSecondMax = kbpsNow;
+
+        unsigned totReceivedNow = stats->totNumPacketsReceived();
+        unsigned totExpectedNow = stats->totNumPacketsExpected();
+        unsigned deltaReceivedNow = totReceivedNow - totNumPacketsReceived;
+        unsigned deltaExpectedNow = totExpectedNow - totNumPacketsExpected;
+        totNumPacketsReceived = totReceivedNow;
+        totNumPacketsExpected = totExpectedNow;
+
+        double lossFractionNow = deltaExpectedNow == 0 ? 0.0 : 1.0 -
+        							 deltaReceivedNow/(double)deltaExpectedNow;
+
+        if (lossFractionNow < packetLossFractionMin) {
+            packetLossFractionMin = lossFractionNow;
+        }
+        if (lossFractionNow > packetLossFractionMax) {
+            packetLossFractionMax = lossFractionNow;
+        }
+
+        minInterPacketGapUS = stats->minInterPacketGapUS();
+        maxInterPacketGapUS = stats->maxInterPacketGapUS();
+        totalGaps = stats->totalInterPacketGaps();
+        jitter = stats->jitter();
+    }
+}
+\end{verbatim}
+\end{quote} 
+\section{Output network metric method}\label{onmm}
+
+
+\begin{quote}
+\begin{verbatim}
+void ConnRTCPInstance::
+			periodicStatMeasurement(struct timeval const& timeNow) 
+{
+    unsigned currentNumBytes;
+    double currentElapsedTime;
+
+    RTPTransmissionStatsDB::Iterator 
+    							statsIter(fSink->transmissionStatsDB());
+
+    fSink->getTotalBitrate(currentNumBytes, currentElapsedTime);
+
+    avgBitrate = currentElapsedTime == 0 ? 0.0 :
+    					((8*currentNumBytes/currentElapsedTime)/1000.0);
+    if(minBitrate > avgBitrate) minBitrate = avgBitrate;
+    if(maxBitrate < avgBitrate) maxBitrate = avgBitrate;
+
+    RTPTransmissionStats* stats;
+    while((stats = statsIter.next()) != NULL){
+        SSRC = stats->SSRC();
+        packetLossRatio = stats->packetLossRatio();
+        if(minPacketLossRatio > packetLossRatio) 
+        							minPacketLossRatio = packetLossRatio;
+        if(maxPacketLossRatio < packetLossRatio) 
+        							maxPacketLossRatio = packetLossRatio;        
+        
+        roundTripDelay = stats->roundTripDelay();
+        if(minRoundTripDelay > roundTripDelay) 
+        							minRoundTripDelay = roundTripDelay;
+        if(maxRoundTripDelay < roundTripDelay) 
+        							maxRoundTripDelay = roundTripDelay;
+
+        jitter = stats->jitter();
+        if(minJitter > jitter) minJitter = jitter;
+        if(maxJitter < jitter) maxJitter = jitter;
+    }
+}
+\end{verbatim}
+\end{quote} 
+\section{Pipiline delay metric method}\label{pdmm}
+
+
+\begin{quote}
+\begin{verbatim}
+void Reader::measureDelay()
+{
+    if(lastTs.count() < 0){
+        lastTs = frame->getPresentationTime();
+    }
+
+    if (lastTs == frame->getPresentationTime()) {
+        return;
+    }
+
+    timeCounter += frame->getPresentationTime() - lastTs;
+    lastTs = frame->getPresentationTime();
+
+    if(timeCounter >= windowDelay){
+        avgDelay = delay / frameCounter;
+        timeCounter = std::chrono::microseconds(0);
+        delay = std::chrono::microseconds(0);
+        frameCounter = 0;
+    }
+    
+    delay += std::chrono::duration_cast<std::chrono::
+    						microseconds>(std::chrono::system_clock::now() 
+    											- frame->getOriginTime());
+    frameCounter++;
+}
+\end{verbatim}
+\end{quote} 
+

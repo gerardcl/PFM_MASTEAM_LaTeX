@@ -1,0 +1,388 @@
+\chapter{Docker, Nginx and Collectd configuration files}\label{ANX:dockerFiles}
+
+\section{Basic LMS container}\label{ANX:dockerFiles1}
+
+\begin{verbatim}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git cmake autoconf automake build-essential \ 
+libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
+libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
+libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
+libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
+
+RUN adduser --disabled-password --gecos '' lms && adduser lms sudo \
+	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER lms
+
+RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
+	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
+	&& make -j && sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
+	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
+	&& ./configure && make -j && sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
+	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
+	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
+	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
+	--enable-libopus --enable-libmp3lame --enable-libvpx \
+	--enable-libfdk_aac --enable-libx265 && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget \
+	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
+	&& tar xaf live555-latest.tar.gz && cd live \
+	&& ./genMakefiles linux-with-shared-libraries && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
+	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
+	&& git checkout development && ./autogen.sh \
+	&& make -j && sudo make install && sudo ldconfig
+
+EXPOSE 5000-5017/udp
+EXPOSE 8554-8564
+EXPOSE 7777
+
+CMD ["/usr/local/bin/livemediastreamer","7777"] 
+\end{verbatim}
+
+\section{HTTP REST API container}\label{ANX:dockerFiles2}
+
+\begin{verbatim}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
+
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git npm
+
+RUN adduser --disabled-password --gecos '' lms \
+&& adduser lms sudo \
+&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER lms
+
+RUN cd /home/lms \
+&& git clone https://github.com/ua-i2cat/LMStoREST.git \
+/home/lms/LMStoREST && cd /home/lms/LMStoREST && npm install
+
+EXPOSE 8080
+CMD ["nodejs", "/home/lms/LMStoREST/lms-middleware.js"]
+\end{verbatim}
+
+\section{Running multiple processes within a container}\label{ANX:dockerFiles3}
+
+\begin{verbatim}
+# LiveMediaStreamer Container
+# and Nginx server for MPEG-DASH streaming
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git cmake autoconf automake build-essential \ 
+libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
+libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
+libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
+libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
+
+RUN apt-get -y install nginx supervisor
+RUN mkdir -p /var/lock/nginx /var/run/nginx \
+	/var/lock/livemediastreamer /var/run/livemediastreamer \
+	/var/log/supervisor
+
+ADD ./nginx.conf /etc/nginx/nginx.conf
+ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+
+RUN adduser --disabled-password --gecos '' lms \
+&& adduser lms sudo \
+&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN mkdir -p /home/lms/dashSegments
+
+USER lms
+
+RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
+	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
+	&& make -j && sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
+	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
+	&& ./configure && make -j && sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
+	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
+	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
+	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
+	--enable-libopus --enable-libmp3lame --enable-libvpx \
+	--enable-libfdk_aac --enable-libx265 && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN cd /home/lms && wget \
+	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
+	&& tar xaf live555-latest.tar.gz && cd live \
+	&& ./genMakefiles linux-with-shared-libraries && make -j \
+	&& sudo make install && sudo ldconfig
+
+RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
+	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
+	&& git checkout development && ./autogen.sh \
+	&& make -j && sudo make install && sudo ldconfig
+
+USER root
+
+EXPOSE 5000-5017/udp
+EXPOSE 8554-8564
+EXPOSE 7777
+EXPOSE 8080
+
+CMD ["/usr/bin/supervisord"] 
+\end{verbatim}
+
+\section{Nginx server file configuration example}\label{ANX:nginxexample}
+
+\begin{verbatim}
+# this sets the user nginx will run as, 
+# and the number of worker processes
+user nobody nogroup;
+worker_processes  1;
+
+# setup where nginx will log errors to 
+# and where the nginx process id resides
+error_log  /var/log/nginx/error.log;
+pid        /var/run/nginx.pid;
+
+events {
+  worker_connections  1024;
+  # set to on if you have more than 1 worker_processes 
+  accept_mutex off;
+}
+
+http {
+  include       /etc/nginx/mime.types;
+
+  default_type application/octet-stream;
+  access_log /tmp/nginx.access.log combined;
+ 
+  # use the kernel sendfile
+  sendfile        on;
+  # prepend http headers before sendfile() 
+  tcp_nopush     on;
+
+  keepalive_timeout  5;
+  tcp_nodelay        on;
+
+  gzip  on;
+  gzip_vary on;
+  gzip_min_length 500;
+  
+  gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+  gzip_types text/plain text/xml text/css
+     text/comma-separated-values
+     text/javascript application/x-javascript
+     application/atom+xml image/x-icon;
+
+  # configure the virtual host
+  server {
+    # replace with your domain name
+    server_name localhost;
+    root /home/lms/dashSegments;
+    # port to listen for requests on
+    listen 8090;
+    # maximum accepted body size of client request 
+    client_max_body_size 4G;
+    # the server will close connections after this time 
+    keepalive_timeout 5;
+    
+    add_header Access-Control-Allow-Origin "*";
+    add_header Access-Control-Allow-Methods "GET, OPTIONS";
+    add_header Access-Control-Allow-Headers "origin, authorization, accept";
+    add_header Cache-Control no-cache;
+    
+    location / {
+        add_header Access-Control-Allow-Origin "*";
+        add_header Access-Control-Allow-Methods "GET, OPTIONS";
+        add_header Access-Control-Allow-Headers "origin, authorization, accept";
+        add_header Cache-Control no-cache;
+    }
+  }
+}
+
+daemon off;
+\end{verbatim}
+
+\section{Sharing volumes within containers}\label{ANX:dockerFiles4}
+\begin{verbatim}
+# Nginx Container - LMS special one
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update && apt-get install --fix-missing \
+	&& apt-get -y upgrade
+
+RUN apt-get -y install nginx 
+
+ADD ./nginx.conf /etc/nginx/nginx.conf
+
+RUN adduser --disabled-password --gecos '' lms \
+	&& adduser lms sudo \
+	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN mkdir -p /home/lms/dashSegments
+
+EXPOSE 8090
+
+CMD ["/usr/sbin/nginx"]  
+\end{verbatim}
+
+\section{Collectd client container}\label{ANX:dockerFiles5}
+
+\begin{verbatim}
+
+FROM    ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+ENV     DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update
+RUN apt-get -y install collectd curl python-dev python-pip
+
+ADD collectd.conf.tpl /etc/collectd/collectd.conf.tpl
+
+RUN pip install envtpl
+ADD start_container /usr/bin/start_container
+RUN chmod +x /usr/bin/start_container
+CMD start_container
+
+\end{verbatim}
+
+\section{Collectd client configuration}\label{ANX:collectdFiles1}
+
+\begin{verbatim}
+Hostname "{{ LMS_NAME }}"
+FQDNLookup true
+
+Interval 1
+Timeout 4
+ReadThreads 5
+
+LoadPlugin syslog
+LoadPlugin cpu
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin network
+
+<Plugin "syslog">
+  LogLevel "info"
+  NotifyLevel "OKAY"
+</Plugin>
+
+<Plugin network>
+  Server "{{ GRAPHITE_HOST }}" "{{ GRAPHITE_PORT | default("25826") }}"
+  ReportStats true
+</Plugin>
+\end{verbatim}
+
+\section{Collectd server and Graphite container}\label{ANX:dockerFiles6}
+
+
+\begin{verbatim}
+# LiveMediaStreamer Container
+FROM ubuntu:14.04
+MAINTAINER Gerard CL <gerardcl@gmail.com>
+
+RUN apt-get update
+RUN apt-get install -y python-cairo collectd-core libgcrypt11 \
+python-virtualenv build-essential python-dev supervisor sudo
+
+RUN adduser --system --group --no-create-home collectd \
+&& adduser --system --home /opt/graphite graphite
+
+RUN sudo -u graphite virtualenv --system-site-packages ~graphite/env
+
+RUN echo "django \n \
+  python-memcached \n \
+  django-tagging \n \
+  twisted \n \
+  gunicorn \n \
+  whisper \n \
+  carbon \n \
+  graphite-web" > /tmp/graphite_reqs.txt
+
+RUN sudo -u graphite HOME=/opt/graphite /bin/sh -c ". \
+~/env/bin/activate && pip install -r /tmp/graphite_reqs.txt"
+
+ADD collectd/collectd.conf /etc/collectd/
+ADD supervisor/ /etc/supervisor/conf.d/
+ADD graphite/settings.py /opt/graphite/webapp/graphite/
+ADD graphite/local_settings.py /opt/graphite/webapp/graphite/
+ADD graphite/mkadmin.py /opt/graphite/webapp/graphite/
+ADD graphite/storage-schemas.conf /opt/graphite/conf/
+
+RUN cp /opt/graphite/conf/carbon.conf.example \
+/opt/graphite/conf/carbon.conf
+RUN cp /opt/graphite/conf/graphite.wsgi.example \
+/opt/graphite/webapp/graphite/graphite_wsgi.py
+RUN cp /opt/graphite/conf/graphite.wsgi.example \
+/opt/graphite/conf/graphite.wsgi
+RUN cp /opt/graphite/conf/storage-aggregation.conf.example \
+/opt/graphite/conf/storage-aggregation.conf
+
+RUN sed -i "s#^\(SECRET_KEY = \).*#\1\"`python -c 'import os; import base64; \
+print(base64.b64encode(os.urandom(40)))'`\"#" \
+/opt/graphite/webapp/graphite/app_settings.py
+RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
+/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python manage.py syncdb --noinput"
+RUN sudo -u graphite HOME=/opt/graphite PYTHONPATH=/opt/graphite/lib/ \
+/bin/sh -c "cd ~/webapp/graphite && ~/env/bin/python mkadmin.py"
+
+EXPOSE 8080 25826/udp
+
+CMD exec supervisord -n
+\end{verbatim}
+
+\section{Collectd server configuration}\label{ANX:collectdFiles2}
+
+\begin{verbatim}
+Hostname "localhost"
+FQDNLookup true
+Interval 1
+
+LoadPlugin syslog
+LoadPlugin network
+LoadPlugin write_graphite
+
+<Plugin syslog>
+	LogLevel "info"
+	NotifyLevel "OKAY"
+</Plugin>
+
+<Plugin network>
+	Listen "*" "25826"
+	ReportStats true
+</Plugin>
+
+<Plugin write_graphite>
+	<Node "graphing">
+		Host "localhost"
+		Port "2003"
+		Protocol "tcp"
+		LogSendErrors true
+		Prefix "collectd."
+		StoreRates true
+		AlwaysAppendDS false
+		EscapeCharacter "_"
+	</Node>
+</Plugin>
+\end{verbatim}

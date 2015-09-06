@@ -1,12 +1,23 @@
 \chapter{Problem statement and proposal}\label{B:problemStatementAndProposal}
 
-As this title's chapter sample, the aim of this section is to provide a structured vision of the specific problems of each issue to be developed during this project.
+The goal of this chapter is to provide a structured vision of the specific problems of each issue to be developed during this project.
 
 Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific microservices that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
 
+Finally, it is important to remark what this project is aiming to achieve, before start going into the architecture statement and proposal.
+
+\begin{itemize}
+\item To implement a high-level HTTP REST API in order to manage and monitor the LMS framework.
+\item To demonstrate that LMS is able to be deployed in a virtualized environment.
+\item To enhance LMS with specific metrics measurements in order to demonstrate its capabilities as a real-time media streaming framework.
+\item To offer a set of tools which gather such metrics and present them in order to demonstrate previous statements.
+\item To include all previous statements within an architecture proposal.
+\item To demonstrate previous statements with specific testing deployments.
+\end{itemize}
+
 \section{Architecture statement}
 
-Therefore, above all it's required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deploy layer), such architecture should contain the different high level layers as shown next:
+Therefore, above all it is required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deployment layer), such architecture should contain the different high level layers as shown next:
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=0.6\textwidth]{./images/generalArch.png}
@@ -31,23 +42,21 @@ First of all, next points are showing which are the expected outcomes for using 
 
 \begin{itemize}
 \item To manage and maintain a system of small pieces of services (assure a microservice architecture based pattern)
-\item To have flexibility in order to quickly load (e.g.: start, restart, stop) required instances (e.g.: to assure real-time scalability) and to deploy any possible required scenario/configuration.
+\item To have flexibility in order to quickly instantiate (e.g.: start, restart, stop) required instances (e.g.: to assure real-time scalability) and to deploy any possible required scenario/configuration.
 \item To offer ease to continuous develop and deploy the different parts of the architecture
-\item To have version like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same REST API service)
+\item To have version control like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same REST API service)
 \item To assure full compatibility for the core layers' operating system (right now only Linux environments are supported)
 \item To assure full compatibility for the hardware to work with (mainly x86 processors are in the scope)
 \end{itemize}
 
 Moreover, it is also required to use an as much lightweight as possible technology, and this fact is also because of this project aims to virtualize each piece of the platform architecture.
 
-Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind.
-
-These are KVM with QEMU and LXC with Docker:
+Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind. These are KVM with QEMU and LXC with Docker:
 
 \begin{itemize}
 \item KVM (Kernel-based Virtual Machines) \hfill
 
-It's a FreeBSD and Linux kernel module that offers a full virtualization solution for Linux on x86 hardware containing virtualization extensions (Intel VT or AMD-V). It consists of a loadable kernel module that provides the core virtualization infrastructure and a processor specific module.
+It is a FreeBSD and Linux kernel module that offers a full virtualization solution for Linux on x86 hardware containing virtualization extensions (Intel VT or AMD-V). It consists of a loadable kernel module that provides the core virtualization infrastructure and a processor specific module.
 Usually, KVM runs with the QEMU (Quick Emulator) which is a complete and standalone emulating suite that performs hardware virtualization.
 
 KVM with QEMU is able to offer virtualization for x86, PowerPC, and S/390 guests. For instance, when the target architecture is the same as the host architecture, QEMU can make use of KVM particular features in order to do not emulate CPU nor memory.
@@ -64,7 +73,7 @@ Figure \ref{F:KVMandQEMU} showcases how KVM can convert a type2 hypervisor (i.e.
 
 \item LXC (Linux Containers) \hfill
 
-It's an operating-system-level virtualization environment for running multiple isolated Linux systems (known as containers) on a single Linux central host.
+It is an operating-system-level virtualization environment for running multiple isolated Linux systems (known as containers) on a single Linux central host.
 
 Linux kernel itself provides the cgroups functionality that allows limitation and prioritization of resources (CPU, memory, block I/O, network, etc.) without the need for starting any virtual machines, and namespace isolation functionality that allows complete isolation of an applications' view of the operating environment, including process trees, networking, user IDs and mounted file systems.
 
@@ -82,7 +91,7 @@ LXC with Docker mean resource isolation features of the Linux kernel to allow in
 
 Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APPENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
 
-Finally, it's important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
+Finally, it is important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
 
 \subsection{Monitoring layer}
 
@@ -119,20 +128,20 @@ Next list to showcase takes into account the data that should be gathered:
 \end{itemize}
 \end{itemize}
 
-Moreover, in order to be fitted into a microservices pattern, it's required to split the monitoring layer. The proposal, as usually done in many monitoring systems is as follows:
+Moreover, in order to be fitted into a microservices pattern, it is required to split the monitoring layer. The proposal, as usually done in many monitoring systems is as follows:
 \begin{itemize}
 \item Gathering layer \hfill
 
-It only will be responsible of the gathering, distribution and storing of the metrics.
+It will only be responsible of the gathering, distribution and storing of the metrics.
 
 \item Display layer
 
-It only will be responsible of the data display as a function of user-specific queries.
+It will only be responsible of the data display as a function of user-specific queries.
 
 \end{itemize}
-To point out that a possible alert layer is treated as a future work because it becomes out of scope. The main reason is that this project is focused on measuring and demonstrating that such platform is feasible, next steps would be to compose a set of alarms and actuators system in order to become as automated as possible.
+It is important to remark that a possible alert layer is treated as a future work because it becomes out of scope. The main reason is that this project is focused on measuring and demonstrating that such platform is feasible, next steps would be to compose a set of alarms and actuators system in order to become as automated as possible.
 
-Once previous steps have been shown, it's time to analyse technologies of interest in order to decide between one of them.
+Once previous steps have been shown, it is time to analyse technologies of interest in order to decide between one of them.
 
 So, the following list shows some of the analysed tools that might fit project's requirement as previously exposed:
 
@@ -197,9 +206,9 @@ First of all, let's showcase main topics application's (i.e.: LiveMediaStreamer 
 	\item To compile the metrics in an efficient manner in order to let them be gathered for Collectd or any other application.
 \end{itemize}
 
-Current LiveMediaStreamer framework's version does not implement any metrics gathering neither logging.
+Currently, last LiveMediaStreamer framework's version does not implement any metrics gathering neither logging.
 
-Regarding network usage statistics, current LiveMediaStreamer's version does not support any internal metrics gathering at network modules (i.e.: receiver and transmitter) where the Live555 library is implemented. However, Live555 library lend to quickly implement network statistics measurements (i.e.: bandwidth, losses, jitter, delay). 
+Regarding network usage statistics, current LiveMediaStreamer's version does not support any internal metrics gathering at network modules (i.e.: receiver and transmitter) where the Live555 library is implemented. However, Live555 library lead to quickly implement network statistics measurements (i.e.: bandwidth, losses, jitter, delay). 
 
 Thanks to Live555 examples (i.e.: the testProgs folder inside the source code library path) it becomes easy to understand how to gather network statistics at input side. But, regarding output network statistics, it is not so obvious which is the optimal solution. This fact is mainly due to having two options which imply to implement the metrics gathering by doing some methods' re-implementation of the RTP or the RTCP main classes, but this specific problem statement will be treated at next chapter \ref{D:application}.
 
@@ -238,7 +247,7 @@ Once the problem statement has been focused per each defined layer (i.e.: virtua
 \end{center}
 \end{figure}
 
-Figure \ref{F:overallArchProp} tries to be as generic as possible in order to showcase the possibilities of the platform. As seen, there are different physical servers presented in order to demonstrate the aim to also support flexibility and scalability. However, following chapters (concretely the conclusions chapter \ref{H:platformDeploymentAndDemonstrations}) will demonstrate if it is feasible. 
+Figure \ref{F:overallArchProp} tries to be as generic as possible in order to showcase the possibilities of the platform. As seen, there are different physical servers presented in order to demonstrate the aim to also support flexibility and scalability. However, the following chapters (specifically the conclusions chapter \ref{H:platformDeploymentAndDemonstrations}) will demonstrate if it is feasible. 
 Moreover, each physical server has different types of containers where are shown different and possible combinations and configurations of the technologies that might be deployed and used for specific use cases (scenarios).
 
 For example, a possible and specific architecture configuration could be a transcoder scenario:
@@ -268,7 +277,7 @@ Finally, this last section aims to organize the tasks to be done in terms of dev
 \end{center}
 \end{figure}
 
-Figure \ref{F:tpgp} is the Gantt proposal for the task planning organization. It takes into account the period of six months for the project and is showing specific periods per task when they should be executed, as a reference. For example, some tasks might seem overloaded about time, but this is taking into account that the whole time I'm not going to be working on the project but other tasks related to my job position at the i2CAT Foundation.
+Figure \ref{F:tpgp} is the Gantt proposal for the task planning organization. It takes into account the period of six months for the project and is showing specific periods per task when they should be executed, as a reference. For example, some tasks might seem overloaded about time, but this is taking into account that the whole time won't be spent on working in the project but other tasks related to my job position at the i2CAT Foundation.
 
 Finally, to point out that the fact of being working with a team and behind an organization, it is important to take into account internal demonstrations periods in order to carry out specific validations. This is due to reach an agreement between the team, because the intention is to take profit of this project.
 

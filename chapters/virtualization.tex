@@ -1,6 +1,6 @@
 \chapter{Virtualization}\label{D:virtualization}
 
-Virtualization chapter focuses on the implementations done in order to showcase how to prepare generic containers for a media production platform prototype with technologies and tools already introduced. 
+Virtualization chapter focuses on the implementations done in order to showcase how to prepare generic containers for a media production platform prototype with technologies and tools already introduced. So, what is done is to study and test the Docker technology in order to assure that LMS is ready to properly fit in a containerized environment and to learn different possibilities to reach maximum flexibility when configuring and deploying different scenarios.
 
 \section{Creating and managing generic containers}
 Proposed and minimal containerized entities are the following ones:
@@ -63,59 +63,7 @@ For a more specific detailed list of options and possibilities from Docker conta
 
 Once previous brief of Docker possibilities to work with has been introduced let's start containerizing a single LiveMediaStreamer.
 
-As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, next is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
-
-\begin{verbatim}
-# LiveMediaStreamer Container
-FROM ubuntu:14.04
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-RUN apt-get update && apt-get -y upgrade
-
-RUN apt-get -y install git cmake autoconf automake build-essential \ 
-libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
-libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
-libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
-libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
-
-RUN adduser --disabled-password --gecos '' lms && adduser lms sudo \
-	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-USER lms
-
-RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
-	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
-	&& make -j && sudo make install && sudo ldconfig
-
-RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
-	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
-	&& ./configure && make -j && sudo make install && sudo ldconfig
-
-RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
-	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
-	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
-	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
-	--enable-libopus --enable-libmp3lame --enable-libvpx \
-	--enable-libfdk_aac --enable-libx265 && make -j \
-	&& sudo make install && sudo ldconfig
-
-RUN cd /home/lms && wget \
-	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
-	&& tar xaf live555-latest.tar.gz && cd live \
-	&& ./genMakefiles linux-with-shared-libraries && make -j \
-	&& sudo make install && sudo ldconfig
-
-RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
-	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
-	&& git checkout development && ./autogen.sh \
-	&& make -j && sudo make install && sudo ldconfig
-
-EXPOSE 5000-5017/udp
-EXPOSE 8554-8564
-EXPOSE 7777
-
-CMD ["/usr/local/bin/livemediastreamer","7777"] 
-\end{verbatim}
+As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles1} is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
 
 Now, let's focus on what is done in order to explain it better: 
 
@@ -170,32 +118,7 @@ $ docker run --rm -p <host port>:<container port> \
 
 Next container proposed to be built is the HTTP REST API middleware developed in chapter \ref{D:application}.  
 
-Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. 
-
-Here is the Docker file:
-\begin{verbatim}
-# LiveMediaStreamer Container
-FROM ubuntu:14.04
-
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-RUN apt-get update && apt-get -y upgrade
-
-RUN apt-get -y install git npm
-
-RUN adduser --disabled-password --gecos '' lms \
-&& adduser lms sudo \
-&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-USER lms
-
-RUN cd /home/lms \
-&& git clone https://github.com/ua-i2cat/LMStoREST.git \
-/home/lms/LMStoREST && cd /home/lms/LMStoREST && npm install
-
-EXPOSE 8080
-CMD ["nodejs", "/home/lms/LMStoREST/lms-middleware.js"]
-\end{verbatim}
+Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. It is show in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles2}.
 
 In this case, in order to build and manage such image, these are the image parameters which defines this image:
 
@@ -283,74 +206,7 @@ The solution for running multiple services inside the same container remains on 
 
 An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH segments. Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser (i.e.: MPD, INIT and SEGMENT files).
 
-So, let's introduce the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx):
-\begin{verbatim}
-# LiveMediaStreamer Container
-# and Nginx server for MPEG-DASH streaming
-FROM ubuntu:14.04
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-RUN apt-get update && apt-get -y upgrade
-
-RUN apt-get -y install git cmake autoconf automake build-essential \ 
-libass-dev libtheora-dev libtool libvorbis-dev pkg-config zlib1g-dev \
-libcppunit-dev yasm libx264-dev  libmp3lame-dev  libopus-dev \
-libvpx-dev liblog4cplus-dev libtinyxml2-dev opencv-data \
-libopencv-dev mercurial cmake-curses-gui vim libcurl3 wget curl 
-
-RUN apt-get -y install nginx supervisor
-RUN mkdir -p /var/lock/nginx /var/run/nginx \
-	/var/lock/livemediastreamer /var/run/livemediastreamer \
-	/var/log/supervisor
-
-ADD ./nginx.conf /etc/nginx/nginx.conf
-ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-
-RUN adduser --disabled-password --gecos '' lms \
-&& adduser lms sudo \
-&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-RUN mkdir -p /home/lms/dashSegments
-
-USER lms
-
-RUN hg clone https://bitbucket.org/multicoreware/x265 /home/lms/x265 \
-	&& cd /home/lms/x265 && cmake -G "Unix Makefiles" ./source \
-	&& make -j && sudo make install && sudo ldconfig
-
-RUN git clone https://github.com/mstorsjo/fdk-aac.git/ /home/lms/fdk-aac \
-	&& cd /home/lms/fdk-aac && libtoolize && ./autogen.sh \
-	&& ./configure && make -j && sudo make install && sudo ldconfig
-
-RUN cd /home/lms && wget http://ffmpeg.org/releases/ffmpeg-2.7.tar.bz2 \
-	&& tar xjvf ffmpeg-2.7.tar.bz2 && cd ffmpeg-2.7 \
-	&& ./configure --enable-gpl --enable-libass --enable-libtheora \
-	--enable-libvorbis --enable-libx264 --enable-nonfree --enable-shared \
-	--enable-libopus --enable-libmp3lame --enable-libvpx \
-	--enable-libfdk_aac --enable-libx265 && make -j \
-	&& sudo make install && sudo ldconfig
-
-RUN cd /home/lms && wget \
-	http://www.live555.com/liveMedia/public/live555-latest.tar.gz \
-	&& tar xaf live555-latest.tar.gz && cd live \
-	&& ./genMakefiles linux-with-shared-libraries && make -j \
-	&& sudo make install && sudo ldconfig
-
-RUN git clone https://github.com/ua-i2cat/livemediastreamer.git \
-	/home/lms/livemediastreamer && cd /home/lms/livemediastreamer \
-	&& git checkout development && ./autogen.sh \
-	&& make -j && sudo make install && sudo ldconfig
-
-USER root
-
-EXPOSE 5000-5017/udp
-EXPOSE 8554-8564
-EXPOSE 7777
-EXPOSE 8080
-
-CMD ["/usr/bin/supervisord"] 
-\end{verbatim}
+In APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} is introduced the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
 
 So, it is quite similar to first Docker file introduced in this chapter but:
 
@@ -363,77 +219,7 @@ So, it is quite similar to first Docker file introduced in this chapter but:
 \item The user that is going to be used for this container is its root user due to require being used by supervisord service itself
 \end{itemize}
 
-Then, the Nginx configuration file is as shown next:
-
-\begin{verbatim}
-# this sets the user nginx will run as, 
-# and the number of worker processes
-user nobody nogroup;
-worker_processes  1;
-
-# setup where nginx will log errors to 
-# and where the nginx process id resides
-error_log  /var/log/nginx/error.log;
-pid        /var/run/nginx.pid;
-
-events {
-  worker_connections  1024;
-  # set to on if you have more than 1 worker_processes 
-  accept_mutex off;
-}
-
-http {
-  include       /etc/nginx/mime.types;
-
-  default_type application/octet-stream;
-  access_log /tmp/nginx.access.log combined;
- 
-  # use the kernel sendfile
-  sendfile        on;
-  # prepend http headers before sendfile() 
-  tcp_nopush     on;
-
-  keepalive_timeout  5;
-  tcp_nodelay        on;
-
-  gzip  on;
-  gzip_vary on;
-  gzip_min_length 500;
-  
-  gzip_disable "MSIE [1-6]\.(?!.*SV1)";
-  gzip_types text/plain text/xml text/css
-     text/comma-separated-values
-     text/javascript application/x-javascript
-     application/atom+xml image/x-icon;
-
-  # configure the virtual host
-  server {
-    # replace with your domain name
-    server_name localhost;
-    root /home/lms/dashSegments;
-    # port to listen for requests on
-    listen 8090;
-    # maximum accepted body size of client request 
-    client_max_body_size 4G;
-    # the server will close connections after this time 
-    keepalive_timeout 5;
-    
-    add_header Access-Control-Allow-Origin "*";
-    add_header Access-Control-Allow-Methods "GET, OPTIONS";
-    add_header Access-Control-Allow-Headers "origin, authorization, accept";
-    add_header Cache-Control no-cache;
-    
-    location / {
-        add_header Access-Control-Allow-Origin "*";
-        add_header Access-Control-Allow-Methods "GET, OPTIONS";
-        add_header Access-Control-Allow-Headers "origin, authorization, accept";
-        add_header Cache-Control no-cache;
-    }
-  }
-}
-
-daemon off;
-\end{verbatim}
+Then, the Nginx configuration file is as shown in \ref{ANX:dockerFiles} section \ref{ANX:nginxexample}.
 
 In this configuration file, a part from typical Nginx configurations (which are out of scope of this project), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing).
 
@@ -479,30 +265,8 @@ For example, previous section is just an example of when running multiple servic
 
 So, let's try to showcase a best practice for solving previous use case. By using the "volumes" feature that Docker offers this last container with multiple services inside could be splitted into two: one specific container for a Nginx server (with same configuration file as shown before) and the other the single LMS container introduced at the beginning of this chapter. 
 
-Therefore, let's showcase which is the Docker file generated for the Nginx container:
-
-\begin{verbatim}
-# Nginx Container - LMS special one
-FROM ubuntu:14.04
-MAINTAINER Gerard CL <gerardcl@gmail.com>
-
-RUN apt-get update && apt-get install --fix-missing \
-	&& apt-get -y upgrade
-
-RUN apt-get -y install nginx 
-
-ADD ./nginx.conf /etc/nginx/nginx.conf
-
-RUN adduser --disabled-password --gecos '' lms \
-	&& adduser lms sudo \
-	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-RUN mkdir -p /home/lms/dashSegments
-
-EXPOSE 8090
-
-CMD ["/usr/sbin/nginx"]  
-\end{verbatim}
+First of all, let's showcase which is the Docker file generated for the Nginx container in
+\ref{ANX:dockerFiles} section \ref{ANX:dockerFiles4}
 
 Then, the build command might be as follows:
 
@@ -527,4 +291,6 @@ $ docker run -it -p 8090:8090 --rm --name nginx \
 
 With \verb|-v| flag is specified the "host volume folder", which is the host folder shared with the internal folder which LMS container will write the MPEG-DASH files (i.e.: "/home/lms/dashSegments"). If not specified, default permissions are read and write. Then, the Nginx container will use the \verb|--volumes-from <container id>:<permissions mode>| flag by specifying the containers from which will share its volume and its file permissions. In this case file permissions are specified to be in read-only mode in order to not avoid file modifications from the server/container side.  
  
-So, scalability, performance, maintenance and security of the set of containers are assured by applying best practices like the last one.
+So, scalability, performance and control of the set of containers are assured by applying best practices like the last one.
+
+Finally, to remark that thanks to these illustrations of Docker file configurations there is a step forward to demonstrate this project's goals.
