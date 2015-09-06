@@ -34,7 +34,7 @@ Related to above statements, the recent advances in chip designs by industry lea
 
 \subsection{Network layer}
 
-On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast \cite{mc} paradigm operation using widely supported routing protocols (e.g.: DVMRP, PIM, IGMP, \ldots), but the computational and scalable complexity of these protocols tends to difficult and limit deployments.
+On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast \cite{mc} paradigm operation using widely supported routing protocols (e.g.: IGMP), but the computational and scalable complexity of these protocols tends to difficult and limit deployments.
 
 In terms of QoS, IP has a field known as ToS/DSCP \cite{tosdscp} which marks the header packets along their way to help mappings with lower-layer protocols (e.g.: Ethernet or MPLS) to implement QoS at the buffer level.
 
@@ -48,7 +48,7 @@ The wide adoption of low-delay encoding (e.g.: JPEG2K, AVC, AVCi, VC-2) for high
 
 \subsubsection{Signaling layer}
 
-In the signaling layer, protocols as RTSP for end-to-end session control or SDP for service description provide capabilities for the stream management. Furthermore, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time, but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility and performance. The MXF (a SMPTE standard) is a "container" format, which supports a number of different streams of coded based by enabling interoperability between different platforms. This is by encoding in any type of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file. 
+In the signaling layer, protocols as RTSP (Real Time Streaming Protocol) for end-to-end session control or SDP for service description provide capabilities for the stream management. Furthermore, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time, but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility and performance. The MXF (Material Exchange Format) is a "container" format, which supports a number of different streams of coded based by enabling interoperability between different platforms. This is by encoding in any type of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file. 
 
 \section{Migration to cloud}
 
@@ -91,7 +91,7 @@ Infrastructure as a Service (Iaas) prices are predictable and granularly treated
 
 \item Dynamic infrastructure deployment \hfill 
 
-Cloud computing helps production entities take advantage by the on demand basis applied deployments. Media production companies can quickly provision servers to meet the demands of specific projects and shut them down when they are no longer needed. So, cloud computing should provide many infrastructure services such as content storage, transcoding, ingestion, \ldots
+Cloud computing helps production entities take advantage by the on demand basis applied deployments. Media production companies can quickly provision servers to meet the demands of specific projects and shut them down when they are no longer needed. Moreover, cloud computing provides many infrastructure services such as content storage, transcoding, ingestion, \ldots
 \end{itemize}
 
 Moreover, cloud computing can improve media production at many different media services requirements planes, such as:
@@ -206,107 +206,30 @@ When coupled system and network monitoring together by adding specific tools and
 The associated database model for collecting such amount of data is the widely known Round Robin Database, which stores data in a circular buffer based database where the system storage remains fixed by handling time-series data. 
 
 Finally, to remark that network managers have the capability to minimize the storage and network resources by allocating only the resources that are required thanks to monitoring evaluation services and tools.
-
-\subsection{Application}\label{SOA:coreService}
-
-This subsection aims to remark the importance of designing and deploying a well structured application/service architecture over the cloud. Therefore, it is important to showcase  the most common and current application architecture patterns before designing a proper platform prototype.
-
-\subsubsection{Services based architectures}\label{SOA:appArch}
-
-There are two main architecture patterns of interest for services architecture definitions over networks. 
-
-\begin{itemize}
-\item Service Oriented Architecture (SOA) \hfill
-
-SOA is software architecture pattern where application components provide services between other components (services) through different types of communications protocols. Services can be combined to provide the functionality of a full software application.
-This pattern defines the services as logical representations of a repeatable business activity with specific goals (i.e.: statistics monitoring)
-
-\item Microservices architecture \hfill
-
-Microservices is a software architecture pattern in which complex applications are composed of small, independent processes communicating between each one (microservices) using language-agnostic APIs. These services are small, highly decoupled and focus on doing a small task, facilitating a modular approach to system-building. 
-Microservices is rather different than SOA perspective: microservices are always independently deployable in their own processes  (-- REFERENCE FORVES--)
-
-\end{itemize}
-
-Without going too deeply on both architecture patterns (check out its references --APPENDIXES--), it seems that for this project requirements a microservices pattern offers more flexibility and lets define a proper architecture where services can be or can't be splitted (i.e.: modules of the same binary process or communication protocols improvements with APIs) when required. 
-
-The prototype to be proposed should be seen as a complex application (the production platform) that requires defining specific microservices that can run independently and require to be flexible in terms of creating different interconnections per each possible configuration.
  
-\section{LiveMediaStreamer}\label{SOA:LMS}
+\section{LiveMediaStreamer framework}\label{SOA:LMS}
 
 This section is devoted to the framework which the core service (i.e.: audio and video mixer software) to be analysed is implemented with, the LiveMediaStreamer (LMS) framework. 
-
-\subsection{LMS framework}\label{SOA:LMSframework}
 
 The aim of LiveMediaStreamer framework is to offer multiple audio and video streams manipulation in real-time in many ways. It is designed following a pipeline pattern so that it consists in a number of filters (i.e.: encoders, decoders, receivers, transmitters, dashers, mixers and resamplers) that can be concatenated or connected with each other in order to process a data flow. The framework is developed under a Linux environment, currently being the only supported platform, using C++ standard libraries and it makes use of several mature media related libraries, which are: 
 
 \begin{itemize}
-\item Live555 – Network streaming media library which implements the RTP standard protocol.
-\item ffmpeg – A complete, cross-platform solution to record, convert and stream audio and video.
-\item OpenCV – Open source computer vision and machine learning software library.
-\item x264 – Free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format.
-\item x265 HEVC Encoder – Open source HEVC encoder.
-\item LAME – High quality MPEG Audio Layer III (MP3) encoder licensed under LGPL license.
-\item Opus – Totally open, royalty-free, highly versatile audio codec.
-\item WebM VPX – VP8/VP9 Codec SDK. A open, royalty-free, media file format designed for the web.
+\item Live555 \cite{l555} – Network streaming media library which implements the RTP standard protocol.
+\item ffmpeg \cite{ffmpeg} – A complete, cross-platform solution to record, convert and stream audio and video.
+\item OpenCV \cite{opencv} – Open source computer vision and machine learning software library.
+\item x264 \cite{x264} – Free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format.
+\item x265 HEVC Encoder \cite{x265} – Open source HEVC encoder.
+\item LAME \cite{lame} – High quality MPEG Audio Layer III (MP3) encoder licensed under LGPL license.
+\item Opus \cite{opus} – Totally open, royalty-free, highly versatile audio codec.
+\item WebM VPX \cite{webm} – VP8/VP9 Codec SDK. A open, royalty-free, media file format designed for the web.
 \end{itemize}
  
 The framework is designed to be managed remotely through a simple network interface based on JSON formatted TCP socket messages. 
 
-LMS framework project was stated to be developed since two years ago. A first implementation was based on the network core of the open-source software UltraGrid (--REFERENCE--). One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and eased further developments. Live555 library enables implementing any RTP and RTSP module, standard or not, among offering out of the box specific audio and video RTP payload formats support like H264, HEVC or VP9 for video codecs and G711, OPUS or AAC for audio codecs.
+LMS framework project was stated to be developed since two years ago. A first implementation was based on the network core of the open-source software UltraGrid \cite{ug}. One year after, a new core has been developed based on the network streaming library Live555. This change has improved system performance and eased further developments. Live555 library enables implementing any RTP and RTSP module, standard or not, among offering out of the box specific audio and video RTP payload formats support like H264, HEVC or VP9 for video codecs and G711, OPUS or AAC for audio codecs.
 
 Currently, the framework does not have a RESTful API, but has a web API based middleware, that loads and manages an audio and video mixer scenario, written in Ruby programming language and it implements Sinatra framework for the web service interface side.
 
-APPENDIX \ref{ANX:lmsarchfull} includes for more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
+APPENDIX \ref{ANX:lmsarchfull} includes more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
 
-\subsection{Existing similar solutions}\label{SOA:similarSolutions}
-
-Finally, it is important to showcase the current state of the art regarding similar technologies.
-
-Most notable audio and video production-like technologies over networks are:
-
-\begin{itemize}
-\item Wowza \hfill
- 
-
-\item Red5 \hfill
-
-
-\item Adobe Flash Media Server \hfill
-
-
-\item vMix \hfill
-
-
-\item makeTV \hfill
-
-
-\item Telestream Wirecast \hfill
-
-
-\item Anvato \hfill
-
-
-\item Livestream \hfill
-
-\end{itemize}
-
-There are other technology/application combinations that lend to deploy a media production platform.
-
-POTSER FER UNA TAULA
-
-\begin{table}[htb]
-\caption{Exemple de taula}
-\begin{center}
-\begin{tabular}{|c|l|r|}
-\hline
-{\bf Títol de la Columna 1} & {\bf Títol de la Columna 2} & {\bf Títol de la Columna 3}  \\ \hline \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-centrada        & a l'esquerra    & a la dreta       \\ \hline
-\end{tabular}
-\label{T:prova}
-\end{center}
-\end{table}
+Finally, to point out that there are many existing similar solutions but most of them are proprietary or closed solutions (i.e.: Wowza Streaming Engine or Adobe Flash Media Server). Moreover, if they are aimed to be used as real-time media productions tools they require for external solutions to provide video and audio mixing features.

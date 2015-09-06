@@ -81,7 +81,7 @@ The selected tool is using the stats API introduced since Docker 1.5 version. An
 \item CPU usage
 \end{itemize}
 
-The plugin is called "collectd-docker" and its documentation can be found in \href{https://github.com/bobrik/collectd-docker/}{GitHub} (--REFERENCE--). But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
+The plugin is called "collectd-docker" and its documentation can be found in GitHub \cite{cdcontainer}. But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
 
 \begin{verbatim}
 <Plugin network>
@@ -124,7 +124,7 @@ So, as already introduced, this is proposed to be done within a container built 
 
 As commonly said by the Collectd and Graphite community, installing and configuring Graphite isn't at all so easy than installing and configuring Collectd. This fact is shown in the Docker file of the \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles6} in order to build such container, as shown in figure \ref{F:maex}.
 
-In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database (i.e.: sqlite3) synchronization and other final configurations required for Graphite are also done (--REFERENCE-- intalling graphite). Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as shown in \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
+In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database (i.e.: sqlite3 \cite{sqlite}, which is required for specific features for the Graphite web application) synchronization and other final configurations required for Graphite are also done. Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as shown in \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
 
 So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the "write graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
 
@@ -166,7 +166,7 @@ stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
 \end{verbatim}
 \end{itemize}
 
-An important configuration that must be decided and configured by knowing the requirements for why monitoring is required implies defining the storage schemas, which detail retention rates for storing metrics by following what was introduced in chapter \ref{B:problemStatementAndProposal}, the Round-Robin Database storage type. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration (see APPENDIX XXX) too, but most of them are set to default values which are the recommended ones. 
+An important configuration that must be decided and configured by knowing the requirements for why monitoring is required implies defining the storage schemas, which detail retention rates for storing metrics by following what was introduced in chapter \ref{B:problemStatementAndProposal}, the Round-Robin Database storage type. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration too, but most of them are set to default values which are the recommended ones. 
 
 Before going to present results and comment the outcomes (chapter \ref{H:platformDeploymentAndDemonstrations}), it is important to showcase example commands for both Collectd client and Collectd server + Graphite's containers:
 

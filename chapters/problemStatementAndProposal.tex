@@ -2,7 +2,7 @@
 
 The goal of this chapter is to provide a structured vision of the specific problems of each issue to be developed during this project.
 
-Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific microservices that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
+Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific services that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
 
 Finally, it is important to remark what this project is aiming to achieve, before start going into the architecture statement and proposal.
 
@@ -41,7 +41,7 @@ This subsection aims to introduce the possibilities that different virtualizatio
 First of all, next points are showing which are the expected outcomes for using virtualization and what should fulfil the selected technology:
 
 \begin{itemize}
-\item To manage and maintain a system of small pieces of services (assure a microservice architecture based pattern)
+\item To manage and maintain a system of small pieces of services
 \item To have flexibility in order to quickly instantiate (e.g.: start, restart, stop) required instances (e.g.: to assure real-time scalability) and to deploy any possible required scenario/configuration.
 \item To offer ease to continuous develop and deploy the different parts of the architecture
 \item To have version control like system for having different version tags for the architecture modules (e.g.: a development and a production box of the same REST API service)
@@ -51,7 +51,7 @@ First of all, next points are showing which are the expected outcomes for using 
 
 Moreover, it is also required to use an as much lightweight as possible technology, and this fact is also because of this project aims to virtualize each piece of the platform architecture.
 
-Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind. These are KVM with QEMU and LXC with Docker:
+Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind. These are KVM \cite{kvm} with QEMU \cite{qemu} and LXC \cite{lxc} with Docker \cite{docker}:
 
 \begin{itemize}
 \item KVM (Kernel-based Virtual Machines) \hfill
@@ -89,7 +89,7 @@ Nowadays virtualization tendencies are focusing on the Docker project, which is 
 LXC with Docker mean resource isolation features of the Linux kernel to allow independent containers to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. Moreover, Docker project automates the deployment of applications inside software containers and offers different tools to manage them (i.e.: CLI, API and file configurations), as shown in figure \ref{F:DockerAndLXC} 
 \end{itemize}
 
-Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. Moreover, ---APPENDIX X--- demonstrates that the performance offered in front of the Virtual Machine (i.e.: QEMU + KVM) one is rather better.
+Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. 
 
 Finally, it is important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
 
@@ -110,7 +110,6 @@ As done in the virtualization problem statement section, it is required to showc
 \item Memory utilization
 \item Network throughput
 \end{itemize}
-\item To fit into a microservice architecture pattern.
 \item To be supported under a Linux environment.
 \item To offer much more capabilities than the required for future requirements (this is a requirement because this platform development is supposed to be continued after this project)
 \item To support RRD (Round Robin Database) as a DBMS (Database Management System) in order to assure data storage size from the beginning.
@@ -128,7 +127,7 @@ Next list to showcase takes into account the data that should be gathered:
 \end{itemize}
 \end{itemize}
 
-Moreover, in order to be fitted into a microservices pattern, it is required to split the monitoring layer. The proposal, as usually done in many monitoring systems is as follows:
+Moreover, it is proposed to split the monitoring layer. The proposal, as usually done in many monitoring systems is as follows:
 \begin{itemize}
 \item Gathering layer \hfill
 
@@ -146,27 +145,27 @@ Once previous steps have been shown, it is time to analyse technologies of inter
 So, the following list shows some of the analysed tools that might fit project's requirement as previously exposed:
 
 \begin{itemize}
-\item Munin \hfill
+\item Munin \cite{munin}\hfill
 
 Cross-platform web-based network monitoring and graphing tool designed as a front-end application. Written in Perl.
 
-\item RRDTool \hfill
+\item RRDTool \cite{rrdtool}\hfill
 
 Known as an industry standard, high performance data logging and graphing system for time series data. Written in C and runs under GNU/Linux, Windows and AIX platforms.
 
-\item Collectd \hfill
+\item Collectd \cite{collectd}\hfill
 
 Small daemon which collects system information periodically and provides mechanisms to store and monitor the values in a variety of ways. Written in C and support any unix-like OS
 
-\item Graphite \hfill
+\item Graphite \cite{graphite}\hfill
 
 Tool for monitoring and graphing the performance of computer systems, which collects, stores, and displays time series data in real time.
 
 \end{itemize}
 
-Many other solutions have been discarded due to depend on specific enterprises' roadmap or due to not fit under previously exposed requirements. (REFERENCE Comparison of network monitoring systems WIKIPEDIA) 
+Many other solutions have been discarded due to depend on specific enterprises' roadmap or due to not fit under previously exposed requirements.
 
-Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP, and because of both tools lead to create a microservice architecture monitoring layer. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in an OS). 
+Finally, Collectd and Graphite are the selected tools. Main reasons are due to being fully configurable and its core design and philosophy. Collectd has a data distribution system based on a push model and it can be single deployed (i.e.: gathering and display layer), but it is going to be used with the storage and display tool Graphite. This fact is due to assure high performance for the containers where the Collectd will be gathering and transmitting metrics through UDP. Moreover, Graphite software will be deployed as a centralized storing and displaying tool which will be feed from many Collectds. Another reason to select Collectd is due to being fully compatible with Docker (Collectd can be deployed inside a container and there is also an official plugin to monitor Docker containers in an OS). 
 
 Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
 
@@ -219,7 +218,7 @@ Regarding media statistics, current LiveMediaStreamers' version of the framework
 \item A specific method to measure processing losses.
 \end{itemize}
 
-Then, a main issue have to be taken into account regarding how to implement the metrics presentations in order to let them be logged for external applications. This is regarding current middleware API, which is not at all an API but a web GUI API for an specific scenario (i.e.: AVMixer scenario, as said in state of the art's chapter \ref{SOA:LMSframework}), which means that it is required to implement a more generic middleware API to let external applications to log the LMS internal metrics as API (--REFERENCE--) definition reclaims. 
+Then, a main issue have to be taken into account regarding how to implement the metrics presentations in order to let them be logged for external applications. This is regarding current middleware API, which is not at all an API but a web GUI API for an specific scenario (i.e.: AVMixer scenario, as said in state of the art's chapter \ref{SOA:LMSframework}), which means that it is required to implement a more generic middleware API to let external applications to log the LMS internal metrics as API definition reclaims. 
 
 Therefore, the proposal for this issue is to develop a RESTfull API in order to present the metrics from the LMS instance. This implementation is an opportunity to develop a full API for managing the LiveMediaStreamer framework over HTTP.  Moreover, such middleware will ease to develop new applications over the LMS framework by evolving it as a SaaS, which means a proper enhancement to fit in a cloud environment. 
 

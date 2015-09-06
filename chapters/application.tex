@@ -8,11 +8,11 @@ As mentioned previously, it's required to develop an API ready to be used over c
 
 Nowadays, the common and widely used format for cloud services intercommunication is JSON, as it is also used for the TCP socket API of the LMS framework. Therefore, this API middleware is going to follow such premise.
 
-A suitable technology to work with JSON formatted messages which is widely known for its good performance is Node.js (--REFERENCE--). Node.js is an open source, cross-platform runtime environment for server-side and networking applications. It provides an event-driven architecture and a non-blocking I/O API that optimizes application's throughput and scalability. This technology is commonly used for real-time web applications. 
+A suitable technology to work with JSON formatted messages which is widely known for its good performance is Node.js \cite{nodejs}. Node.js is an open source, cross-platform runtime environment for server-side and networking applications. It provides an event-driven architecture and a non-blocking I/O API that optimizes application's throughput and scalability. This technology is commonly used for real-time web applications. 
 
 Moreover, working with Node.js means avoiding serialization of the JSON messages by increasing services intercommunication performance (i.e.: less computational cost and less processing time). 
 
-Then, the common Noje.js framework for developing web applications and REST APIs is Express.js (--REFERENCE--). It's the de facto standard server framework for Node.js. So, the middleware to develop is going to use its routing system, which refers to the definition of end points (URIs with HTTP request methods like GET, POST, PUT and DELETE) to an application and how it responds to client requests.
+Then, the common Noje.js framework for developing web applications and REST APIs is Express.js \cite{expressjs}. It's the de facto standard server framework for Node.js. So, the middleware to develop is going to use its routing system, which refers to the definition of end points (URIs with HTTP request methods like GET, POST, PUT and DELETE) to an application and how it responds to client requests.
 
 Following is the software structure proposal for developing the HTTP RESTfull API middleware, which is responsible to translate to the TCP socket API of the LMS framework:
 
@@ -38,7 +38,7 @@ This layer handles the body messages from the previous layer's HTTP queries and 
 This layer is the responsible to send and receive JSON formatted TCP socket messages between the LMS instance targeted.
 \end{itemize}
 
-As introduced in section \ref{SOA:LMSframework} and deeply explained in APPENDIX \ref{ANX:lmsarchfull}, there are two different management layers: the generic and the filter specific. So, by following this organization, the proposed API's structure is as shown in APPENDIX \ref{ANX:RESTAPI}.
+As introduced in section \ref{SOA:LMS} and deeply explained in APPENDIX \ref{ANX:lmsarchfull}, there are two different management layers: the generic and the filter specific. So, by following this organization, the proposed API's structure is as shown in APPENDIX \ref{ANX:RESTAPI}.
 
 To point out that this API is not implementing persistence because the state (managed through 'State' method) is given by the LMS instance itself. The unique sign of persistence is regarding the LMS host and port which the middleware is connected to (managed through 'Connect' and 'Disconnect' methods). Higher levels of persistence should be implemented by external applications which implies specific scenarios and requirements (i.e.: specific persistence).
 
@@ -80,7 +80,7 @@ Previous algorithm prepares the metrics that are going to be presented through t
 All these metrics are measured through previous algorithm shown which is scheduled each second (it is the default value set for all metrics gathered indeed). Concretely the bitrate is measured by knowing the overall number of octets (i.e.: bytes) received during each scheduled period and the elapsed time given by the Live555 library implementation:
 
 \begin{equation}\label{E:bitrate}
-average_bitrate (kbps) = 8 \cdot \frac{kbytes_receivd_now}{elapsed_seconds}
+average\ bitrate (kbps) = 8 \cdot \frac{kbytes\ receivd\ now}{elapsed\ seconds}
 \end{equation}
 
 Moreover, the maximum and the minimum are the last maximum and minimum average bitrates obtained, and this is done for all other metrics.

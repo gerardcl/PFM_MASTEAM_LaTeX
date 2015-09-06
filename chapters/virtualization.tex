@@ -10,7 +10,7 @@ Proposed and minimal containerized entities are the following ones:
 \item The HTTP REST API container with the middleware interface inside and ready to use
 \end{itemize}
 
-First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS (--REFERENCE--), which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this issue will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer can be deployed inside a containerised environment.
+First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS \cite{ubuntu}, which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this issue will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer can be deployed inside a containerised environment.
 
 To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
@@ -23,7 +23,7 @@ So, some procedures must be taken into account in order to properly install and 
 \item To configure a DNS server: because Docker defaults to using an external DNS nameserver because it can't use the local one.
 \end{itemize}
 
-To concretely know how this configurations can be done it is strongly recommended to check documentation's web page of the official Docker project site (--REFERENCE--). There is a lot of documentation and references in order to understand and learn how Docker works.
+To concretely know how this configurations can be done it is strongly recommended to check documentation's web page of the official Docker project site \cite{docker}. There is a lot of documentation and references in order to understand and learn how Docker works.
 
 Once Docker is properly installed as a daemon in the OS let's focus on interesting possibilities that this technology offers in order to create and manage containers:
 
@@ -204,7 +204,9 @@ Finally, it is important to note that a Docker image is only able to run a singl
 
 The solution for running multiple services inside the same container remains on a common and widely used tool, called supervisord. Supervisord is a client/server system that allows monitoring and controlling any number of processes on UNIX-like operating systems, which is meant to be used to control processes related to a project or a customer (i.e.: a Docker container), and is meant to start like any other program at boot time.
 
-An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH segments. Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser (i.e.: MPD, INIT and SEGMENT files).
+An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH \cite{mpegdash} segments, which a key point feature of the LMS framework in order to offer live or on demand streaming to browser applications.
+
+Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser.
 
 In APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} is introduced the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
 
@@ -289,7 +291,7 @@ $ docker run -it -p 8090:8090 --rm --name nginx \
 		--volumes-from lmsdash:ro gerardcl/lms-nginx:single 
 \end{verbatim}
 
-With \verb|-v| flag is specified the "host volume folder", which is the host folder shared with the internal folder which LMS container will write the MPEG-DASH files (i.e.: "/home/lms/dashSegments"). If not specified, default permissions are read and write. Then, the Nginx container will use the \verb|--volumes-from <container id>:<permissions mode>| flag by specifying the containers from which will share its volume and its file permissions. In this case file permissions are specified to be in read-only mode in order to not avoid file modifications from the server/container side.  
+With \verb|-v| flag is specified the "host volume folder", which is the host folder shared with the internal folder which LMS container will write the MPEG-DASH files. If not specified, default permissions are read and write. Then, the Nginx container will use the \verb|--volumes-from <container id>:<permissions mode>| flag by specifying the containers from which will share its volume and its file permissions. In this case file permissions are specified to be in read-only mode in order to not avoid file modifications from the server/container side.  
  
 So, scalability, performance and control of the set of containers are assured by applying best practices like the last one.
 

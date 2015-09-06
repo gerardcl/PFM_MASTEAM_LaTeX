@@ -53,7 +53,7 @@ In order to demonstrate results of interest what is done is to implement a C/C++
 \end{center}
 \end{figure}
 
-The Collectd client container, which reads from the volume where the LMS container is logging its metrics, is using the \texttt{tail} plugin (previously explained in chapter \ref{G:monitoringLayer}) with specific regular expressions in order to parse the metrics from the LMS logs (See APPENDIX XXX for this specific collectd configuration)
+The Collectd client container, which reads from the volume where the LMS container is logging its metrics, is using the \texttt{tail} plugin (previously explained in chapter \ref{G:monitoringLayer}) with specific regular expressions in order to parse the metrics from the LMS logs.
 
 So, both isolated scenarios are the same but one is running the LMS on the system and the other is running the same configured LMS but containerized.
 
