@@ -1,10 +1,10 @@
 \chapter{Problem statement and proposal}\label{B:problemStatementAndProposal}
 
-The goal of this chapter is to provide a structured vision of the specific problems of each issue to be developed during this project.
+The goal of this chapter is to provide a structured vision of the specific problems of each issue to be developed within this thesis.
 
 Main issues are about to prepare and/or adapt current technologies to be ready for a cloud deployment. This fact implies studying existing technologies and tools in order to create specific services that will be interconnected between them. And, finally to carry out required developments in order to assure the goals behind and ease demonstrate the results.
 
-Finally, it is important to remark what this project is aiming to achieve, before start going into the architecture statement and proposal.
+Finally, it is important to remark what this thesis is aiming to achieve, before start going into the architecture statement and proposal.
 
 \begin{itemize}
 \item To implement a high-level HTTP REST API in order to manage and monitor the LMS framework.
@@ -17,7 +17,7 @@ Finally, it is important to remark what this project is aiming to achieve, befor
 
 \section{Architecture statement}
 
-Therefore, above all it is required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this project (i.e.: service layer, monitoring layer, virtualization/deployment layer), such architecture should contain the different high level layers as shown next:
+Therefore, above all it is required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this thesis (i.e.: service layer, monitoring layer, virtualization/deployment layer), such architecture should contain the different high level layers as shown next:
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=0.6\textwidth]{./images/generalArch.png}
@@ -36,7 +36,7 @@ Finally, to point out that how the communication between each layer is going to 
 
 \subsection{Virtualization}
 
-This subsection aims to introduce the possibilities that different virtualization technologies could offer for this project requirements and to decide between one of them.
+This subsection aims to introduce the possibilities that different virtualization technologies could offer for this thesis requirements and to decide between one of them.
 
 First of all, next points are showing which are the expected outcomes for using virtualization and what should fulfil the selected technology:
 
@@ -49,7 +49,7 @@ First of all, next points are showing which are the expected outcomes for using 
 \item To assure full compatibility for the hardware to work with (mainly x86 processors are in the scope)
 \end{itemize}
 
-Moreover, it is also required to use an as much lightweight as possible technology, and this fact is also because of this project aims to virtualize each piece of the platform architecture.
+Moreover, it is also required to use an as much lightweight as possible technology, and this fact is also because of this thesis aims to virtualize each piece of the platform architecture.
 
 Under Linux environments there are many virtualization options (most of them proprietary) to analyse, but lets focus on the ones that are open-source and have wider and active communities behind. These are KVM \cite{kvm} with QEMU \cite{qemu} and LXC \cite{lxc} with Docker \cite{docker}:
 
@@ -89,15 +89,15 @@ Nowadays virtualization tendencies are focusing on the Docker project, which is 
 LXC with Docker mean resource isolation features of the Linux kernel to allow independent containers to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. Moreover, Docker project automates the deployment of applications inside software containers and offers different tools to manage them (i.e.: CLI, API and file configurations), as shown in figure \ref{F:DockerAndLXC} 
 \end{itemize}
 
-Thus, it seems that the technology that best suits this project requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. 
+Thus, it seems that the technology that best suits this thesis requirements is the Docker project. Main reasons are the capabilities of ease maintain, test and quickly deploy each container. 
 
 Finally, it is important to point out that another keypoint of the Docker solution is that lets intercommunicate containers that are in the same physical server without exposing network layer. This means much more security and performance over other virtualization solutions (at least of the simplicity point of view when intercommunicating instances).
 
 \subsection{Monitoring layer}
 
-Monitoring layer section aims to provide an insight of what are the minimum requirements for what monitoring is required in this project and which are the available tools of interest.
+Monitoring layer section aims to provide an insight of what are the minimum requirements for what monitoring is required in this thesis and which are the available tools of interest.
 
-Following the same criteria as this project tends to, the tools that are going to be focused on are the ones that have an open-source philosophy behind. So, most of the tools and services around the Internet are directly ruled out.
+Following the same criteria as this thesis tends to, the tools that are going to be focused on are the ones that have an open-source philosophy behind. So, most of the tools and services around the Internet are directly ruled out.
 
 As done in the virtualization problem statement section, it is required to showcase main requirements for the monitoring layer implementation:
 
@@ -111,7 +111,7 @@ As done in the virtualization problem statement section, it is required to showc
 \item Network throughput
 \end{itemize}
 \item To be supported under a Linux environment.
-\item To offer much more capabilities than the required for future requirements (this is a requirement because this platform development is supposed to be continued after this project)
+\item To offer much more capabilities than the required for future requirements (this is a requirement because this platform development is supposed to be continued after this thesis)
 \item To support RRD (Round Robin Database) as a DBMS (Database Management System) in order to assure data storage size from the beginning.
 \end{itemize}
 
@@ -138,11 +138,11 @@ It will only be responsible of the gathering, distribution and storing of the me
 It will only be responsible of the data display as a function of user-specific queries.
 
 \end{itemize}
-It is important to remark that a possible alert layer is treated as a future work because it becomes out of scope. The main reason is that this project is focused on measuring and demonstrating that such platform is feasible, next steps would be to compose a set of alarms and actuators system in order to become as automated as possible.
+It is important to remark that a possible alert layer is treated as a future work because it becomes out of scope. The main reason is that this thesis is focused on measuring and demonstrating that such platform is feasible, next steps would be to compose a set of alarms and actuators system in order to become as automated as possible.
 
 Once previous steps have been shown, it is time to analyse technologies of interest in order to decide between one of them.
 
-So, the following list shows some of the analysed tools that might fit project's requirement as previously exposed:
+So, the following list shows some of the analysed tools that might fit this thesis's requirement as previously exposed:
 
 \begin{itemize}
 \item Munin \cite{munin}\hfill
@@ -259,7 +259,7 @@ For example, a possible and specific architecture configuration could be a trans
 \end{center}
 \end{figure}
 
-Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Concretely, at architecture level, there is a container with an LMS daemon running, another one with the REST API that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, data losses, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different OS. 
+Figure \ref{F:exampleArch} is a simple example of a transcoding servicde behind a web application. This use case example takes into account an user, which configures and manages the LiveMediaStreamer's scenario configured for a transcoding service (e.g.: starting with a HTML input form for incoming inputs, transcoding parameters and RTSP server configuration). Specifically, at architecture level, there is a container with an LMS daemon running, another one with the REST API that receives queries from the HTTP server from another container, which is serving the web application to the end user, which is using the application through a web browser. Then, each container has a collectd client that parses the logs of interest and it sends the metrics to the Graphite service running. Therefore, at the web application the user could be able to see specific graphics (e.g.: CPU usage, data losses, bandwidth usage, \ldots) from the graphite server (in another container) in order to monitor the overall performance and actuate if required. Finally, to point out that this scenario could be splitted into different OS. 
 
 Finally, to point out that what will be deployed in order to demonstrate the platform feasibility is an specific but as generic as possible scenario. However, this topic will be treated in chapter \ref{H:platformDeploymentAndDemonstrations}.
 
@@ -276,8 +276,8 @@ Finally, this last section aims to organize the tasks to be done in terms of dev
 \end{center}
 \end{figure}
 
-Figure \ref{F:tpgp} is the Gantt proposal for the task planning organization. It takes into account the period of six months for the project and is showing specific periods per task when they should be executed, as a reference. For example, some tasks might seem overloaded about time, but this is taking into account that the whole time won't be spent on working in the project but other tasks related to my job position at the i2CAT Foundation.
+Figure \ref{F:tpgp} is the Gantt proposal for the task planning organization. It takes into account the period of six months for the thesis and is showing specific periods per task when they should be executed, as a reference. For example, some tasks might seem overloaded about time, but this is taking into account that the whole time won't be spent on working in the thesis but other tasks related to tasks carried out at the i2CAT Foundation.
 
-Finally, to point out that the fact of being working with a team and behind an organization, it is important to take into account internal demonstrations periods in order to carry out specific validations. This is due to reach an agreement between the team, because the intention is to take profit of this project.
+Finally, to point out that the fact of being working with a team and behind an organization, it is important to take into account internal demonstrations periods in order to carry out specific validations. This is due to reach an agreement between the team, because the intention is to take profit of this thesis.
 
 Next chapters aims to showcase the work done per each topic developed. These are application (chapter \ref{D:application}), monitoring (chapter \ref{G:monitoringLayer}), virtualization chapter \ref{D:virtualization}) and final deployment demonstrations (chapter \ref{H:platformDeploymentAndDemonstrations}). 

@@ -26,7 +26,6 @@
 *.out
 *.synctex.gz
 *~
-*.pdf
 *.lof
 *.log
 *.fls

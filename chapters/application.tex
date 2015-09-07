@@ -1,10 +1,10 @@
 \chapter{Application}\label{D:application}
 
-This chapter aims to develop the tasks introduced for the application layer in this project Gantt (see figure \ref{F:tpgp}).
+This chapter aims to develop the tasks introduced for the application layer in Gantt diagram of this thesis (see figure \ref{F:tpgp}).
 
 \section{REST API}
 
-As mentioned previously, it's required to develop an API ready to be used over cloud environments in order to ease creating specific and new applications over the LMS framework, and thus to demonstrate the viability of this project prototype.
+As mentioned previously, it's required to develop an API ready to be used over cloud environments in order to ease creating specific and new applications over the LMS framework, and thus to demonstrate the viability of this thesis prototype.
 
 Nowadays, the common and widely used format for cloud services intercommunication is JSON, as it is also used for the TCP socket API of the LMS framework. Therefore, this API middleware is going to follow such premise.
 
@@ -60,7 +60,7 @@ As said in subsection \ref{B:appLayerCH2}, input network metrics are going to be
 \end{center}
 \end{figure}
 
-By following the LiveMediaStreamer architecture structure, input network implementations are going to be implemented inside the 'liveMediaInput' structure. Concretely, a new class is implemented, called 'SCSSubsessionStats'. This class is managed by the 'StreamCleanState' class which is a class related to each stream 'Session' class managed by the 'SourceManager' class. This last class is a 'HeadFilter' class. Figure \ref{F:inms} shows the inter-class structure.
+By following the LiveMediaStreamer architecture structure, input network implementations are going to be implemented inside the 'liveMediaInput' structure. Specifically, a new class is implemented, called 'SCSSubsessionStats'. This class is managed by the 'StreamCleanState' class which is a class related to each stream 'Session' class managed by the 'SourceManager' class. This last class is a 'HeadFilter' class. Figure \ref{F:inms} shows the inter-class structure.
 
 By initializing new RTP or RTSPClient sessions (i.e.: network inputs), a group of subessions is associated per each stream (i.e.: an RTP session has one subsession associated and the RTSPClient session has as many subsessions as accepted from the SDP that defines different RTP sessions).
 
@@ -77,7 +77,7 @@ Previous algorithm prepares the metrics that are going to be presented through t
 \item Jitter: maximum, minimum and current inter-packet gap variation in microseconds.
 \end{itemize}
 
-All these metrics are measured through previous algorithm shown which is scheduled each second (it is the default value set for all metrics gathered indeed). Concretely the bitrate is measured by knowing the overall number of octets (i.e.: bytes) received during each scheduled period and the elapsed time given by the Live555 library implementation:
+All these metrics are measured through previous algorithm shown which is scheduled each second (it is the default value set for all metrics gathered indeed). Specifically, bitrate is measured by knowing the overall number of octets (i.e.: bytes) received during each scheduled period and the elapsed time given by the Live555 library implementation:
 
 \begin{equation}\label{E:bitrate}
 average\ bitrate (kbps) = 8 \cdot \frac{kbytes\ receivd\ now}{elapsed\ seconds}
@@ -96,9 +96,9 @@ As done in previous section, output network metrics are going to be implemented 
 
 This implementation has been much more difficult to be achieved due to not having control of the RTPSink class of the Live555 library in the sense that when it is created neither deleted. Previous developments before the final version where based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
 
-In order to go on the development an e-mail was sent to the Live555 developers mailing list, concretely to the head developer of the library, thanks to his replay the solution was clarified (see APPENDIX \ref{ANX:emailRoss}).
+In order to go on the development an e-mail was sent to the Live555 developers mailing list, specifically to the head developer of the library, thanks to his replay the solution was clarified (see APPENDIX \ref{ANX:emailRoss}).
 
-So, the best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, concretely the inheriting classes of the QueueServerMediaSubsession class. 
+So, the best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, specifically the inheriting classes of the QueueServerMediaSubsession class. 
 
 \begin{figure}[!htb]
 \begin{center}

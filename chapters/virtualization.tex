@@ -23,7 +23,7 @@ So, some procedures must be taken into account in order to properly install and 
 \item To configure a DNS server: because Docker defaults to using an external DNS nameserver because it can't use the local one.
 \end{itemize}
 
-To concretely know how this configurations can be done it is strongly recommended to check documentation's web page of the official Docker project site \cite{docker}. There is a lot of documentation and references in order to understand and learn how Docker works.
+It is strongly recommended to check documentation's web page of the official Docker project site \cite{docker} in order to know how this configurations can be done . There is a lot of documentation and references in order to understand and learn how Docker works.
 
 Once Docker is properly installed as a daemon in the OS let's focus on interesting possibilities that this technology offers in order to create and manage containers:
 
@@ -86,7 +86,7 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-To point out that in order to start working with different images and managing them in different environments (i.e.: different servers/computers) a Docker Hub account has been created. So, let's define each parameter in order to name and tag each image to built during this project. In this case:
+To point out that in order to start working with different images and managing them in different environments (i.e.: different servers/computers) a Docker Hub account has been created. So, let's define each parameter in order to name and tag each image to built during this thesis. In this case:
 
 \begin{itemize}
 \item Origin repository registry is "gerardcl" (see \url{https://hub.docker.com/r/gerardcl})
@@ -223,7 +223,7 @@ So, it is quite similar to first Docker file introduced in this chapter but:
 
 Then, the Nginx configuration file is as shown in \ref{ANX:dockerFiles} section \ref{ANX:nginxexample}.
 
-In this configuration file, a part from typical Nginx configurations (which are out of scope of this project), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing).
+In this configuration file, a part from typical Nginx configurations (which are out of scope of this thesis), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing).
 
 Moreover, to note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
 
@@ -295,4 +295,4 @@ With \verb|-v| flag is specified the "host volume folder", which is the host fol
  
 So, scalability, performance and control of the set of containers are assured by applying best practices like the last one.
 
-Finally, to remark that thanks to these illustrations of Docker file configurations there is a step forward to demonstrate this project's goals.
+Finally, to remark that thanks to these illustrations of Docker file configurations there is a step forward to demonstrate this thesis's goals.
