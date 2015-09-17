@@ -28,7 +28,7 @@ This section is based on how Collectd can be configured and deployed in order to
 
 From a container point of view and by following the premise to build containers as reusable as possible what is proposed to implement is a container that has the goal to gather the logged stats from an LMS container. This, as shown in figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network plugin as done in previous Collectd client configuration.
 
-But, first of all, it is also required to be built in a container. This specific Docker file is shown in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
+But, first of all, it is also required to be built in a container. This specific Docker file is shown in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
 
 Then, what is done in this case is to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
 \begin{verbatim}
@@ -51,7 +51,7 @@ this is to set the address of the remote/local container where the Collectd serv
 this is the port where the Collect server and Graphite's tools container is listening to.
 \end{itemize}
 
-And these parameters are set in the Collectd configuration file as shown in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
+And these parameters are set in the Collectd configuration file as shown in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
 
 This Collectd configuration example file is loading specific system loggers plugins as inputs to be sent through the network plugin to the Collectd server.
 
