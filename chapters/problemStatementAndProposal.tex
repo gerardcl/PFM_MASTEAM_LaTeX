@@ -15,9 +15,9 @@ Finally, it is important to remark what this thesis is aiming to achieve, before
 \item To demonstrate previous statements with specific testing deployments.
 \end{itemize}
 
-\section{Architecture statement}
+\section{Architecture analysis}
 
-Therefore, above all it is required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this thesis (i.e.: service layer, monitoring layer, virtualization/deployment layer), such architecture should contain the different high level layers as shown next:
+Therefore, above all it is required to define the platform's architecture to prototype in order to have a global and generic insight. So, taking into account the pieces required for this thesis (i.e.: service layer, monitoring layer, virtualization/deployment layer), such architecture should contain the different high level layers as shown in figure \ref{F:genericPlatArch}.
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=0.6\textwidth]{./images/generalArch.png}
@@ -169,7 +169,7 @@ Finally, Collectd and Graphite are the selected tools. Main reasons are due to b
 
 Finally, Graphite has also been selected because it offers a HTTP API which ease its scalability. 
 
-So, the monitoring layer is proposed to be designed as shown next:
+So, the monitoring layer is proposed to be designed as shown in figure \ref{F:MLAP}.
 
 \begin{figure}[htb]
 \begin{center}
@@ -230,7 +230,7 @@ Therefore, the proposal for this issue is to develop a RESTfull API in order to 
 \end{center}
 \end{figure}
 
-Figure \ref{F:appArch} showcases how previous statements are proposed to be implemented. As it can be seen in APPENDIX \ref{ANX:lmsarchfull}, each filter can have one or more readers and writers (both are inheritors of the IOInterface class). But, this issue will be developed in chapter \ref{D:application}.
+Figure \ref{F:appArch} showcases how previous statements are proposed to be implemented. As it can be seen in appendix \ref{ANX:lmsarchfull}, each filter can have one or more readers and writers (both are inheritors of the IOInterface class). But, this issue will be developed in chapter \ref{D:application}.
 
 On the other hand, the Pipelinemanager class instance is the responsible class to compile the metrics filter by filter when they are requested by the Controller class instance. 
 
@@ -249,7 +249,7 @@ Once the problem statement has been focused per each defined layer (i.e.: virtua
 Figure \ref{F:overallArchProp} tries to be as generic as possible in order to showcase the possibilities of the platform. As seen, there are different physical servers presented in order to demonstrate the aim to also support flexibility and scalability. However, the following chapters (specifically the conclusions chapter \ref{H:platformDeploymentAndDemonstrations}) will demonstrate if it is feasible. 
 Moreover, each physical server has different types of containers where are shown different and possible combinations and configurations of the technologies that might be deployed and used for specific use cases (scenarios).
 
-For example, a possible and specific architecture configuration could be a transcoder scenario:
+For example, a possible and specific architecture configuration could be a transcoder scenario. This is shown in figure \ref{F:exampleArch}.
 
 \begin{figure}[!htb]
 \begin{center}

@@ -2,21 +2,50 @@
 
 This chapter aims to provide a vision of how the audio-visual media production sector has been, and still is, carrying out IP convergence. 
 
-Moreover, this chapter will be focused on the topics related to media production over an IP related environment and, specifically, the ones related on this thesis study and proposal.
+Moreover, this chapter will be focused on the topics related to media production over an IP related environment and, specifically, the ones related on this thesis study and proposal. Which are virtualization, monitoring and application core service.
 
-\section{IP convergence of media content production}
+Within the broadcast workflow two main scenarios can be distinguished, which are production and diffusion (i.e.: broadcasting). Therefore, it is important to remark that this thesis is going to be focused on the production scenario.
 
-As briefly as possible, this section aims to summarise the evolution of the IP convergence itself and how technologies are evolving to carry out such transformation at audio-visual media content production level.
+\section{Media content production}
 
-Next subsections are also organized by enumerating potential technologies and standards following the OSI \cite{osi} stack from the bottom layer as a beginning.
+As briefly as possible, this section aims to summarise which standard formats exist and how they are adapted or newer ones appear to reach IP convergence for audio-visual media content production.
 
-\subsection{Physical and Data link layers}
+\subsection{Standard formats}
+
+Broadcasters prefer to transmit their audio and video content in an uncompressed state. Main reason is to ensure they deliver the best quality possible (i.e.: lossless quality) of their digitized data. 
 
 In 1989, SMPTE (The Society of Motion Picture and Television Engineers \cite{smpte}) standardized a family of digital video and audio interfaces based on coaxial cable, called SDI (Serial Digital Interface \cite{SDI}), which is intended to be used for transport of uncompressed digital video and audio in a television studio environment. 
 
 Around SDI there are other related standards which are focused in specific solutions (i.e.: to support higher video resolution, media qualities, media formats, frame rates, audio channels, synchronization,\ldots). An example is the HD-SDI \cite{SDI} standard (High-Definition Serial Digital Interface, defined in SMPTE 292M) which provides bandwidth enough to transport HD video fromats (i.e.: up to 1,485 Gbps). Other SDI related standards are the 3G-SDI \cite{3GSDI} and 12G UHD-SDI \cite{UHDSDI}, which give support to FHD (i.e.: Full HD, 1080p resolution up to 2,970 Gbps bitrates) and 4K (i.e.: UHD cinema resolution up to 12 Gbps bitrates) video formats, respectively. 
 
-Since then, new encapsulation audio (i.e.: AES67-2013 \cite{AES}) and video (i.e.: SMPTE 2022-6 \cite{ST2022}) standards are appearing to transport high-quality media signals over IP Networks. Also, further specific solutions, such as managing packet loss recovery using FEC (SMPTE 2022-5 \cite{ST20225}), have appeared as potential robustness solutions.
+Previous bandwidth usage shown per each SDI standard are given by specific parameters which are defined for the media type transmitted.
+
+So, video bandwidth is measured as:
+
+\begin{equation}\label{E:videobitrate}
+bitrate (\frac{bits}{second} (bps)) = color\ depth (\frac{bits}{pixel}) \cdot video\ resolution (\frac{pixels}{frame}) \cdot frame\ rate (\frac{frames}{second}) 
+\end{equation}
+
+\begin{itemize}
+\item Color depth: this is also referred to as bits-per-pixel (BPP), and defines how many colors can be represented by each pixel in the video frames (i.e.: still images).
+\item Video resolution: this is measured by the number of pixels wide by the number of pixels high of a video stream.
+\item Frame rate: this is the number of still images (i.e.: video frames) per second (i.e.: fps) sent as part of the video stream. 
+\end{itemize}
+
+And, audio bandwidth is measured as:
+\begin{equation}\label{E:videobitrate}
+bitrate (\frac{bits}{second} (bps)) = sample\ rate (\frac{samples}{second}(Hz)) \cdot bit\ depth (\frac{bits}{sample}) \cdot channels  
+\end{equation}
+
+\begin{itemize}
+\item Sample rate: This is the average number of audio samples obtained in one second and its measurement unit is hertz (Hz).
+\item Bit depth: this is the number of bits an audio sample is recorded at.
+\item Number of channels: this is the number of separate streams of the audio information.
+\end{itemize}
+
+\subsection{IP convergence}
+
+Since SDI standard was released, new encapsulation audio (i.e.: AES67-2013 \cite{AES}) and video (i.e.: SMPTE 2022-6 \cite{ST2022}) standards are appearing to transport high-quality media signals over IP Networks. Also, further specific solutions, such as managing packet loss recovery using FEC (SMPTE 2022-5 \cite{ST20225}), have appeared as potential robustness solutions.
 
 In the middle of 2014, the Video Services Forum (VSF \cite{VSF}) has formed a new group (SVIP \cite{SVIP}, which stands for Define and research requirements for Video over IP without SDI encapsulation) looking at new encapsulation mechanisms for audio, video and ancillary data into IP without using SDI framing (raw data) to develop or recommend a standard for video over IP without SDI encapsulation.
 
@@ -32,21 +61,13 @@ On the other hand, the emergence of the SDN paradigm \cite{sdn}, separating the 
 
 Related to above statements, the recent advances in chip designs by industry leaders (e.g.: Intel, Broadcom, Xilinx and Altera) have eased a strong movement towards consolidation of complex functions (e.g.: encoding, transcoding, conversion, \ldots ) into a single device, instead several disparate platforms. Additionally, these hardware advances implied the chance of using software-centric frameworks, which provide for greater flexibility and customization from a business standpoint. Both advances are enabling a broader adoption of upcoming media technologies at a reduced cost, without compromise on quality, flexibility nor capability. 
 
-\subsection{Network layer}
-
-On the network layer, IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast \cite{mc} paradigm operation using widely supported routing protocols (e.g.: IGMP), but the computational and scalable complexity of these protocols tends to difficult and limit deployments.
+IP is the de facto standard and within its protocol suite there are some solutions which help to transport media content efficiently. For instance, IP supports multicast \cite{mc} paradigm operation using widely supported routing protocols (e.g.: IGMP), but the computational and scalable complexity of these protocols tends to difficult and limit deployments.
 
 In terms of QoS, IP has a field known as ToS/DSCP \cite{tosdscp} which marks the header packets along their way to help mappings with lower-layer protocols (e.g.: Ethernet or MPLS) to implement QoS at the buffer level.
 
-\subsection{Transport and Application layers}\label{S:sessionPresentationApplicatio}
-
 On the transport layer, UDP has been preferred over TCP for real-time transport because of its connectionless nature and avoidance of unnecessary retransmission for live streams. As common known and basic extension, the RTP (Real Time Protocol), whose most deployed version is RFC 3550, was initially introduced to audio and video services, to add supplementary data fiels in order to enhance the UDP protocol (i.e.: timestamp field, sequence number, payload identification), together with the protocol for control purposes (i.e.: RTCP, which stands for Real Time Control Protocol). Recently, new extensions have appeared introducing new header options to support the adoption of services related to media production workflows. Concretely, RTP and RTCP have been proposed to accommodate media specific info over IP, answering to specific challenges.
 
-\subsubsection{Payload layer}
-
 The wide adoption of low-delay encoding (e.g.: JPEG2K, AVC, AVCi, VC-2) for high quality video stream could represent a new opportunity to reduce the bandwidth consumption in several scenarios. Likewise, high-compression mechanism as MPEG4 H264 or HEVC could be useful to transport media content through very limited network resources scenarios (as Internet or cloud-based systems).
-
-\subsubsection{Signaling layer}
 
 In the signaling layer, protocols as RTSP (Real Time Streaming Protocol) for end-to-end session control or SDP for service description provide capabilities for the stream management. Furthermore, media wrappers aim to gather different types of programme media and associated information, as well as generically identify this information. Different media wrapper formats are in use at this time, but, for the media industry, it is important that the wrappers have characteristics like openness, extensibility and performance. The MXF (Material Exchange Format) is a "container" format, which supports a number of different streams of coded based by enabling interoperability between different platforms. This is by encoding in any type of video and audio compression formats, together with a metadata wrapper which describes the material contained within the MXF file. 
 
@@ -230,6 +251,8 @@ LMS framework project was stated to be developed since two years ago. A first im
 
 Currently, the framework does not have a RESTful API, but has a web API based middleware, that loads and manages an audio and video mixer scenario, written in Ruby programming language and it implements Sinatra framework for the web service interface side.
 
-APPENDIX \ref{ANX:lmsarchfull} includes more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
+To remark that the main reason to provide a REST API is due to its decoupled architecture and low bandwidth usage, which make REST architecture style suitable for developing applications over cloud environments.
+
+Appendix \ref{ANX:lmsarchfull} includes more information about specifics of the LMS architecture in order to understand next chapters (mostly, in problem statement and proposal's subchapter \ref{B:appLayerCH2} and chapter \ref{D:application}, the solution's implementation).
 
 Finally, to point out that there are many existing similar solutions but most of them are proprietary or closed solutions (i.e.: Wowza Streaming Engine or Adobe Flash Media Server). Moreover, if they are aimed to be used as real-time media productions tools they require for external solutions to provide video and audio mixing features.

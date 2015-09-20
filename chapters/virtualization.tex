@@ -37,7 +37,7 @@ Once Docker is properly installed as a daemon in the OS let's focus on interesti
 	\item Using Docker pull, commit and push for images
 
 	This is not recommended for creating an original container. But, it is really suitable when starting learning Docker technology. However, it is recommended to be used once an initial container has been build (from a Docker file) in order to maintain and to distribute different versions and deployments of this (as said, as a higher level git repository).	 
-It's important to note that a Docker image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image (the container itself). Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. This last fact is a key point due to its capacity of also offering deployment layers inside a container (i.e.: mora than one tool/technology inside a container).
+It's important to note that a Docker image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image (the container itself). Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. This last fact is a key point due to its capacity of also offering deployment layers inside a container (i.e.: more than one tool/technology inside a container).
 	
 	\end{itemize}
 \item Managing containers 
@@ -57,13 +57,13 @@ It's important to note that a Docker image consists of a series of layers. Docke
 	\end{itemize}
 \end{itemize}
 
-For a more specific detailed list of options and possibilities from Docker containers, please check APPENDIX \ref{ANX:csd}.
+For a more specific detailed list of options and possibilities from Docker containers, please check appendix \ref{ANX:csd}.
 
 \subsection{Basic LMS container}
 
 Once previous brief of Docker possibilities to work with has been introduced let's start containerizing a single LiveMediaStreamer.
 
-As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles1} is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
+As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles1} is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
 
 Now, let's focus on what is done in order to explain it better: 
 
@@ -76,7 +76,7 @@ Now, let's focus on what is done in order to explain it better:
 \item CMD: this configures the command that will be executed when running the image itself. It's important to point out that any user can later enter inside the container avoiding the execution of the default CMD defined (e.g.: executing bash for development purposes inside the container and creating a new container's version).
 \end{itemize}
 
-There are many other commands that could be used inside a Docker file (see APPENDIX \ref{ANX:csd}) but they are not required in this case.
+There are many other commands that could be used inside a Docker file (see appendix \ref{ANX:csd}) but they are not required in this case.
 
 Then, once the Docker file is defined it's time to build the image, this is done as shown next:
 
@@ -118,7 +118,7 @@ $ docker run --rm -p <host port>:<container port> \
 
 Next container proposed to be built is the HTTP REST API middleware developed in chapter \ref{D:application}.  
 
-Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. It is show in APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles2}.
+Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. It is show in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles2}.
 
 In this case, in order to build and manage such image, these are the image parameters which defines this image:
 
@@ -208,7 +208,7 @@ An example for supervisor to be required is due to the fact that LMS framework i
 
 Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser.
 
-In APPENDIX \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} is introduced the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
+In appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} is introduced the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
 
 So, it is quite similar to first Docker file introduced in this chapter but:
 

@@ -59,7 +59,7 @@ So, both isolated scenarios are the same but one is running the LMS on the syste
 
 The second OS running is the one which runs the Docker container with the Collectd+Graphite tools. Moreover, this OS acts as the receiver of the transcoded streams through RTSP protocol and also as the transmitter of the source stream.
 
-Therefore, let's group and show the results of interest which are mainly focused on the pipeline performance metrics (i.e.: internal LMS performance):
+Therefore, in figure \ref{F:isoCPU} the results of interest are shown and grouped. These are mainly focused on the pipeline performance metrics (i.e.: internal LMS performance).
 
 \begin{figure}[!htb]
   \begin{center}
@@ -76,7 +76,7 @@ Therefore, let's group and show the results of interest which are mainly focused
 
 Figure \ref{F:isoCPU} showcases the CPU usage gathered at the Collectd client side and presented for the Graphite web GUI for both isolated scenarios. Regarding system installation the CPU average usage of the averages given by Graphite is around 4,015\% and around 4,111\% for the containerized one. So, there is not so difference about running system installation or the same application containerized. 
 
-In order to continue demonstrating that the fact of deploying a service platform within a containerized environment let's continue showcasing results of interest:
+In order to continue demonstrating that the fact of deploying a service platform within a containerized environment figure \ref{F:isoappt} is showcasing results of interest.
 
 \begin{figure}[!htb]
   \begin{center}
@@ -134,7 +134,7 @@ This demonstration is quite similar than the other but this time LMS is only con
 
 So, in this case what is deployed is an audio and video mixer which receives four audio streams and four video streams encoded with OPUS and H264 codecs, respectively, which are streamed through its standard RTP encapsulation (i.e.: specific payload headers).
 
-Regarding the audio mixing, all input streams are mixed with logarithmic mixing algorithm in order to not saturate the signal of the resulting audio stream. Then, regarding the video mixing, the HD inputs (i.e.: 1280x720 pixels of resolution) are mixed as shown next:
+Regarding the audio mixing, all input streams are mixed with logarithmic mixing algorithm in order to not saturate the signal of the resulting audio stream. Then, regarding the video mixing, the HD inputs (i.e.: 1280x720 pixels of resolution) are mixed as shown in figure \ref{F:outVMix}.
 
 \begin{figure}[!htb]
 \begin{center}
