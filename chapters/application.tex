@@ -155,7 +155,8 @@ This metric is following a similar criteria as the previous one. This is solved 
 
 Then, in order to properly present it to external applications it is required to be presented at a path level as done for the delay metrics. So, in this case it is only required to sum up the overall losses of the path's readers.
 
-It is important to note that this metric is not referenced to a total data processed or at any time point, but specific problem detections are achieved thanks to measuring its continuity. This means that if this value is incrementing gradually then the system is not working properly. Such detections might imply fast increments on its continuity (differential increase). 
+It is important to note that this metric is not referenced to a total data processed or at any time point, but specific issues detections are achieved thanks to measuring its continuity. This means that if this value is incrementing gradually then the system is not working properly. Such detections might imply fast increments on its continuity (differential increase). 
 
+Finally, to remark that Pipeline metrics are measured when flushing frames (discarding) or when a reader is able to remove a frame from its belonging queue. 
 
-Finally, as a section corollary, Pipeline metrics are measured when flushing frames (discarding) or when a reader is able to remove a frame from its belonging queue. 
+So, once previous developments are carried out a first step to offer a cloud real-time media production service is achieved. This means, offering a RESTful API and a status layer for monitoring external and internal performance of the platform.

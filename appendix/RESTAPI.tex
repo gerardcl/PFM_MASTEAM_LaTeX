@@ -45,13 +45,11 @@ JSON    {
         }
 \end{verbatim}
 \end{quote}        
+
 \item Create a path of filters \hfill
 
-Create a path of filters. A path can be a master path or an slave one, as shown:
+Create a path of filters. It interconnects each filter as specified.
 
-\begin{itemize}
-
-\item Master path
 \begin{quote}
 \begin{verbatim}
 POST http://<host>:<port>/api/createPath
@@ -65,22 +63,19 @@ JSON    {
         }
 \end{verbatim}
 \end{quote}
-\item Slave path of previous master path
+
+\item Remove a path of filters \hfill
+
+Deletes a path of filters. It disconnects each path's filters.
+
 \begin{quote}
 \begin{verbatim}
-POST http://<host>:<port>/api/createPath
-JSON    { 
-            'id' : pathId, 
-            'orgFilterId' : filterID1, 
-            'dstFilterId' : dstFilterId2, 
-            'orgWriterId' : -1, 
-            'dstReaderId' : dstReaderId2, 
-            'midFiltersIds' : [filterID3, filterID4,...] 
-        }  
+DELETE http://<host>:<port>/api/path/:path_id
 \end{verbatim}
 \end{quote}
+
 \end{itemize}
-\end{itemize}
+
 \item Specific filter management queries        
 \begin{itemize}
 \item Configure an existing filter \hfill

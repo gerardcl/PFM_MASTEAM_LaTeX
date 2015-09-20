@@ -157,7 +157,7 @@
   Concretament, aquesta tèsi s'enfoca en analitzar, proposar, desenvolupar i demostrar tecnologies específiques de virtualització, monitoratge i aplicació, que ofereixen solucions a les qüestions esmentades.
   \\
   \\
-  Pel que fa a la virtualització s'implementen tecnologies basades en Linux Containers, concretament contenidors Docker. Gràcies a la capa de gestió que ofereix aquesta tecnología s'assoleix l'empaquetament, distribució i execució d'aplicacions de forma distribuïda a la xarxa. A més a més, s'assegura una plataforma escalable ja que aquest tipus de tecnología permet el manteniment, gestió i replicació d'aplicacions de forma ràpida i robusta.
+  Pel que fa a la virtualització s'utilitzen tecnologies basades en Linux Containers, concretament contenidors Docker. Gràcies a la capa de gestió que ofereix aquesta tecnología s'assoleix l'empaquetament, distribució i execució d'aplicacions de forma distribuïda a la xarxa. A més a més, s'assegura una plataforma escalable ja que aquest tipus de tecnología permet el manteniment, gestió i replicació d'aplicacions de forma ràpida i robusta.
   \\
   \\
   L'aplicació d'eines de monitorització és una peça clau per a oferir a les aplicacions i a la pròpia plataforma el control de l'estat d'aquestes i així permetre aplicar polítiques d'actuació a temps real de forma eficient. En concret, s'utilitzen les tecnologies Collectd i Graphite. Aquestes eines també permeten ser gestionades dins de contenidors per tal de poder ser distribuïdes per la xarxa en paral·lel a les aplicacions que conformen la plataforma. 
@@ -176,7 +176,16 @@
   Furthermore, most of these technologies involve large deployment and maintenance costs (e.g.: specific hardware, specific and costly wiring, \ ldots). For this reason, it is proposed the study of IP technology, specifically technology related to the distributed cloud computing concept, in order to propose solutions to reduce costs and improve the chances of producing audiovisual content.
   \\
   \\
-  Particularly, this project focuses on analyse, propose, develop and demonstrate specific virtualization, monitoring and application technologies, which provide solutions to these mentioned issues.     
+  Particularly, this thesis focuses on analyse, propose, develop and demonstrate specific virtualization, monitoring and application technologies, which provide solutions to these mentioned issues.   
+  \\
+  \\
+  Regarding virtualization, technologies based on Linux Containers are used, specifically Docker containers. Thanks to the managing layer offered by Docker containers the shipment, distribution and execution of applications over the network is achieved. Moreover, platform scalability is assured because the maintenance, management and replication of applications containerized within this technology are fast and reliable.
+  \\
+  \\
+  The use of monitoring tools is a key point to offer application status management to applications and to the platform itself and to let apply actuation policies in real-time in an efficient manner. Specifically, Collectd and Graphite are the selected tools. Moreover, these tools are able to be managed inside containers in order to be simultaneously deployed over the network together with the applications' platform. 
+  \\
+  \\
+  Finally, it is demonstrated that the core of the platform, the LiveMediaStreamer framework, reaches the requirements in order to be used as a real-time cloud service for audiovisual media content production. This is thanks to the technologies above-mentioned, the statistics layer implemented (network and performance) and the development of the REST API middleware.
 
 \end{overview}
 
@@ -265,7 +274,7 @@ Narang, N.
 \bibitem{n-tier architecture} 
 Ortiz Ramirez, A.
 ``Three-Tier Architecture''. {\it Linux Journal}.
-{\bf volum}(75),
+volum(75),
 1--1. (2000) 
 
 \bibitem{i2catua}
@@ -273,12 +282,6 @@ i2CAT Foundation - Audiovisual Unit. Homesite: \url{http://i2cat.net/en/area/aud
 
 \bibitem{lmsGITHUB}
 LiveMediaStreamer framework project. Homesite: \url{https://github.com/ua-i2cat/liveMediaStreamer}
-
-\bibitem{osi} 
-Zimmermann , H.
-``OSI Reference Model - The ISO Model of Architecture for Open Systems Interconnection''. {\it IEEE TRANSACTIONS ON COMMUNICATIONS}.
-{\bf volum}(28 - 4),
-425--432. (1980) 
 
 \bibitem{smpte}
 Society of Motion Picture \& Television Engineers. Homesite: \url{https://www.smpte.org/standards}
@@ -363,13 +366,16 @@ OpenCV library. Homesite: \url{http://opencv.org/}
 
 \bibitem{x264}
 x264 library. Homesite: \url{http://www.videolan.org/developers/x264.html}
+
 \bibitem{x265}
 x265 library. Homesite: \url{https://bitbucket.org/multicoreware/x265}
 
 \bibitem{lame}
 LAME library. Homesite: \url{http://lame.sourceforge.net/}
+
 \bibitem{opus}
 OPUS library. Homesite: \url{http://www.opus-codec.org/}
+
 \bibitem{webm}
 WebM library. Homesite: \url{http://www.webmproject.org/code/}
 
@@ -378,28 +384,41 @@ UltraGrid project. Homesite: \url{http://www.ultragrid.cz/en}
 
 \bibitem{kvm}
 Kernel Virtual Machine project. Homesite: \url{http://www.linux-kvm.org/page/Main_Page}
+
 \bibitem{qemu}
 Quick EMUlator project. Homesite: \url{http://wiki.qemu.org/Main_Page}
+
 \bibitem{lxc}
 Linux containers project. Homesite: \url{https://linuxcontainers.org/}
+
 \bibitem{docker}
 Docker project. Homesite: \url{https://www.docker.com/}
 
+\bibitem{dockerBP}
+Docker file - Best practices. Homesite: \url{https://docs.docker.com/
+articles/dockerfile_best-practices}
+
 \bibitem{munin}
 Munin project. Homesite: \url{http://munin-monitoring.org/}
+
 \bibitem{rrdtool}
 RRDTool project. Homesite: \url{http://oss.oetiker.ch/rrdtool/}
+
 \bibitem{collectd}
 Collectd project. Homesite: \url{https://collectd.org/}
+
 \bibitem{graphite}
 Graphite project. Homesite: \url{http://graphite.wikidot.com/}
 
 \bibitem{nodejs}
 Nodejs project. Homesite: \url{https://nodejs.org/en/}
+
 \bibitem{expressjs}
 Expressjs project. Homesite: \url{http://expressjs.com/}
+
 \bibitem{ubuntu}
 Ubuntu project. Homesite: \url{http://www.ubuntu.com/}
+
 \bibitem{mpegdash}
 MPEG-DASH project. Homesite: \url{http://dashif.org/about/}
 
