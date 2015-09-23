@@ -18,10 +18,9 @@ In 1989, SMPTE (The Society of Motion Picture and Television Engineers \cite{smp
 
 Around SDI there are other related standards which are focused in specific solutions (i.e.: to support higher video resolution, media qualities, media formats, frame rates, audio channels, synchronization,\ldots). An example is the HD-SDI \cite{SDI} standard (High-Definition Serial Digital Interface, defined in SMPTE 292M) which provides bandwidth enough to transport HD video fromats (i.e.: up to 1,485 Gbps). Other SDI related standards are the 3G-SDI \cite{3GSDI} and 12G UHD-SDI \cite{UHDSDI}, which give support to FHD (i.e.: Full HD, 1080p resolution up to 2,970 Gbps bitrates) and 4K (i.e.: UHD cinema resolution up to 12 Gbps bitrates) video formats, respectively. 
 
-Previous bandwidth usage shown per each SDI standard are given by specific parameters which are defined for the media type transmitted.
+Previous bandwidth usage shown per each SDI standard are given by specific parameters which are defined by the uncompressed transmitted media type. Which are:
 
-So, video bandwidth is measured as:
-
+- For video:
 \begin{equation}\label{E:videobitrate}
 bitrate (\frac{bits}{second} (bps)) = color\ depth (\frac{bits}{pixel}) \cdot video\ resolution (\frac{pixels}{frame}) \cdot frame\ rate (\frac{frames}{second}) 
 \end{equation}
@@ -32,7 +31,7 @@ bitrate (\frac{bits}{second} (bps)) = color\ depth (\frac{bits}{pixel}) \cdot vi
 \item Frame rate: this is the number of still images (i.e.: video frames) per second (i.e.: fps) sent as part of the video stream. 
 \end{itemize}
 
-And, audio bandwidth is measured as:
+- For audio:
 \begin{equation}\label{E:videobitrate}
 bitrate (\frac{bits}{second} (bps)) = sample\ rate (\frac{samples}{second}(Hz)) \cdot bit\ depth (\frac{bits}{sample}) \cdot channels  
 \end{equation}
@@ -42,6 +41,8 @@ bitrate (\frac{bits}{second} (bps)) = sample\ rate (\frac{samples}{second}(Hz)) 
 \item Bit depth: this is the number of bits an audio sample is recorded at.
 \item Number of channels: this is the number of separate streams of the audio information.
 \end{itemize}
+
+Since current and non-IP-converged transport technologies have been briefly introduced next chapteris focusing on IP convergence in a tranport and media point of view.
 
 \subsection{IP convergence}
 
