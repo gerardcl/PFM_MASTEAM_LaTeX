@@ -56,19 +56,19 @@ Regarding this virtualization system implemented, it has demonstrated to be a pr
 
 Moreover, Docker ease this platform to become a multiplatform tool, which means that any piece of this prototype can be executed in any OS which Docker gives support (i.e.: currently supported OS are Linux/Unix, MacOSX and Windows).
 
-To point out that thanks to this tool, this platform becomes fast to scale due to its fast startup, restart and shutdown times. And this is also due to its ease to quickly replicate any containerized application or service, if required. 
+To point out that thanks to this tool, this platform becomes fast to scale due to its fast start-up, restart and shut-down times. And this is also due to its ease to quickly replicate any containerized application or service, if required. 
 
 Despite its strengths, it's not still a mature technology (the company behind, called dotCloud, and Docker project itself were born in 2013) but it's evolving really fast. And, this is demonstrated by the high growth that its community is taking place year by year. 
 
 An example to be considered, which should be solved by Docker itself or through external solutions, is about security issues. This is mainly due to the fact that when running a containerized LMS this container does not completely isolate LMS from the security considerations of running it directly on the host, in fact it adds more security considerations. The most important of these is that the Docker daemon's API does not require any kind of authentication. It is important to make sure to have good firewall configured to isolate the host machine from outside the host, or it might be controllable from externals. 
 
-Also, to take into account that Docker's bridged networking as well as mounted filesystem support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is an extensive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
+Also, to take into account that Docker's bridged networking as well as mounted file system support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is an extensive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
 
 \section{Platform}
 
 Although previous tools might work properly and fit in a cloud environment the problem isn't at all solved. 
 
-What has been developed and tested is what can be called the tip of the iceberg of a cloud real-time media production platform. Therefore, the outcomes of this thesis are specific tools/solutions which are suitable to be used together or separated, which lead to implement new specific and higher level tools. 
+What has been developed and tested is what can be called the tip of the iceberg of a cloud real-time and live media production platform. Therefore, the outcomes of this thesis are specific tools/solutions which are suitable to be used together or separated, which lead to implement new specific and higher level tools. 
 
 So, the main goals of this project has been achieved and are ready to be used.
 
@@ -78,12 +78,12 @@ Finally, to point out that in order to follow the premise to be as open as possi
 
 Although this thesis finishes, new user requirements will be gathered and new developments will be proposed. However, the main premise will remain to continue evolving as a set of tools as much configurable as possible.
 
-Also, in order to improve some filter steps it is already proposed to work over GPGPUs. In this case, OpenCV is already offering specific APIs to work over CUDA which are of interest. Moreover, such implementations will lead to develop UHD video pipelines.
+In order to improve some filter steps it is already proposed to work over GPGPUs. In this case, OpenCV is already offering specific APIs to work over CUDA, which are of interest. Moreover, such implementations will lead to develop UHD video pipelines.
 
 Regarding the network side and thanks to the implemented APIs it seems feasible to analyse possibilities to deploy these thesis tools within SDN environments which should improve management and resource optimization.
 
 Next steps are also related to implement new codec and new media formats in order to be up to date. 
 
-In order to improve streaming robustness, a FEC implementation is also a key point for next steps enhancements of the overall platform. There are specific and proprietary solutions but it is proposed to implement the already standard described in RFC 5109 (RTP Payload Format for Generic Forward Error Correction)
+In order to improve streaming robustness, a FEC implementation is also a key point for next steps enhancements of the overall platform. There are specific and proprietary solutions but it is proposed to implement the already standard described in RFC 5109 (RTP Payload Format for Generic Forward Error Correction). Moreover, it is also important to  support specific synchronization mechanisms, such as PTP (Precision Time Protocol - IEEE 1588-2008 standard), which is a protocol used to synchronize clocks throughout a computer network.
 
 Moreover, in order to offer a complete set of tools for private media production use cases and to maintain specific license agreements (i.e.: IPR - Intellectual Property Rights) it is also proposed to implement DRM (Digital Rights Management) technology.
