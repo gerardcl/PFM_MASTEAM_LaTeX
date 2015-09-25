@@ -4,7 +4,7 @@ In order to demonstrate that the LiveMediaStreamer is a suitable tool to be used
 
 \section{Platform deployment}
 
-In order to demonstrate how LMS suits to become a proper tool it's proposed to deploy two scenarios with different complex degrees.
+Therefore, in order to demonstrate how LMS fits to become a proper tool it is proposed to deploy two scenarios with different complex degrees.
 
 \begin{itemize}
 \item Isolated deployment \hfill
@@ -43,7 +43,7 @@ Finally, to point out that all tests have been carried out in a local area netwo
 
 \subsection{Isolated demonstrations}
 
-In order to demonstrate results of interest what is done is to implement a C/C++ script which configures the LMS framework as shown in figure \ref{F:idsc}. Moreover, in order to test how it performs the pipeline metrics are logged once per second (i.e.: pipeline losses and delay) and gathered by a Collectd client container properly configured. Then the Collectd client sends the data to the Graphite container. 
+In order to demonstrate results of interest what is done is to implement a C/C++ script which configures the LMS framework as shown in figure \ref{F:idsc}. Moreover, in order to test how it performs the pipeline metrics are logged once per second (i.e.: pipeline losses and delay) and gathered by a Collectd client container properly configured. Then the Collectd client sends the data to the Graphite container. Finally, it is recommended to check appendix \ref{ANX:dockerFiles} section \ref{ANX:collectdTailFiles2} to see an example of how the logging and collecting is implemented for these demonstrations. 
 
 \begin{figure}[!htb]
 \begin{center}

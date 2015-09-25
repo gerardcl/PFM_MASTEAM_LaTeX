@@ -388,3 +388,152 @@ LoadPlugin write_graphite
 	</Node>
 </Plugin>
 \end{verbatim}
+
+\section{Collectd tail plugin example configuration}\label{ANX:collectdTailFiles2}
+
+Next tail plugin configuration is performing specific regular expression matching to bind logged metrics from the LMS demo script. Each logged line to stdout is formatted as shown next:
+
+\begin{verbatim}
+|PATHID|value|avgDelay-5004|value|lostBlocs-5004|value|PATHID|value
+|avgDelay-5006|value|lostBlocs-5006|value|RXmediaType|video
+|videoRXavgBitRateInKbps|value|videoRXavgPacketLossPercentage
+|value|videoRXavgInterPacketGapInMiliseconds|value
+|videoRXcurJitterInMicroseconds|value|RXmediaType|audio
+|audioRXavgBitRateInKbps|value|audioRXavgPacketLossPercentage
+|value|audioRXavgInterPacketGapInMiliseconds|value
+|audioRXcurJitterInMicroseconds|value|TX_URI|value
+|TX_SSRC-1|value|TXavgBitrateInKbps-1|value
+|TXpacketLossRatio-1|value|TXjitterInMicroseconds-1
+|value|TXroundTripDelayMilliseconds-1|value|TX_SSRC-2
+|value|TXavgBitrateInKbps-2|value|TXpacketLossRatio-2
+|value|TXjitterInMicroseconds-2|value|TXroundTripDelayMilliseconds-2|value|
+\end{verbatim}
+
+Then, each new line is parsed through the tail plugin of the Collectd configuration. An example is shown next:
+\begin{verbatim}
+<Plugin tail>
+<File "/home/lms/logs/lms.log">
+Instance "lmsTest"
+<Match>
+Regex ".*avgDelay-5004\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoAVGdelay-us"
+</Match>
+<Match>
+Regex ".*lostBlocs-5004\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoLostBlocs"
+</Match>
+<Match>
+Regex ".*avgDelay-5006\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioAVGdelay-us"
+</Match>
+<Match>
+Regex ".*lostBlocs-5006\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioLostBlocs"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|video.*videoRXavgBitRateInKbps\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "videoRXavgBitRateInKbps"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|video.*videoRXavgPacketLossPercentage\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "videoRXavgPacketLossPercentage"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|video.*videoRXavgInterPacketGapInMiliseconds\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "videoRXavgInterPacketGapInMiliseconds"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|video.*videoRXcurJitterInMicroseconds\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "videoRXcurJitterInMicroseconds"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|audio.*audioRXavgBitRateInKbps\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "audioRXavgBitRateInKbps"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|audio.*audioRXavgPacketLossPercentage\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "audioRXavgPacketLossPercentage"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|audio.*audioRXavgInterPacketGapInMiliseconds\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "audioRXavgInterPacketGapInMiliseconds"
+</Match>
+<Match>
+Regex ".*RXmediaType\\|audio.*audioRXcurJitterInMicroseconds\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "audioRXcurJitterInMicroseconds"
+</Match>
+<Match>
+Regex ".*TXavgBitrateInKbps-1\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoTXavgBitrateInKbps"
+</Match>
+<Match>
+Regex ".*TXpacketLossRatio-1\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoTXpacketLossRatio"
+</Match>
+<Match>
+Regex ".*TXjitterInMicroseconds-1\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoTXjitterInMicroseconds"
+</Match>
+<Match>
+Regex ".*TXroundTripDelayMilliseconds-1\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "VideoTXroundTripDelayMilliseconds"
+</Match>
+<Match>
+Regex ".*TXavgBitrateInKbps-2\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioTXavgBitrateInKbps"
+</Match>
+<Match>
+Regex ".*TXpacketLossRatio-2\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioTXpacketLossRatio"
+</Match>
+<Match>
+Regex ".*TXjitterInMicroseconds-2\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioTXjitterInMicroseconds"
+</Match>
+<Match>
+Regex ".*TXroundTripDelayMilliseconds-2\\|([0-9]*).*"
+DSType "CounterAdd"
+Type counter
+Instance "AudioTXroundTripDelayMilliseconds"
+</Match>
+</File>
+</Plugin>
+\end{verbatim}
