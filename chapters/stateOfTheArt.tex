@@ -42,9 +42,26 @@ bitrate (\frac{bits}{second} (bps)) = sample\ rate (\frac{samples}{second}(Hz)) 
 \item Number of channels: this is the number of separate streams of the audio information.
 \end{itemize}
 
-Next subsection is focusing on IP convergence through transport and media types point of view. This is exposed in order to show how media content is proposed to be transported and treated through an IP environment (from coaxial to network cables such Optical Fibre or Ethernet). This subsection is also exposed in order to know how tools that are going to be developed during this thesis will fit with current convergence of the media content production to IP.
+For example, HD-SDI has 10 bit word samples and YUV\footnote{In ‘YUV,’ ‘Y’ represents the brightness, or ‘luma’ value, and ‘UV’ represents the color, or ‘chroma’ values. In contrast, the values of the RGB encoding scheme represent the intensities of red, green and blue channels in each pixel.} color encoding scheme is applied with Y sampled at 74.25 MHz and CB and CR sampled at 37.125 MHz.  So, the maximum amount of bandwidth accepted is:
+
+\begin{equation}\label{E:sr}
+10 bits \cdot (74.25Mhz + 2 \cdot 37.125Mhz) = 1.485 Gbps
+\end{equation}
+
+Therefore, a video sampled at 50 frames per second at interleaved frame rate, with frame size of 1920 x 1080 pixels and bit depth of 24 bpp (i.e.: 24 bits RGB) fits inside HD-SDI:
+
+\begin{equation}\label{E:srex}
+24 depth \frac{bits}{pixel} \cdot (1920 \cdot 1080) \frac{pixels}{frame} \cdot 25 \frac{frames}{second} = 1.244 Gbps
+\end{equation}
 
 \subsection{IP convergence}
+
+This section is focusing on IP convergence through transport and media types point of
+view. This is exposed in order to show how media content is proposed to be transported
+and treated through an IP environment (from coaxial to network cables such Optical Fibre
+or Ethernet). This subsection is also exposed in order to know how tools that are going
+to be developed during this thesis will fit with current convergence of the media content
+production to IP. 
 
 Since SDI standard was released, new encapsulation audio (i.e.: AES67-2013 \cite{AES}) and video (i.e.: SMPTE 2022-6 \cite{ST2022}) standards are appearing to transport high-quality media signals over IP Networks. Also, further specific solutions, such as managing packet loss recovery using FEC (SMPTE 2022-5 \cite{ST20225}), have appeared as potential robustness solutions.
 
@@ -74,7 +91,9 @@ Finally, to point out that the wide adoption of low-delay encoding (e.g.: JPEG2K
 
 \section{Migration to cloud}
 
-This section is a continuation of the previous one but focusing on how OTT\footnote{OTT refers to the service you use over the network services of your service provider. An example of OTT service is Youtube, which lets you playback video content through your ISP (Internet Service Provider) infrastructure.} \cite{ottVSiptv} content technologies (i.e.: video delivery techniques) are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
+This section is related to the previous one but focusing on how OTT\footnote{OTT refers to the service you use over the network services of your service provider. An example of OTT service is Youtube, which lets you playback video content through your ISP (Internet Service Provider) infrastructure.} \cite{ottVSiptv} content technologies (i.e.: video delivery techniques) are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
+
+This section is a continuation of the previous one but focusing on how OTT\footnote{OTT refers to the service you use over the network services of your service provider. An example of OTT service is Youtube, which lets you playback video content through your ISP (Internet Service Provider) infrastructure.} \cite{ottVSiptv} content technologies (i.e.: video delivery techniques) are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept.
 
 \subsection{Cloud computing}
 
