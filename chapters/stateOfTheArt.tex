@@ -42,7 +42,7 @@ bitrate (\frac{bits}{second} (bps)) = sample\ rate (\frac{samples}{second}(Hz)) 
 \item Number of channels: this is the number of separate streams of the audio information.
 \end{itemize}
 
-For example, HD-SDI has 10 bit word samples and YUV\footnote{In ‘YUV,’ ‘Y’ represents the brightness, or ‘luma’ value, and ‘UV’ represents the color, or ‘chroma’ values. In contrast, the values of the RGB encoding scheme represent the intensities of red, green and blue channels in each pixel.} color encoding scheme is applied with Y sampled at 74.25 MHz and CB and CR sampled at 37.125 MHz.  So, the maximum amount of bandwidth accepted is:
+For example, HD-SDI has 10 bit word samples and YUV\footnote{In ‘YUV,’ ‘Y’ represents the brightness, or ‘luma’ value, and ‘UV’ represents the color, or ‘chroma’ values (U is the blue-difference and V is the red-difference). In contrast, the values of the RGB encoding scheme represent the intensities of red, green and blue channels in each pixel.} color encoding scheme is applied with Y sampled at 74.25 MHz and $\mathrm{C_{B}}$ (i.e.: U) and $\mathrm{C_{R}}$ (i.e.: V) sampled at 37.125 MHz.  So, the amount of bandwidth accepted is:
 
 \begin{equation}\label{E:sr}
 10 bits \cdot (74.25Mhz + 2 \cdot 37.125Mhz) = 1.485 Gbps
@@ -210,7 +210,7 @@ Therefore, this implies monitoring the cloud infrastructure (e.g.: servers, virt
 
 QoS is the network-centric monitoring of underlying infrastructure components such as servers, routers and its network traffic. QoS metrics are generally device (e.g.: CPU and memory load, CPU temperature, disk space or HDD health) or transport-oriented (e.g.: packet loss, delay, bandwidth usage or jitter). 
 
-Although QoS can be fully affordable due to the robustness and redundancy of current infrastructures (e.g.: back-up services, network rerouting and error correction), this doesn't mean that any end user might be feeling comfortable by using deployed services (e.g.: searching on a e-commerce webpage) over a high QoS infrastructure. Then, QoE monitoring term evaluates the quality delivered to a user and it is done by analysing parameters when connecting to such services like a user. Therefore, QoE performance indicators are user-centric (e.g.: webpages response time or measuring video and audio quality (MOS)).
+Although QoS can be fully affordable due to the robustness and redundancy of current infrastructures (e.g.: back-up services, network rerouting and error correction), this doesn't mean that any end user might be feeling comfortable by using deployed services (e.g.: searching on a e-commerce webpage) over a high QoS infrastructure. Then, QoE monitoring term evaluates the quality delivered to a user and it is done by analysing parameters when connecting to such services like a user. Therefore, QoE performance indicators are user-centric (e.g.: webpages response time or measuring video and audio quality (e.g.: Mean Opinion Score test, MOS)).
 
 Common network monitoring protocols for distributed infrastructures management are:
 
@@ -224,7 +224,7 @@ Usually, these protocols are used to measure QoS, but there are complex algorith
 
 Focusing our attention in what this thesis is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience. This is mainly because these contents are compressed and coded, and have low redundancy. Moreover, when designing systems, for referenced analysis, several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the transcoding system, transport network, access network, home network to end device).
 
-On the other hand, the referenceless\footnote{Referenceless analysis } analysis is based on the idea that end users do not know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
+On the other hand, the referenceless\footnote{Referenceless analysis is a technique studied and implemented by the AGH Multimedia Team \cite{AGHTEAM} and it has been applyed within European projects \cite{mitsu} where i2CAT Foundation's Media Internet area and AGH Multimedia Team has been collaborating \cite{AGHQOE}.} analysis is based on the idea that end users do not know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
 
 Obviously, the automation of critical cloud performance monitoring tasks is crucial for ensuring availability, providing efficient services and reducing common errors, costs and complexity. So, the use of OTT applications that processes such quantities of data flows and displays outcome parameters of interest are crucial. 
 

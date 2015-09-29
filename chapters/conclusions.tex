@@ -64,6 +64,8 @@ An example to be considered, which should be solved by Docker itself or through 
 
 Also, to take into account that Docker's bridged networking as well as mounted file system support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is an extensive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
 
+Although previous issues shown, Docker offers other interesting solutions like direct hardware access (i.e.: non-specific GPU drivers nor emulator) and security at infrastructure management level (i.e.: fast replication and delocation of the containers). 
+
 \section{Platform}
 
 Although previous tools might work properly and fit in a cloud environment the problem isn't at all solved. 
