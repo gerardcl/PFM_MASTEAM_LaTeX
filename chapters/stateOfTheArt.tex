@@ -51,7 +51,7 @@ For example, HD-SDI has 10 bit word samples and YUV\footnote{In ‘YUV,’ ‘Y�
 Therefore, a video sampled at 50 frames per second at interleaved frame rate, with frame size of 1920 x 1080 pixels and bit depth of 24 bpp (i.e.: 24 bits RGB) fits inside HD-SDI:
 
 \begin{equation}\label{E:srex}
-24 depth \frac{bits}{pixel} \cdot (1920 \cdot 1080) \frac{pixels}{frame} \cdot 25 \frac{frames}{second} = 1.244 Gbps
+24 \frac{bits}{pixel} \cdot (1920 \cdot 1080) \frac{pixels}{frame} \cdot 25 \frac{frames}{second} = 1.244 Gbps
 \end{equation}
 
 \subsection{IP convergence}
@@ -92,8 +92,6 @@ Finally, to point out that the wide adoption of low-delay encoding (e.g.: JPEG2K
 \section{Migration to cloud}
 
 This section is related to the previous one but focusing on how OTT\footnote{OTT refers to the service you use over the network services of your service provider. An example of OTT service is Youtube, which lets you playback video content through your ISP (Internet Service Provider) infrastructure.} \cite{ottVSiptv} content technologies (i.e.: video delivery techniques) are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept. 
-
-This section is a continuation of the previous one but focusing on how OTT\footnote{OTT refers to the service you use over the network services of your service provider. An example of OTT service is Youtube, which lets you playback video content through your ISP (Internet Service Provider) infrastructure.} \cite{ottVSiptv} content technologies (i.e.: video delivery techniques) are giving new chances to enhance audio-visual media production to IP convergence, concretely within the cloud computing concept.
 
 \subsection{Cloud computing}
 
@@ -226,7 +224,7 @@ Usually, these protocols are used to measure QoS, but there are complex algorith
 
 Focusing our attention in what this thesis is about, the QoE measurements are relevant for audiovisual content services because bad network performance may highly affect the user's experience. This is mainly because these contents are compressed and coded, and have low redundancy. Moreover, when designing systems, for referenced analysis, several elements in the video production and delivery chain may introduce distortion by degrading the content (i.e.: from the transcoding system, transport network, access network, home network to end device).
 
-On the other hand, the referenceless analysis is based on the idea that end users do not know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
+On the other hand, the referenceless\footnote{Referenceless analysis } analysis is based on the idea that end users do not know about the original content. In this case, instead of measuring the QoE by comparing the original data to the delivered one, this is done by trying to detect artefacts (i.e.: blockiness, blur or jerkiness for video frames).
 
 Obviously, the automation of critical cloud performance monitoring tasks is crucial for ensuring availability, providing efficient services and reducing common errors, costs and complexity. So, the use of OTT applications that processes such quantities of data flows and displays outcome parameters of interest are crucial. 
 
