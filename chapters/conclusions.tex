@@ -16,6 +16,8 @@ Figures \ref{F:isoCPU} and \ref{F:gsavgcpu} trace what is the scalability of the
 \end{center}
 \end{figure}
 
+It is important to note that in figure \ref{F:gsvpalbd} (also in previous chapter \ref{H:platformDeploymentAndDemonstrations} figures) appear some noisy data which are caused due to the facto of working static files to simulate live audio-video streaming. This means that when the each file end some seconds of discontinuity appear.
+
 Moreover, a topic related to development continuity of the LMS framework it's demonstrated that the selected third party libraries are suitable to continue being used (i.e.: Live555, LibAV/ffmpeg, x264 and OpenCV, among others). And, also regarding debugging the LMS, thanks to the metrics gathering system implemented it is possible to know which filters are critical or which should be improved.
 
 It's also important to remark that thanks to the developments done related to metrics gathering and the tools deployed around the LMS have helped detecting issues that might not be detected in near future but could be problematic. For example, figure \ref{SF:S5} showcased that the processing time for the audio "receiver to mixer" path was not working properly due to not cleaning up the queues when the source is sending in a pseudo-live mode (i.e.: a loop, a periodic reinitialization of the audio stream).
@@ -64,7 +66,7 @@ An example to be considered, which should be solved by Docker itself or through 
 
 Also, to take into account that Docker's bridged networking as well as mounted file system support allows for possible security holes into and out of the container itself, but it also might happen with traditional virtualization. Of course, the topic of container security is an extensive subject, but it's an issue to be strongly considered when creating a container in order to keep the security of Docker (and LXC) for granted.
 
-Although previous issues shown, Docker offers other interesting solutions like direct hardware access (i.e.: non-specific GPU drivers nor emulator) and security at infrastructure management level (i.e.: fast replication and delocation of the containers). 
+Although previous issues shown, Docker offers other interesting solutions like direct hardware access (i.e.: non-specific GPU drivers nor emulator are required) and security at infrastructure management level (i.e.: fast replication and relocation of the containers when specific containers are running with troubles like external network attacks to the service). 
 
 \section{Platform}
 

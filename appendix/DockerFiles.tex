@@ -4,6 +4,8 @@ This appendix is listing specific Docker, Nginx and Collectd configuration files
 
 \section{Basic LMS container}\label{ANX:dockerFiles1}
 
+Next Docker file installs latest development commit into the container to be built and prepares the image to run LMS as a service.
+
 \begin{verbatim}
 # LiveMediaStreamer Container
 FROM ubuntu:14.04
@@ -58,6 +60,8 @@ CMD ["/usr/local/bin/livemediastreamer","7777"]
 
 \section{HTTP REST API container}\label{ANX:dockerFiles2}
 
+Next Docker file installs Node.js and clones latest HTTP REST API for LMS from the GitHub repository. It also prepares the image in order to run the HTTP REST API middleware for the LMS framework.
+
 \begin{verbatim}
 # LiveMediaStreamer Container
 FROM ubuntu:14.04
@@ -83,6 +87,8 @@ CMD ["nodejs", "/home/lms/LMStoREST/lms-middleware.js"]
 \end{verbatim}
 
 \section{Running multiple processes within a container}\label{ANX:dockerFiles3}
+
+This Docker file installs Nginx and LMS inside the same container in order to be ready to serve through HTTP Nginx server the MPEG-DASH files generated for the LMS framework (it externally requires to be configured as a transcoder to MPEG-DASH). Then, superviord, which is also installed, runs as the default image process. Supervisord is managing each defined process to be executed.  
 
 \begin{verbatim}
 # LiveMediaStreamer Container
@@ -153,6 +159,8 @@ CMD ["/usr/bin/supervisord"]
 \end{verbatim}
 
 \section{Nginx server file configuration example}\label{ANX:nginxexample}
+
+This is a basic example to configure the Nginx server in order to server the files generated for the LMS. It is not recommended to define servers in the same nginx.conf file (servers should be defined through the sites available/enabled directories) but this is done that way in order to demonstrate and example a complete but basic Nginx server configuration.
 
 \begin{verbatim}
 # this sets the user nginx will run as, 
@@ -225,6 +233,9 @@ daemon off;
 \end{verbatim}
 
 \section{Sharing volumes within containers}\label{ANX:dockerFiles4}
+
+This containers installs Nginx and runs it as default image command. This is an isolated Nginx server container which is serving the LMS files through the shared volumes between the basic LMS container and this one.
+
 \begin{verbatim}
 # Nginx Container - LMS special one
 FROM ubuntu:14.04
@@ -250,6 +261,8 @@ CMD ["/usr/sbin/nginx"]
 
 \section{Collectd client container}\label{ANX:dockerFiles5}
 
+This is a basic Collectd client container build.
+
 \begin{verbatim}
 
 FROM    ubuntu:14.04
@@ -270,6 +283,8 @@ CMD start_container
 \end{verbatim}
 
 \section{Collectd client configuration}\label{ANX:collectdFiles1}
+
+This is a basic Collectd client configuration template file.
 
 \begin{verbatim}
 Hostname "{{ LMS_NAME }}"
@@ -298,6 +313,7 @@ LoadPlugin network
 
 \section{Collectd server and Graphite container}\label{ANX:dockerFiles6}
 
+This Docker file installs and configures all the dependences required to run a basic Graphite system which is served by a Collectd server which listens from external Collectd containerized clients.
 
 \begin{verbatim}
 # LiveMediaStreamer Container
@@ -355,6 +371,8 @@ CMD exec supervisord -n
 \end{verbatim}
 
 \section{Collectd server configuration}\label{ANX:collectdFiles2}
+
+This is a Collectd server configuration example.
 
 \begin{verbatim}
 Hostname "localhost"
