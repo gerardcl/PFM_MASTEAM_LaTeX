@@ -1,29 +1,29 @@
 \chapter{Virtualization}\label{D:virtualization}
 
-Virtualization chapter focuses on the implementations done in order to showcase how to prepare generic containers for a media production platform prototype with technologies and tools already introduced. So, what is done is to study and test the Docker technology in order to assure that LMS is ready to properly fit in a containerized environment and to learn different possibilities to reach maximum flexibility when configuring and deploying different scenarios.
+This chapter focuses on the preparation of generic containers for a media production platform prototype with the technologies and tools introduced in Chapter \ref{A:stateOfTheArt}. We study and test the Docker technology in order to assure that LMS is ready to properly fit in a containerized environment and to evaluate different possibilities to reach maximum flexibility when configuring and deploying different scenarios.
 
 \section{Creating and managing generic containers}
-Proposed and minimal containerized entities are the following ones:
+The minimal containerized entities are the following ones:
 
 \begin{itemize}
 \item The core container with a LiveMediaStreamer instance already deployed inside and ready to use.
 \item The HTTP REST API container with the middleware interface inside and ready to use
 \end{itemize}
 
-First of all, let's introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS \cite{ubuntu}, which is the Linux distribution version where the LMS is being developed. And, to point out that previous list does not handle monitoring requirements, this issue will be treated in chapter \ref{G:monitoringLayer}. Also, this is because initial interest is about testing how LiveMediaStreamer can be deployed inside a containerised environment.
+First of all, let us introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS \cite{ubuntu}, which is the Linux distribution version where the LMS is being developed. Note that previous list does not handle monitoring requirements, but this topic will be treated in Chapter \ref{G:monitoringLayer}. this is because our initial interest is related to testing how LiveMediaStreamer can be deployed inside a containerised environment.
 
-To remark that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
+Note that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
-So, some procedures must be taken into account in order to properly install and assure a best fit possible of the Docker technology inside the OS (and also to be ready for a cloud environment). These procedures imply:
+Some procedures must be taken into account in order to properly install and assure a best fit possible of the Docker technology inside the OS (and also to be ready for a cloud environment). These procedures include:
 
 \begin{itemize}
 \item To create a docker group: in order to avoid user permission issues.
 \item To adjust memory and swap accounting: in order to not suffer memory overhead and performance degradation.
-\item To enable UFW forwarding: if UFW is enabled it's required to properly configure its forwarding policy (if UFW's enabled it will drop all forwarding and incoming traffic).
-\item To configure a DNS server: because Docker defaults to using an external DNS nameserver because it can't use the local one.
+\item To enable UFW forwarding: if UFW is enabled it is required to properly configure its forwarding policy (if UFW's enabled it will drop all forwarding and incoming traffic).
+\item To configure a DNS server: since Docker defaults to using an external DNS nameserver, it cannot use the local one.
 \end{itemize}
 
-It is strongly recommended to check documentation's web page of the official Docker project site \cite{docker} in order to know how this configurations can be done . There is a lot of documentation and references in order to understand and learn how Docker works.
+It is strongly recommended to check documentation's web page of the official Docker project site \cite{docker} in order to know how these configurations can be done.
 
 Once Docker is properly installed as a daemon in the OS let's focus on interesting possibilities that this technology offers in order to create and manage containers:
 
@@ -32,12 +32,12 @@ Once Docker is properly installed as a daemon in the OS let's focus on interesti
 	\begin{itemize}
 	\item Using a Docker file \hfill
 	
-	This is the main configuration file for a Docker container set up. It can be seen as an initial script to build a specific docker container. Also, it's like setting up a local git repository to later distribute it, but at a container level instead of software level. There you can define many configuration parameters in order to install and properly configure required dependencies and tools to run inside. 	
+	This is the main configuration file for a Docker container set up. It can be seen as an initial script to build a specific docker container. Also, it is like setting up a local git\footnote{Git is a version control system for software development. It is a distributed revision control system.} repository to later distribute it, but at a container level instead of software level. There you can define many configuration parameters in order to install and properly configure required dependencies and tools to run inside. 	
 	
 	\item Using Docker pull, commit and push for images
 
-	This is not recommended for creating an original container. But, it is really suitable when starting learning Docker technology. However, it is recommended to be used once an initial container has been build (from a Docker file) in order to maintain and to distribute different versions and deployments of this (as said, as a higher level git repository).	 
-It's important to note that a Docker image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image (the container itself). Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. This last fact is a key point due to its capacity of also offering deployment layers inside a container (i.e.: more than one tool/technology inside a container).
+	This is not recommended for creating an original container, but it is appropriate when starting with Docker technology. However, it is recommended to be used once an initial container has been build (from a Docker file) in order to maintain and to distribute different versions and deployments of this (as said, as a higher level git repository).	 
+It is important to note that a Docker image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image (the container itself). Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. This last fact is a key point due to its capacity of also offering deployment layers inside a container (i.e.: more than one tool/technology inside a container).
 	
 	\end{itemize}
 \item Managing containers 
@@ -48,37 +48,37 @@ It's important to note that a Docker image consists of a series of layers. Docke
 	
 	\item Using Docker Registry and Repository service
 
-	This	 listed item is a key point when looking for local management of images' repositories. This tool let's deploy an external (e.g.: private) registry if some enhancements over Docker Hub are desired (e.g.: specific user credentials, high level security layer,...).
+	This item is a key point when looking for local management of images' repositories. This tool let's deploy an external (e.g.: private) registry if some enhancements over Docker Hub are desired (e.g.: specific user credentials, high level security layer,...).
 	
 	\item Using Docker Compose
 	
-	This tool let's create a localhost orchestrator of docker containers. This means managing/running more than one container and linking them (if required) at same time from the same point.
+	This tool let us create a localhost orchestrator of docker containers. This means managing/running more than one container and linking them (if required) at same time from the same point.
 	
 	\end{itemize}
 \end{itemize}
 
-For a more specific detailed list of options and possibilities from Docker containers, please check appendix \ref{ANX:csd}.
+For a more specific detailed list of options and possibilities from Docker containers, please check Appendix \ref{ANX:csd}.
 
 \subsection{Basic LMS container}
 
 Once previous brief of Docker possibilities to work with has been introduced let's start containerizing a single LiveMediaStreamer.
 
-As shown in the wiki page at GitHub's LiveMediaStreamer, the framework has some requirements and dependences that should be previously solved (i.e.: installed). Therefore, in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles1} is listed the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
+As shown in the wiki page at GitHub's LiveMediaStreamer (see Appendix \ref{ANX:lmsarchfull}), the framework has some requirements and dependences that should be previously solved (i.e.: installed). Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles1} lists the first and basic Docker file which installs and configures the image in order to run a LMS instance. 
 
 Now, let's focus on what is done in order to explain it better: 
 
 \begin{itemize}
-\item FROM: this command indicates which is the image base to be used, in this case, as previously said, Ubuntu 14.04 is the selected environment.
+\item FROM: this command indicates which is the image base to be used, in this case, as previously mentioned, Ubuntu 14.04 is the selected environment.
 \item MAINTAINER: this command tags the maintainer/creator of such container image.
 \item RUN: specific command which runs specific bash scripts (e.g.: apt-get, mkdir, adduser and any other available system command from the base image)
 \item USER: this command is used in order to specify the system user that is going to be loaded in such container. This is mainly for security reasons (e.g.: avoiding root user).
-\item EXPOSE: this command handles the ports to be exposed from the container itself. This does not imply that later ports couldn't be exposed through the command line interface. But, it's used in order to list suitable ports to be required. In this case, the exposed ports are a range of UDP ports where streams will be input or outputted (i.e.: RTP), a TCP range for the RTSP and the TCP port for managing the LMS framework through TCP socket messages. 
+\item EXPOSE: this command handles the ports to be exposed from the container itself. This does not imply that later ports couldn't be exposed through the command line interface, but it is used in order to list suitable ports to be required. In this case, the exposed ports are a range of UDP ports where streams will be input or outputted (i.e.: RTP), a TCP range for the RTSP and the TCP port for managing the LMS framework through TCP socket messages. 
 \item CMD: this configures the command that will be executed when running the image itself. It's important to point out that any user can later enter inside the container avoiding the execution of the default CMD defined (e.g.: executing bash for development purposes inside the container and creating a new container's version).
 \end{itemize}
 
-There are many other commands that could be used inside a Docker file (see appendix \ref{ANX:csd}) but they are not required in this case.
+There are many other commands that could be used inside a Docker file (see Appendix \ref{ANX:csd}) but they are not required in this case.
 
-Then, once the Docker file is defined it's time to build the image, this is done as shown next:
+Once the Docker file is defined it is time to build the image as follows:
 
 \begin{verbatim}
 $ docker build \
@@ -86,7 +86,7 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-To point out that in order to start working with different images and managing them in different environments (i.e.: different servers/computers) a Docker Hub account has been created. So, let's define each parameter in order to name and tag each image to built during this thesis. In this case:
+Note that in order to start working with different images and managing them in different environments (i.e.: different servers/computers) a Docker Hub account has been created. So, let's define each parameter in order to name and tag each image to built during this thesis. In this case:
 
 \begin{itemize}
 \item Origin repository registry is "gerardcl" (see \url{https://hub.docker.com/r/gerardcl})
@@ -94,18 +94,16 @@ To point out that in order to start working with different images and managing t
 \item Image version tag is "single"
 \end{itemize}
 
-Therefore, last command will build the image by following the defined script inside the Docker file already defined.
-
-Then, the command to execute the image is as proposed next:
+The last command builds the image by following the defined script inside the Docker file already defined. Finally, the command to execute the image is:
 
 \begin{verbatim}
 $ docker run --rm -p <host port>:<container port> \
 		--name single-lms gerardcl/lms:single
 \end{verbatim}
 
-This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|, which has been configured in CMD method with 7777) to another defined TPC port at host side (i.e.: \verb|<host port>|). Moreover, flag \verb|--rm| is used in order to be able to run again the same command by defining (i.e.: identifying) the running image with "single-lms" name (i.e.: \verb|--name| flag). To point out that for testing purposes flags \verb|-i -t| (or \verb|-it|, it's just the same) might be also added in the command in order to run as an interactive process (this means allocating a TTY for the container process, so exposing the STDIN, STDOUT and STDERR standard streams). Therefore, it seems like executing the process over the same OS too.
+This last command runs the previous defined and built image by exposing internal TCP port (i.e.: \verb|<container port>|, which has been configured in CMD method with 7777) to another defined TPC port at host side (i.e.: \verb|<host port>|). Flag \verb|--rm| is used in order to be able to run again the same command by defining (i.e.: identifying) the running image with "single-lms" name (i.e.: \verb|--name| flag). Note that for testing purposes flags \verb|-i -t| (or \verb|-it|, it's just the same) might be also added in the command in order to run as an interactive process (this means allocating a TTY for the container process, so exposing the STDIN, STDOUT and STDERR standard streams). Therefore, the effect is similar to executing the process over the same OS too.
 
-Finally in order to expose many other ports it's just required to add the -p flag as many times as ports required. Moreover, if an UDP port is also required to be exposed it is required to add the udp tag as shown:
+Finally, in order to expose other ports it is just required to add the -p flag as many times as ports required. If an UDP port is also required to be exposed it is required to add the udp tag as shown:
 
 \begin{verbatim}
 $ docker run --rm -p <host port>:<container port> \
@@ -116,11 +114,9 @@ $ docker run --rm -p <host port>:<container port> \
 
 \subsection{HTTP REST API container}
 
-Next container proposed to be built is the HTTP REST API middleware developed in chapter \ref{D:application}.  
+The following container to be built is the HTTP REST API middleware developed in Chapter \ref{D:application}. Since it is a Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. This is show in Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles2}.
 
-Therefore, as it's an Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. It is show in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles2}.
-
-In this case, in order to build and manage such image, these are the image parameters which defines this image:
+In this case, in order to build and manage such image, these are the image parameters which define this image:
 
 \begin{itemize}
 \item Origin repository registry is "gerardcl" (see \url{https://hub.docker.com/r/gerardcl})
@@ -128,7 +124,7 @@ In this case, in order to build and manage such image, these are the image param
 \item Image version tag is "single"
 \end{itemize}
 
-So, the building command should be as shown next:
+The building command is:
 
 \begin{verbatim}
 $ docker build \
@@ -136,22 +132,22 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-To point out that the middleware implementation support changing the listening port of the application (default is 8080) by just adding the "-e" flag and defining the "PORT" environment variable of the container. Next an example is shown:
+Note that the middleware implementation support changing the listening port of the application (default is 8080) by just adding the "-e" flag and defining the "PORT" environment variable of the container. An example is shown:
 
 \begin{verbatim}
 $ docker run -it -e "PORT=9000" -p 8080:9000 \
 		--name lms-rest-api --rm  gerardcl/lms-rest-api:single
 \end{verbatim}
 
-So, this last command sets the internal "PORT" environment variable to 9000 and binds it to the 8080 port of the host.
+This last command sets the internal "PORT" environment variable to 9000 and binds it to the 8080 port of the host.
 
 \section{Linking containers}
 
-In order to play with previous containers built it is required to know how they might be interconnected (i.e.: linked).
+In order to play with the previously built containers, it is required to know how they might be interconnected (i.e.: linked).
 
 \subsection{Same OS}
 
-If containers are running on the same OS it's important to remember that each environment is isolated so its network environment too. Then, in order to let the HTTP REST API container connect to and manage the LMS instance container it is required to share the its network environment with LMS instance container. Here is how each container might be executed:
+If containers are running on the same OS it is important to keep in mind that each environment is isolated and its network environment is isolated too. Then, in order to let the HTTP REST API container connect to and manage the LMS instance container it is required to share the its network environment with LMS instance container. Here is how each container might be executed:
 
 \begin{verbatim}
 $ docker run -it -p 8080:8080 --name lms-rest-api \
@@ -162,9 +158,9 @@ $ docker run -it --rm --net container:lms-rest-api \
 		--name lms gerardcl/lms:single
 \end{verbatim}
 
-As shown, flag \verb|--net container:<container id>| helps solving this issue. This configures the "lms" container to use the network environment of the "lms-rest-api" container. So, both containers are on the same localhost, but isolated. The unique exposed port is the 8080, which is required to get access to REST API.
+Flag \verb|--net container:<container id>| helps solving this issue. This configures the "lms" container to use the network environment of the "lms-rest-api" container. So, both containers are on the same localhost, but isolated. The only exposed port is the 8080, which is required to get access to REST API.
 
-To point out that in this case it's not required to expose the TCP socket API port because it is internally linked through the REST API container. This is a key point of the Docker technology, which lets isolate a container from external world. 
+To point out that in this case it is not required to expose the TCP socket API port because it is internally linked through the REST API container. This is a key point of the Docker technology, which lets isolate a container from external world. 
 
 In order to demonstrate it let's show what a \verb|$ netstat -putaneo| command  execution returns:
 \begin{itemize}
@@ -181,7 +177,7 @@ No result obtained so isolation is reached on port 7777
 
 \subsection{Separate OS}
 
-In order to deploy each container in separate OS it is required to expose required ports for achieve intercommunication. So Docker "run" command might be:
+In order to deploy each container in separate OS it is required to expose required ports for achieve intercommunication. The Docker "run" command might be:
 \begin{itemize}
 \item For LMS container (only exposing TCP socket API control ports): \hfill
 
@@ -200,34 +196,26 @@ Then, in order to reach connection from REST API to LMS the host to set in the c
 
 \section{Running multiple processes within a container}
 
-Finally, it is important to note that a Docker image is only able to run a single process through the CMD method. But, there is a solution to reach executing more than one process (i.e.: multiple services). This fact will help developing chapter \ref{G:monitoringLayer}.
+Finally, it is important to note that a Docker image is only able to run a single process through the CMD method. But there is a solution to reach executing more than one process (i.e.: multiple services). This fact will help developing Chapter \ref{G:monitoringLayer}.
 
 The solution for running multiple services inside the same container remains on a common and widely used tool, called supervisord. Supervisord is a client/server system that allows monitoring and controlling any number of processes on UNIX-like operating systems, which is meant to be used to control processes related to a project or a customer (i.e.: a Docker container), and is meant to start like any other program at boot time.
 
-An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH \cite{mpegdash} segments, which a key point feature of the LMS framework in order to offer live or on demand streaming to browser applications.
+An example for supervisor to be required is due to the fact that LMS framework is able to encapsulate audio and/or video streams to MPEG-DASH\footnote{Dynamic Adaptive Streaming over HTTP (DASH), also known as MPEG-DASH, is an adaptive bitrate streaming technique that enables high quality streaming of media content over the Internet delivered from conventional HTTP web servers.} \cite{mpegdash} segments, which a key point feature of the LMS framework in order to offer live or on demand streaming to browser applications. Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser. Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} describes the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
 
-Therefore, in order to let a browser play obtained segments an HTTP server is required, which serves the required files to be sent to the browser.
-
-In appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles3} is introduced the Docker file for building such container, which will have a LMS instance and a HTTP server (i.e.: Nginx).
-
-So, it is quite similar to first Docker file introduced in this chapter but:
+This is quite similar to the first Docker file introduced in this chapter but:
 
 \begin{itemize}
 \item Nginx and Supervisord are also installed
 \item Specific /var/run and /var/log folders are created per each Supervidord process inside the supervisord.conf file
 \item This Docker file uses the command ADD in order to add specific configuration files for the Nginx and Supervisord container's servers (they are later showcased)
 \item What is executed now is the Supervisord daemon
-\item There is also exposed the port for the Nginx server
+\item The port for the Nginx server is exposed
 \item The user that is going to be used for this container is its root user due to require being used by supervisord service itself
 \end{itemize}
 
-Then, the Nginx configuration file is as shown in \ref{ANX:dockerFiles} section \ref{ANX:nginxexample}.
+The Nginx configuration file is as shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:nginxexample}. In this configuration file, apart from typical Nginx configurations (which are out of scope of this thesis), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing). Note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
 
-In this configuration file, a part from typical Nginx configurations (which are out of scope of this thesis), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing).
-
-Moreover, to note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
-
-Finally, last file to show is the supervisord.conf configuration file:
+Finally, the last file to show is the supervisord.conf configuration file:
 
 \begin{verbatim}
 [supervisord]
@@ -240,9 +228,7 @@ command=/usr/local/bin/livemediastreamer 7777
 command=/usr/sbin/nginx 
 \end{verbatim}
 
-This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx.  
-
-Then, as done with previous Docker files, let's show how it should be built:
+This supervisord configuration file defines both services to be executed, LiveMediaStreamer and Nginx. Then, as done with previous Docker files, let's show how it should be built:
 
 \begin{verbatim}
 $ docker build \
@@ -250,24 +236,24 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-And, an example command to run this container's image is as shown next:
+An example command to run this container's image is shown next:
 
 \begin{verbatim}
 $ docker run -p 8090:8090 -p 7777:7777 -p 5004:5004/udp -it \
 		--rm --name lms-dash gerardcl/lms:dash 
 \end{verbatim}
 
-So, this container will serve the MPEG-DASH files on http://host:8090/, it will also be listening on port 7777 in order to get TCP socket configuration messages and it will be listening on port 5004 in order to receive an audio or a video on that port.
+So, this container will serve the MPEG-DASH files on http://host:8090/ and it will also be listening on port 7777 in order to get TCP socket configuration messages and it will be listening on port 5004 in order to receive an audio or a video on that port.
 
 \section{Best practices}
 
 As illustrated in the official Docker documentation web site \cite{dockerBP}, one of the best practices that should be taken into account is to avoid creating complex images and try to split as much as possible them.
 
-For example, previous section is just an example of when running multiple services inside a container is a must (i.e.: when there are no other options or the solution becomes much complex or the customer demands it), which should be avoided.
+For example, the previous section is just an example of a scenario where running multiple services inside a container is a must (i.e.: when there are no other options or the solution becomes much complex or the customer demands it), which should be avoided.
 
-So, let's try to showcase a best practice for solving previous use case. By using the "volumes" feature that Docker offers this last container with multiple services inside could be splitted into two: one specific container for a Nginx server (with same configuration file as shown before) and the other the single LMS container introduced at the beginning of this chapter. 
+So, let's try to showcase a best practice for solving previous use case. By using the "volumes" feature that Docker offers, this last container with multiple services inside could be splitted into two: one specific container for a Nginx server (with same configuration file as shown before) and the other the single LMS container introduced at the beginning of this chapter. 
 
-First of all, let's showcase which is the Docker file generated for the Nginx container in
+First of all, let us describe which is the Docker file generated for the Nginx container in Appendix
 \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles4}
 
 Then, the build command might be as follows:
@@ -278,7 +264,7 @@ $ docker build \
 		<Docker file folder path>
 \end{verbatim}
 
-Finally, let's show which should be the run commands, in order:
+Finally, let us show in order which should be the commands to execute:
 
 \begin{verbatim}
 $ docker run -v <host volume folder>:/home/lms/dashSegments \

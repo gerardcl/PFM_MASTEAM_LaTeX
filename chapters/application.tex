@@ -1,20 +1,20 @@
 \chapter{Application}\label{D:application}
 
-This chapter aims to develop the tasks introduced for the application layer in the Gantt diagram of this thesis (see figure \ref{F:tpgp}). Main tasks are to prepare LMS to be deployed as a cloud service and to give support internal and external monitoring.
+The main goal of this chapter is to develop the tasks related to the application, including to prepare LMS to be deployed as a cloud service and to give support for internal and external monitoring.
 
 \section{REST API}
 
-As mentioned previously, it's required to develop an API ready to be used over cloud environments in order to ease creating specific and new applications over the LMS framework, and thus to demonstrate the viability of this thesis prototype.
+As mentioned previous chapters, it is required to develop an API ready to be used over cloud environments in order to ease creating specific and new applications over the LMS framework, and thus to demonstrate the viability of this thesis prototype.
 
-Nowadays, the common and widely used format for cloud services intercommunication is JSON, as it is also used for the TCP socket API of the LMS framework. Therefore, this API middleware is going to follow such premise.
+Nowadays, the common and widely used format for cloud services intercommunication is JSON, as it is also used for the TCP socket API of the LMS framework. Therefore, this API middleware is going to follow such requirement.
 
-A suitable technology to work with JSON formatted messages which is widely known for its good performance is Node.js \cite{nodejs}. Node.js is an open source, cross-platform runtime environment for server-side and networking applications. It provides an event-driven architecture and a non-blocking I/O API that optimizes application's throughput and scalability. This technology is commonly used for real-time web applications. 
+A suitable technology to work with JSON formatted messages is Node.js \cite{nodejs} which is widely known for its good performance. Node.js is an open source, cross-platform runtime environment for server-side and networking applications. It provides an event-driven architecture and a non-blocking I/O API that optimizes application's throughput and scalability. This technology is commonly used for real-time web applications. 
 
-Moreover, working with Node.js means avoiding serialization of the JSON messages by increasing services intercommunication performance (i.e.: less computational cost and less processing time). 
+Working with Node.js means avoiding serialization of the JSON messages by increasing services intercommunication performance (i.e.: less computational cost and less processing time). 
 
-Then, the common Noje.js framework for developing web applications and REST APIs is Express.js \cite{expressjs}. It's the de facto standard server framework for Node.js. So, the middleware to develop is going to use its routing system, which refers to the definition of end points (URIs with HTTP request methods like GET, POST, PUT and DELETE) to an application and how it responds to client requests.
+A common Noje.js framework for developing web applications and REST APIs is Express.js \cite{expressjs}. It is the de-facto standard server framework for Node.js. So, our middleware development is going to use Express.js routing system (URIs with HTTP request methods like GET, POST, PUT and DELETE).
 
-Figure \ref{F:restAPI} showcases the software structure proposal for developing the HTTP RESTfull API middleware, which is responsible to translate to the TCP socket API of the LMS framework.
+Figure \ref{F:restAPI} illustrates the software structure proposal for developing the HTTP RESTfull API middleware, which is responsible for translating the TCP socket API of the LMS framework.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -27,30 +27,30 @@ Figure \ref{F:restAPI} showcases the software structure proposal for developing 
 \begin{itemize}
 \item HTTP REST API layer \hfill
 
-This layer handles HTTP queries from external applications. It implements specific routes to handle specific HTTP queries. First implementation will not implement multiple LMS management but single. As shown in figure \ref{F:restAPI}.
+This layer handles HTTP queries from external applications. It implements specific routes to handle specific HTTP queries. The first implementation will not implement multiple LMS management but single, as shown in Figure \ref{F:restAPI}.
 
 \item Interface layer \hfill
 
-This layer handles the body messages from the previous layer's HTTP queries and manipulates them in order to create an as much generic as possible API by adapting the messages to be sent through following layer.
+This layer handles the body messages from the previous layer's HTTP queries and manipulates them in order to create an as much generic as possible API by adapting the messages to be sent through following TCP socket layer.
 
 \item TCP socket layer \hfill
 
-This layer is the responsible to send and receive JSON formatted TCP socket messages between the LMS instance targeted.
+This layer is the responsible for sending and receiving JSON-formatted TCP socket messages to and from the targeted LMS instance.
 \end{itemize}
 
-As introduced in section \ref{SOA:LMS} and deeply explained in appendix \ref{ANX:lmsarchfull}, there are two different management layers: the generic and the filter specific. So, by following this organization, the proposed API's structure is as shown in appendix \ref{ANX:RESTAPI}.
+As presented in Section \ref{SOA:LMS} and detailed in Appendix \ref{ANX:lmsarchfull}, there are two different management layers: the generic one and the filter specific one. So, by following this organization, the proposed API's structure is as described in Appendix \ref{ANX:RESTAPI}.
 
-To point out that this API is not implementing persistence because the state (managed through 'State' method) is given by the LMS instance itself. The unique sign of persistence is regarding the LMS host and port which the middleware is connected to (managed through 'Connect' and 'Disconnect' methods). Higher levels of persistence should be implemented by external applications which implies specific scenarios and requirements (i.e.: specific persistence).
+Note that this API is not implementing persistence\footnote{Persistence, in computer science, refers to the characteristic of state that outlives the process that created it. This is usually solved by storing the state's application as data structures in databases.} because the state (managed through 'State' method) is given by the LMS instance itself. The unique sign of persistence is regarding the LMS host and port which the middleware is connected to (managed through 'Connect' and 'Disconnect' methods). Higher levels of persistence should be implemented by external applications, which implies specific scenarios and requirements (i.e.: specific persistence).
 
-Finally, in order to know how this structure and the overall middleware is implemented check appendix \ref{ANX:sourceCodes} to see the code. Next chapters will demonstrate it too.
+For more details about how this is structured and the overall middleware is implemented check Appendix \ref{ANX:sourceCodes} with the code. 
 
 \section{Network metrics}
 
-Network metrics could be treated as external metrics. This is because these metrics are specially dependent from sources which transmit to LMS, the receivers from LMS and the state of the network itself. Obviously, the performance of the LMS affect to the metrics gathered too, but it is intended to be minimized, at least in a gathering and presentation of the metrics' point of view.
+Network metrics could be treated as external metrics. This is because these metrics are specially dependent from sources which transmit to LMS, the receivers from LMS and the state of the network itself. Obviously, the performance of the LMS affects to the metrics gathered too, but this effect is intended to be minimized, at least in a gathering and presentation of the metrics' point of view.
 
 \subsection{Input network metrics}
 
-As said in subsection \ref{B:appLayerCH2}, input network metrics are going to be implemented by carrying out methods re-implementations given by the Live555 library, which is the library implemented for managing network streams.  
+As mentioned in Section \ref{B:appLayerCH2}, input network metrics are going to be implemented by carrying out methods re-implementations of methods provided by the Live555 library, which is the library that will manage network streams.  
 
 \begin{figure}[!htb]
 \begin{center}
@@ -60,15 +60,11 @@ As said in subsection \ref{B:appLayerCH2}, input network metrics are going to be
 \end{center}
 \end{figure}
 
-By following the LiveMediaStreamer architecture structure, input network implementations are going to be implemented inside the 'liveMediaInput' structure. Specifically, a new class is implemented, called 'SCSSubsessionStats'. This class is managed by the 'StreamCleanState' class which is a class related to each stream 'Session' class managed by the 'SourceManager' class. This last class is a 'HeadFilter' class. Figure \ref{F:inms} shows the inter-class structure.
+By following the LiveMediaStreamer architecture structure, input network implementations are going to be developed inside the 'liveMediaInput' structure. Specifically, a new class is developed, called 'SCSSubsessionStats'. This class is managed by the 'StreamCleanState' class, which is a class related to each stream 'Session' class managed by the 'SourceManager' class. This last class is a 'HeadFilter' class. Figure \ref{F:inms} shows the inter-class structure.
 
 By initializing new RTP or RTSPClient sessions (i.e.: network inputs), a group of subessions is associated per each stream (i.e.: an RTP session has one subsession associated and the RTSPClient session has as many subsessions as accepted from the SDP that defines different RTP sessions).
 
-When a new subsession is set, then, automatically, a new RTPReceiverStats class is initialized. This Live555 object implements RTCP stats measurement which are only required to be treated outside. This is done at SCSSubsessionState, which creates a new schedule to periodically measure and save current state (a default granularity of 1 second is set).
-
-The implemented method that is called periodically is as shown in appendix \ref{ANX:appALG} section \ref{inmm}.
-
-Previous algorithm prepares the metrics that are going to be presented through the state when a new state query is received. In the code is shown how metrics from Live555 library are obtained. For a more detailed insight of the overall implementation see appendix \ref{ANX:sourceCodes}. Next are listed the metrics that are presented per each new state query:
+When a new subsession is set, a new RTPReceiverStats class is automatically initialized. This Live555 object implements RTCP stats measurement which are only required to be treated outside. This is done at SCSSubsessionState, which creates a new schedule to periodically measure and save current state (a default granularity of 1 second is set). The implemented method is called periodically as shown in Appendix \ref{ANX:appALG} Section \ref{inmm}. This implementation prepares the metrics that are going to be presented when a new state query is received. The code in Appendix \ref{ANX:appALG} Section \ref{inmm} shows how metrics from the Live555 library are obtained. For a more detailed insight of the overall implementation see Appendix \ref{ANX:sourceCodes}. The metrics that are presented per each new state query are shown next (a default granularity of 1 second is set):
 
 \begin{itemize}
 \item Bitrate: maximum, minimum and average in kbps.
@@ -77,28 +73,28 @@ Previous algorithm prepares the metrics that are going to be presented through t
 \item Jitter: maximum, minimum and current inter-packet gap variation in microseconds.
 \end{itemize}
 
-All these metrics are measured through previous algorithm shown which is scheduled each second (it is the default value set for all metrics gathered indeed). Specifically, bitrate is measured by knowing the overall number of octets (i.e.: bytes) received during each scheduled period and the elapsed time given by the Live555 library implementation:
+All these metrics are measured through previous algorithm shown which is executed each second (it is the default value set for all metrics gathered indeed). Specifically, bitrate is measured by dividing the total number bytes, received during each scheduled period, by the elapsed time given by the Live555 library implementation:
 
 \begin{equation}\label{E:bitrate}
-average\ bitrate (kbps) = 8 \cdot \frac{kbytes\ receivd\ now}{elapsed\ seconds}
+average\ bitrate (kbps) = 8 \cdot \frac{kbytes\ received}{elapsed\ seconds}
 \end{equation}
 
-Moreover, the maximum and the minimum are the last maximum and minimum average bitrates obtained, and this is done for all other metrics.
+The maximum and the minimum bitrates are the last maximum and minimum average bitrates obtained, and this is done for all other metrics.
 
-Then, it is important to remark that the jitter is measured as the estimate of the statistical variance of the RTP data interarrival time to be inserted in the interarrival jitter field of reception reports (in microseconds), and this is already internally done by the Live555 library. So, what is presented is the current jitter value at the beginning of each new schedule.
+Jitter is measured as the estimate of the statistical variance of the RTP data interarrival time inserted in the interarrival jitter field of reception reports (in microseconds), and this is already internally done by the Live555 library. So, what is presented is the current jitter value at the beginning of each new schedule.
 
-Another metric that might be of interest is the time delay from the stream source but it is discarded due to not being offered from Live555 library. Moreover, to be implemented at SCSSubsessionStats class level has been discarded due to is computational cost and complexity to develop such requirement. But, to point out that it is not a high priority required metric due to take into account that this issue is out of LMS performance scope and if there are network performance problems they can be detected through other metrics already gathered.
+Another metric that might be of interest is the delay from the stream source to the LMS instance but it is discarded due to not being offered from Live555 library. Moreover, it has been discared to be implemented at SCSSubsessionStats class level due to is computational cost and complexity to develop such requirement. Note that this metric is not relevant because network performance problems can be detected through other metrics already gathered (i.e.: jitter and packet loss ratio).
 
 
 \subsection{Output network metrics}
 
-As done in previous section, output network metrics are going to be implemented by carrying out methods re-implementations given by the Live555 library, which is the library implemented for managing network streams.
+As done in previous section, output network metrics are going to be implemented by carrying out re-implementations of methods given by the Live555 library.
 
-This implementation has been much more difficult to be achieved due to not having control of the RTPSink class of the Live555 library in the sense that when it is created neither deleted. Previous developments before the final version where based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
+This implementation has been much more difficult due to not having control of the creation or deletion of the RTPSink class of the Live555 library. Previous developments before the final version were based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
 
-In order to go on the development an e-mail was sent to the Live555 developers mailing list, specifically to the head developer of the library, thanks to his replay the solution was clarified (see appendix \ref{ANX:emailRoss}).
+In order to continue with the development, an e-mail was sent to the Live555 developers mailing list and a solution was provided by Ross Finlayson as shown in Appendix \ref{ANX:emailRoss}.
 
-So, the best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, specifically the inheriting classes of the QueueServerMediaSubsession class. 
+The best option, as suggested by Ross, was to re-implement the RTCPInstance class per each inheriting class of the OnDemandServerMediaSubsession class, specifically the inheriting classes of the QueueServerMediaSubsession class. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -108,11 +104,9 @@ So, the best option, as suggested by Ross, was to re-implement the RTCPInstance 
 \end{center}
 \end{figure}
 
-In figure \ref{F:onms} is shown the relationship between the SinkManager class with both possible types of connections (i.e.: RTP or RTSP). Each Connetion object has a map of objects of the re-implemented RTCPInstance class, called ConnRTCPInstance (i.e.: RTCP instances per each connection). Then, each time a new specific RTP connection or any QueueServerMediaSubsession (RTSP connection, from RTSP server) is created, a ConnRTCPInstance is associated in order to start gathering the statistics offered from Live555 library. This is shown in appendix \ref{ANX:appALG} section \ref{onmm} piece of code by showing the method which is periodically called (default periodicity value is set to 1 second), as done for the input network metrics.
+Figure \ref{F:onms} shows the relationship between the SinkManager class with both possible types of connections (RTP or RTSP). Each Connetion object has a map of objects of the re-implemented RTCPInstance class, called ConnRTCPInstance (i.e.: RTCP instances per each connection). Then, each time a new specific RTP connection or any QueueServerMediaSubsession (RTSP connection, from RTSP server) is created, a ConnRTCPInstance is associated in order to start gathering the statistics offered from Live555 library. This is shown in Appendix \ref{ANX:appALG} Section \ref{onmm}, with the code of the method that is periodically called (default periodicity value is set to 1 second). In this case, the delay metric is gathered from the Live555 library.
 
-In this case, the delay metric is offered from the Live555 library, which is gathered.
-
-Finally, presented metrics are as shown next:
+The metrics are:
 
 \begin{itemize}
 \item Bitrate: maximum, minimum and average in kbps.
@@ -121,11 +115,11 @@ Finally, presented metrics are as shown next:
 \item Jitter: maximum, minimum and current inter-packet gap variation in microseconds.
 \end{itemize}
 
-All these metrics are measured by applying the same patterns as done for the input network metrics.
+All these metrics are measured by following the same expressions used for the input network metrics.
 
 \section{Pipeline metrics}
 
-Following metrics are intended to be exposed as the internal metrics. It's important to point out that the measurements behind are really responsive to the overall performance of the LMS framework. Therefore, to achieve the minimum computational cost is a must. Then, as introduced in subsection \ref{B:appLayerCH2}, the optimal solutions to gather and measure such metrics is as shown next. But, first of all, let's pick up the example figure of a pipeline from appendix \ref{ANX:lmsarchfull} in order to showcase the internal pipeline structure of the LMS framework. This will help understanding next two implementations.
+The following metrics are presented as the internal metrics. Please, note that the measurement of these metrics interfere the overall performance of the LMS framework. Therefore, to achieve the minimum possible computational cost is a must. But, first of all, let's pick up the example figure of a pipeline from Appendix \ref{ANX:lmsarchfull} in order to showcase the internal pipeline structure of the LMS framework. As described in Appendix \ref{ANX:lmsarchfull}, this will help understanding the following two implementations.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -135,28 +129,26 @@ Following metrics are intended to be exposed as the internal metrics. It's impor
 \end{center}
 \end{figure}
 
-To point out that in figure \ref{F:lmsps} the arrows are the queues which interconnect each filter's writer with another filter's reader. Writers and readers are subclasses of the IOInterface class.
+Note that in Figure \ref{F:lmsps} the arrows are the queues which interconnect each filter's writer with another filter's reader. Writers and readers are subclasses of the IOInterface class.
 
 \subsection{Delay}
 
-First of all, to emphasize that this metric is related to the time which data (i.e.: a video frame, an audio sample,\ldots) takes to be processed from an origin point to an end point by an unique given path, and this is measured thanks to a given and required time: the data's timestamps. Data inside the LMS source code is known as a "frame", which can be an audio frame (i.e.: sample), a H264 NAL unit, a raw frame, \ldots 
+This metric is related to the time that data (i.e.: a video frame, an audio sample,\ldots) takes to be processed from an origin point to an end point by an unique given path, and this is measured from a given and required time: the data's timestamps. Data inside the LMS source code is known as a "frame", which can be an audio frame (i.e.: sample), a H264 video NAL unit, a raw frame, \ldots 
 
-The delay time isn't considered to be measured per each filter in order to not affect the overall performance but each measured time involves an origin filter which resets the timestamps. These origins are the Head (i.e.: receiver filter) and OneToMany (i.e.: audio and video mixer filters) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
+The delay time is not measured per each filter in order to not affect the overall performance, but each measured time involves an origin filter which resets the timestamps. These origins are the Head (i.e.: receiver) and OneToMany (i.e.: audio and video mixer) filters. These filters reset the frames' timestamps in order to reach and control an internal synchronization, and this is due to the fact that these filters have many outputs (i.e.: writers) or many inputs (i.e.: readers) and they require synchronizing their outputs in order to assure one point of time control inside the LMS framework, whatever the scenario configured.
 
-So, in order to measure the delay it is important to note that a pipeline isn't composed by an unique path (see appendix \ref{ANX:lmsarchfull} for clarifications) but multiple paths. This fact implies that it's not possible to measure an unique overall delay time per frame which goes over the pipeline (indeed there is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path), or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter).
+So, in order to measure the delay it is important to note that a pipeline is not composed by an unique path (see Appendix \ref{ANX:lmsarchfull} for clarifications) but multiple paths. This fact implies that it is not possible to measure an unique overall delay time per frame which goes over the pipeline\footnote{There is a special case, and this is when there is a unique path that defines the pipeline itself, an unique path}, or at least it's not suitable for performance issues, but it can be done for external applications which know the scenario configuration and gathers such metrics. Therefore, this is solved by splitting the measurements by paths. And this is an optimal measurement: the delay is given by the differential time measured by the last reader of the path (i.e.: the reader of the destination filter). Appendix \ref{ANX:appALG} section \ref{pdmm} shows the method which implements the measurement inside the Reader class.
 
-In appendix \ref{ANX:appALG} section \ref{pdmm} is shown the method which implements the measurement inside the Reader class.
-
-So, what is done is to measure the average delay of a frame by a given window time (default is configured to 1 second) with a resolution of microseconds. And this means measuring from the origin time, which, as said, is set by the origin filters (i.e.: the beginning of a path, starting from a writer), to each reader of the path (i.e.: each filter). But, the delay time presented is from the beginning (i.e.: initial writer of the path) until the last reader. See figure \ref{F:lmsps} where different path examples are illustrated.
+In summary, the code measure the average delay of a frame by a given window time (default is configured to 1 second) with a resolution of microseconds. And this means measuring from the origin time, which, as said, is set by the origin filters (i.e.: the beginning of a path, starting from a writer), to each reader of the path (i.e.: each filter). But, the delay time presented is from the beginning (i.e.: initial writer of the path) until the last reader. Figure \ref{F:lmsps} illustrates different path examples.
 
 \subsection{Losses}
 
-This metric is following a similar criteria as the previous one. This is solved by measuring at the same point, but it's done when flushing frames at the reader side (as introduced in section \ref{B:appLayerCH2}). In order to reach minimal computational cost, the measurement is just a counter of the overall data losses when calling the flush methods. What is done is a method encapsulation by defining a parent method that is just incrementing its reader counter and then it calls the specific flush implementation per each data/frame type.
+This metric follows a similar criteria as the previous one. This is solved by measuring at the same point, but it is done when flushing frames at the reader side (as presented in Section \ref{B:appLayerCH2}). In order to reach minimal computational cost, the measurement is just a counter of the overall data losses when calling the flush methods. What is done is a method encapsulation by defining a parent method that is just incrementing its reader counter and then it calls the specific flush implementation per each data/frame type.
 
-Then, in order to properly present it to external applications it is required to be presented at a path level as done for the delay metrics. So, in this case it is only required to sum up the overall losses of the path's readers.
+In order to properly present it to external applications it is required to be presented at a path level as done for the delay metrics. So, in this case it is only required to sum up the overall losses of the path's readers.
 
-It is important to note that this metric is not referenced to a total data processed or at any time point, but specific issues detections are achieved thanks to measuring its continuity. This means that if this value is incrementing gradually then the system is not working properly. Such detections might imply fast increments on its continuity (differential increase). 
+It is important to note that this metric is not referenced to a total data processed or at any time point, but measuring its continuity over time permits detect losses with different thresholds. This means that if this value is incrementing gradually then the system is not working properly. Such detections might imply fast increments on its continuity (differential increase). 
 
-Finally, to remark that Pipeline metrics are measured when flushing frames (discarding) or when a reader is able to remove a frame from its belonging queue. 
+Note that Pipeline metrics are measured when flushing frames (discarding) or when a reader is able to remove a frame from its belonging queue. 
 
-So, once previous developments are carried out a first step to offer a cloud real-time media production service is achieved. This means, offering a RESTful API and a status layer for monitoring external and internal performance of the platform.
+Finally, once previous developments are carried out a first step to offer a cloud real-time media production service is achieved. This means, offering a RESTful API and a status layer for monitoring external and internal performance of the platform.
