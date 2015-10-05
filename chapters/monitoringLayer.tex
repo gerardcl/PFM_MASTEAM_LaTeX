@@ -2,13 +2,13 @@
 
 As already discussed, in order to properly manage a cloud computing environment it is strongly required to use monitoring tools in order to gather information of interest by improving the environment itself or by finding out issues and solving them as fast as possible.
 
-This chapter aims to showcase how the selected monitoring tools can fit in the architecture type that has been proposed and how they can be used. This means, preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
+This chapter describes how the selected monitoring tools can fit in the architecture that has been proposed and how they can be used. This includes preparing the environment to support Collectd (i.e.: monitoring and gathering) and Graphite (i.e.: storing and presenting) tools.
 
-Moreover, to point out that such tools are helpful to demonstrate that LiveMediaStreamer framework could be deployed as the core of a real-time media production platform (see chapter \ref{H:platformDeploymentAndDemonstrations}).
+Such tools are helpful to demonstrate that LiveMediaStreamer framework could be deployed as the core of a real-time media production platform, as shown in Chapter \ref{H:platformDeploymentAndDemonstrations}).
 
-So, to remark that the fact of creating small and reusable containers is the main goal of this chapter and, of course, the goal of this platform architecture to prototype. And, thanks to the selected monitoring tools, which are lightweight and ease configuration flexibility, this issue might be properly solved.
+Note that the fact of creating small and reusable containers is the main goal of this chapter and, of course, the goal of this platform architecture to prototype. And, thanks to the selected monitoring tools, which are lightweight and ease configuration flexibility, this issue might be properly solved.
 
-Then, a proposal of the monitoring architecture in a more detailed description (regarding figure \ref{F:MLAP}) is shown in figure \ref{F:maex}.
+Figure \ref{F:maex} illustrates the proposal of the monitoring architecture, which describes the relationship between different containers and the whole Collectd+Graphite deployment.
 
 \begin{figure}[htb]
 \begin{center}
@@ -18,19 +18,17 @@ Then, a proposal of the monitoring architecture in a more detailed description (
 \end{center}
 \end{figure}
 
-Figure \ref{F:maex} showcases the relationship between different containers and the whole Collectd+Graphite deployment. Following sections are explaining it:
-
 \section{Monitoring containers}
 
-This section is based on how Collectd can be configured and deployed in order to monitor and properly gather metrics of interest.
+This section is based on how Collectd can be configured and deployed in order to monitor and properly gather the metrics of interest.
 
 \subsection{From container point of view}
 
-From a container point of view and by following the premise to build containers as reusable as possible what is proposed to implement is a container that has the goal to gather the logged stats from an LMS container. This, as shown in figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network plugin as done in previous Collectd client configuration.
+From a container point of view and by following the requirement to build containers as reusable as possible, what is proposed to implement is a container to gather the logged stats from an LMS container. This, as shown in Figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous Chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail\footnote{The Tail plugin can be used to “tail” log files. Each line is given to one or more “matches” which test if the line is relevant for any statistics using a POSIX extended regular expression.} plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network\footnote{The Network plugin can send values to other instances (i.e.: client) and receive values from from other instances (i.e.: server). Which action is taken depends on the configuration.} plugin as done in previous Collectd client configuration.
 
-But, first of all, it is also required to be built in a container. This specific Docker file is shown in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
+First of all, to deploy this Collectd configuration in a container is required. The specific Docker file is shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
 
-Then, what is done in this case is to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
+Then, we have to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
 \begin{verbatim}
 #!/bin/bash
 envtpl /etc/collectd/collectd.conf.tpl
@@ -40,24 +38,18 @@ collectd -C /etc/collectd/collectd.conf -f
 Thanks to the envtpl package it is possible to run the container with specific environment variables in order to configure following parameters:
 
 \begin{itemize}
-\item LMS NAME \hfill
-
-this will be used to identify the LMS instance in a container which Collectd is monitoring.
-\item GRAPHITE HOST \hfill
-
-this is to set the address of the remote/local container where the Collectd server is listening and pushing the metrics inside the Graphite's tools.
-\item GRAPHITE PORT \hfill
-
-this is the port where the Collect server and Graphite's tools container is listening to.
+\item LMS NAME: this will be used to identify the LMS instance in a container which Collectd is monitoring.
+\item GRAPHITE HOST: this is to set the address of the remote/local container where the Collectd server is listening and pushing the metrics inside the Graphite's tools.
+\item GRAPHITE PORT: this is the port where the Collect server and Graphite's tools container is listening to.
 \end{itemize}
 
-And these parameters are set in the Collectd configuration file as shown in appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
+These parameters are set in the Collectd configuration file as shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
 
-This Collectd configuration example file is loading specific system loggers plugins as inputs to be sent through the network plugin to the Collectd server.
+This Collectd configuration example file loads specific system loggers plugins as inputs to be sent through the network plugin to the Collectd server.
 
-But, in next chapter \ref{H:platformDeploymentAndDemonstrations} is shown an example of use of the Collectd tail plugin by using regular expressions. And this, as shown in figure \ref{F:maex}, this tail plugin is listening in an specific folder which is shared through the Docker's volume functionality with the LMS container, which logs its metrics in the same volume.
+Chapter \ref{H:platformDeploymentAndDemonstrations} shows an example of use of the Collectd tail plugin by using regular expressions. As shown in Figure \ref{F:maex}, the tail plugin is listening in an specific folder which is shared through the Docker's volume functionality with the LMS container, which logs its metrics in the same volume.
 
-Finally, the Docker run command where the specific environment variables are set should be as shown next:
+Finally, the Docker run command where the specific environment variables are set is:
 \begin{verbatim}
 $ docker run -it -e "LMS_NAME=lms" \
 	-e "GRAPHITE_HOST=<IP address>" -e "GRAPHITE_PORT=25826" \
@@ -65,15 +57,13 @@ $ docker run -it -e "LMS_NAME=lms" \
 	-p 25826:25826/udp gerardcl/lms-collectd-client
 \end{verbatim}
 
-This will start immediately sending the defined container stats to the Graphite container specified by the environment parameters. Following section showcases the Graphite side to be deployed.
+This will start immediately sending the defined container stats to the Graphite container specified by the environment parameters. The following section showcases the Graphite side to be deployed.
 
-So, this example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
+This example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
 
 \subsection{From OS point of view}
 
-The fact of using Collectd means a wide community behind, which probably have already developed required functionalities. And this is the case: in order to monitor each of the containers that a host OS might have it can be solved by configuring already existing plugins or similar tools for Collectd from Docker community. 
-
-The selected tool is using the stats API introduced since Docker 1.5 version. And, the reported container's stats are:
+The fact of using Collectd means a wide community behind, which probably have already developed some of the functionalities a project could require. And this is the case: the requirement of monitoring each of the containers that a host OS might have can be solved by configuring already existing plugins or similar tools for Collectd from the Docker community. The selected tool is using the stats API introduced since Docker 1.5 version. The reported container's stats are:
  
 \begin{itemize}
 \item Network
@@ -81,7 +71,7 @@ The selected tool is using the stats API introduced since Docker 1.5 version. An
 \item CPU usage
 \end{itemize}
 
-The plugin is called "collectd-docker" and its documentation can be found in GitHub \cite{cdcontainer}. But, in order to follow the idea of clustering Collectd it has been modified in order to use the network plugin instead the write graphite plugin. So, the fact of being running on the same OS it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
+The plugin is called "collectd-docker" and its documentation can be found in GitHub \cite{cdcontainer}. But, in order to follow the idea of clustering Collectd, it has been modified in order to use the network plugin instead of using the write graphite\footnote{The Write Graphite plugin stores values in Carbon, the storage layer of Graphite. It keeps the TCP connection to Carbon open in order to minimize the connection handshake overhead. It buffers the data in a buffer to send many lines at once, rather than generating lots of small network packets. The size of this buffer (1428 bytes) is dimensioned so that the buffer as well as the TCP and IP header fit into one Ethernet frame and can (hopefully) be delivered without fragmentation.} plugin. Since both run on the same OS, it requires changing the UDP ports through the metrics are sent by avoiding port binding issues. Moreover, previous Collectd client is also configured as a proxy server by re-configuring the network plugin as shown next: 
 
 \begin{verbatim}
 <Plugin network>
@@ -92,9 +82,9 @@ The plugin is called "collectd-docker" and its documentation can be found in Git
 </Plugin>
 \end{verbatim}
 
-Therefore, it is not a plugin itself but a Docker container, which listens the docker daemon socket of the system (as proposed in figure \ref{F:maex}) and monitors each one of the containers running.
+Therefore, it is not a plugin itself but a Docker container, which listens the docker daemon socket of the system (as proposed in Figure \ref{F:maex}) and monitors each one of the containers running.
 
-This container implements the same envtpl python package in order to define specific environment parameters such as the collectd server host and port (check its documentation for a detailed configuration explanation). So, in order to showcase how this and the previous Collect client are interconnected the following Docker run commands are shown:
+This container implements the same envtpl python package in order to define specific environment parameters such as the collectd server host and port (check its documentation for a detailed configuration explanation). So, in order to showcase how this and the previous Collect client are interconnected, the following Docker run commands are shown:
 
 \begin{itemize}
 \item Collectd tail client (from the container point of view):
@@ -114,21 +104,19 @@ gerardcl/lms-collectd-collector
 \end{verbatim}
 \end{itemize}
 
-So, here, what is done in order to avoid port binding issues is to setup the Docker collectd collector container to use the same network environment of the Collectd tail client.
+In order to avoid port binding issues, the previous code sets up the Docker collectd collector container to use the same network environment of the Collectd tail client.
 
 \section{Showcasing monitoring}
 
-This section is focused on the storage and presentation side of the metrics already logged and gathered.
+This section focuses on the storage and presentation side of the metrics already logged and gathered. This is proposed to be done within a container built with a Collectd server (network data inputs served to Graphite) and a Graphite system (storing and presenting stats).
 
-So, as already introduced, this is proposed to be done within a container built with a Collectd server (network data inputs served to Graphite) and a Graphite system (storing and presenting stats).
+Installing and configuring Graphite is not trivial and not as easy as installing and configuring Collectd. This can be seen in the Docker file of the Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles6} in order to build such container, as shown in Figure \ref{F:maex}.
 
-As commonly said by the Collectd and Graphite community, installing and configuring Graphite isn't at all so easy than installing and configuring Collectd. This fact is shown in the Docker file of the \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles6} in order to build such container, as shown in figure \ref{F:maex}.
+In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database synchronization (i.e.: sqlite3 \cite{sqlite}, which is required for specific features for the Graphite web application) and other final configurations required for Graphite are also done. Regarding Collectd, it is installed in a similar way as previously done but it is now configured as shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
 
-In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database (i.e.: sqlite3 \cite{sqlite}, which is required for specific features for the Graphite web application) synchronization and other final configurations required for Graphite are also done. Regarding Collectd, it is installed in a similiar way as previously done but it is now configured as shown in \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
+So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the write graphite plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
 
-So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the "write graphite" plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
-
-In this case, it is required to configure this container to be able to run multiple processes (i.e.: Graphite and Collectd). Therefore, by following previous section of how to run multiple processes inside a container in chapter \ref{D:virtualization}, the Supervisord system is used. This time it's configured by splitting the processes configurations into two parts, the Collectd and the Graphite. This last is configuring the Graphite web application and the Graphite's Carbon cache.
+It is required to configure this container to be able to run multiple processes (i.e.: Graphite and Collectd). Therefore, by following the instructions of the previous section regarding how to run multiple processes inside a container in Chapter \ref{D:virtualization}, the Supervisord system is used. This time it is configured by splitting the processes configurations into two parts, Collectd and Graphite. The later configures the Graphite web application and the Graphite's Carbon cache.
 
 \begin{itemize}
 \item Collectd: \hfill
@@ -166,9 +154,9 @@ stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
 \end{verbatim}
 \end{itemize}
 
-An important configuration that must be decided and configured by knowing the requirements for why monitoring is required implies defining the storage schemas, which detail retention rates for storing metrics by following what was introduced in chapter \ref{B:problemStatementAndProposal}, the Round-Robin Database storage type. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration too, but most of them are set to default values which are the recommended ones. 
+An important configuration, that must be previously decided and configured by knowing the requirements for why monitoring is required, implies defining the storage schemas, which detail retention rates for storing metrics by using the Round-Robin Database storage type, as mentioned in Chapter \ref{B:problemStatementAndProposal}. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration, but most of them are set to default values which are the recommended ones. 
 
-Before going to present results and comment the outcomes (chapter \ref{H:platformDeploymentAndDemonstrations}), it is important to showcase example commands for both Collectd client and Collectd server + Graphite's containers:
+Before presenting the results, it is important to describe example commands for both Collectd client and Collectd server + Graphite's containers:
 
 \begin{verbatim}
 $ docker run -it -e "LMS_NAME=lms" -e "GRAPHITE_HOST=<IP of >" \
@@ -180,6 +168,6 @@ $ docker run -it --rm --name graphite -p 25826:25826/udp -p 8080:8080 \
 gerardcl/lms-collectd-graphite
 \end{verbatim}
 
-As shown, the collectd (i.e.: Collectd client) container is sending to the default port (i.e.: UDP protocol) of the graphite host's (Collectd server and Graphite tools) container. Moreover, the graphite container opens HTTP port 8080 in order to enable browsers to get access to its web application anywhere. 
+As shown, the collectd (i.e.: Collectd client) container sends to the default port (i.e.: UDP protocol) of the graphite host's container ( with Collectd server and Graphite tools). Moreover, the graphite container opens the HTTP port 8080 in order to enable browsers to get access to its web application anywhere. 
 
-So, before ending this chapter, it is important to conclude that thanks to previous monitoring technology treated a generic and scalable monitoring layer is achieved.
+As conclusion, thanks to previous monitoring technology treated a generic and scalable monitoring layer is achieved.
