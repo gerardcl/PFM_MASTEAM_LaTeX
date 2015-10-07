@@ -118,7 +118,7 @@ So, here, Collectd is configured as a server by listening from anywhere at the d
 
 It is required to configure this container to be able to run multiple processes (i.e.: Graphite and Collectd). Therefore, by following the instructions of the previous section regarding how to run multiple processes inside a container in Chapter \ref{D:virtualization}, the Supervisord system is used. This time it is configured by splitting the processes configurations into two parts, Collectd and Graphite. The later configures the Graphite web application and the Graphite's Carbon cache.
 
-\begin{itemize}
+\vbox{\begin{itemize}
 \item Collectd: \hfill
 
 \begin{verbatim}
@@ -152,7 +152,7 @@ command=/opt/graphite/bin/carbon-cache.py --debug start
 stdout_logfile=/var/log/supervisor/%(program_name)s.log
 stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
 \end{verbatim}
-\end{itemize}
+\end{itemize}}
 
 An important configuration, that must be previously decided and configured by knowing the requirements for why monitoring is required, implies defining the storage schemas, which detail retention rates for storing metrics by using the Round-Robin Database storage type, as mentioned in Chapter \ref{B:problemStatementAndProposal}. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration, but most of them are set to default values which are the recommended ones. 
 

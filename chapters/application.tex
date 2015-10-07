@@ -76,7 +76,7 @@ When a new subsession is set, a new RTPReceiverStats class is automatically init
 All these metrics are measured through previous algorithm shown which is executed each second (it is the default value set for all metrics gathered indeed). Specifically, bitrate is measured by dividing the total number bytes, received during each scheduled period, by the elapsed time given by the Live555 library implementation:
 
 \begin{equation}\label{E:bitrate}
-average\ bitrate (kbps) = 8 \cdot \frac{kbytes\ received}{elapsed\ seconds}
+average\ bitrate (kbps) = \frac{kbits\ received}{elapsed\ seconds}
 \end{equation}
 
 The maximum and the minimum bitrates are the last maximum and minimum average bitrates obtained, and this is done for all other metrics.
