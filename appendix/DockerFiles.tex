@@ -412,8 +412,8 @@ LoadPlugin write_graphite
 Next tail plugin configuration is performing specific regular expression matching to bind logged metrics from the LMS demo script. Each logged line to stdout is formatted as shown next:
 
 \begin{verbatim}
-|PATHID|value|avgDelay-5004|value|lostBlocs-5004|value|PATHID|value
-|avgDelay-5006|value|lostBlocs-5006|value|RXmediaType|video
+|PATHID|value|avgDelay-5004|value|lostBlocks-5004|value|PATHID|value
+|avgDelay-5006|value|lostBlocks-5006|value|RXmediaType|video
 |videoRXavgBitRateInKbps|value|videoRXavgPacketLossPercentage
 |value|videoRXavgInterPacketGapInMiliseconds|value
 |videoRXcurJitterInMicroseconds|value|RXmediaType|audio
@@ -439,10 +439,10 @@ Type counter
 Instance "VideoAVGdelay-us"
 </Match>
 <Match>
-Regex ".*lostBlocs-5004\\|([0-9]*).*"
+Regex ".*lostBlocks-5004\\|([0-9]*).*"
 DSType "CounterAdd"
 Type counter
-Instance "VideoLostBlocs"
+Instance "VideoLostBlocks"
 </Match>
 <Match>
 Regex ".*avgDelay-5006\\|([0-9]*).*"
@@ -451,10 +451,10 @@ Type counter
 Instance "AudioAVGdelay-us"
 </Match>
 <Match>
-Regex ".*lostBlocs-5006\\|([0-9]*).*"
+Regex ".*lostBlocks-5006\\|([0-9]*).*"
 DSType "CounterAdd"
 Type counter
-Instance "AudioLostBlocs"
+Instance "AudioLostBlocks"
 </Match>
 <Match>
 Regex ".*RXmediaType\\|video.*videoRXavgBitRateInKbps\\|([0-9]*).*"
