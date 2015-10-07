@@ -8,7 +8,7 @@ Such tools are helpful to demonstrate that LiveMediaStreamer framework could be 
 
 Note that the fact of creating small and reusable containers is the main goal of this chapter and, of course, the goal of this platform architecture to prototype. And, thanks to the selected monitoring tools, which are lightweight and ease configuration flexibility, this issue might be properly solved.
 
-Figure \ref{F:maex} illustrates the proposal of the monitoring architecture, which describes the relationship between different containers and the whole Collectd+Graphite deployment.
+Figure \ref{F:maex} illustrates the proposal of the monitoring architecture, which describes the relationship between different containers and the whole Collectd and Graphite deployment.
 
 \begin{figure}[htb]
 \begin{center}
@@ -26,7 +26,7 @@ This section is based on how Collectd can be configured and deployed in order to
 
 From a container point of view and by following the requirement to build containers as reusable as possible, what is proposed to implement is a container to gather the logged stats from an LMS container. This, as shown in Figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous Chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail\footnote{The Tail plugin can be used to “tail” log files. Each line is given to one or more “matches” which test if the line is relevant for any statistics using a POSIX extended regular expression.} plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network\footnote{The Network plugin can send values to other instances (i.e.: client) and receive values from from other instances (i.e.: server). Which action is taken depends on the configuration.} plugin as done in previous Collectd client configuration.
 
-First of all, to deploy this Collectd configuration in a container is required. The specific Docker file is shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5}.
+First of all, to deploy this Collectd configuration in a container is required. The specific Docker file is shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:dockerFiles5}.
 
 Then, we have to specify a bash script to run as CMD. This runs collectd but after envtpl python's package sets the environment parameters:
 \begin{verbatim}
@@ -43,7 +43,7 @@ Thanks to the envtpl package it is possible to run the container with specific e
 \item GRAPHITE PORT: this is the port where the Collect server and Graphite's tools container is listening to.
 \end{itemize}
 
-These parameters are set in the Collectd configuration file as shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles5} (among the specific plugins).
+These parameters are set in the Collectd configuration file as shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:dockerFiles5} (among the specific plugins).
 
 This Collectd configuration example file loads specific system loggers plugins as inputs to be sent through the network plugin to the Collectd server.
 
@@ -110,9 +110,9 @@ In order to avoid port binding issues, the previous code sets up the Docker coll
 
 This section focuses on the storage and presentation side of the metrics already logged and gathered. This is proposed to be done within a container built with a Collectd server (network data inputs served to Graphite) and a Graphite system (storing and presenting stats).
 
-Installing and configuring Graphite is not trivial and not as easy as installing and configuring Collectd. This can be seen in the Docker file of the Appendix \ref{ANX:dockerFiles} section \ref{ANX:dockerFiles6} in order to build such container, as shown in Figure \ref{F:maex}.
+Installing and configuring Graphite is not trivial and not as easy as installing and configuring Collectd. This can be seen in the Docker file of the Appendix \ref{ANX:dockerFiles} Section \ref{ANX:dockerFiles6} in order to build such container, as shown in Figure \ref{F:maex}.
 
-In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database synchronization (i.e.: sqlite3 \cite{sqlite}, which is required for specific features for the Graphite web application) and other final configurations required for Graphite are also done. Regarding Collectd, it is installed in a similar way as previously done but it is now configured as shown in Appendix \ref{ANX:dockerFiles} section \ref{ANX:collectdFiles2}.
+In this case, specific "collectd" and "graphite" users are created (among other environment configurations as shown). Then, a bunch of different and specific configuration files for graphite are added (i.e.: ADD command) to their specific configuration folders. And, finally, specific command executions for database synchronization (i.e.: sqlite3 \cite{sqlite}, which is required for specific features for the Graphite web application) and other final configurations required for Graphite are also done. Regarding Collectd, it is installed in a similar way as previously done but it is now configured as shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:collectdFiles2}.
 
 So, here, Collectd is configured as a server by listening from anywhere at the default port for Collectd clustering. Moreover, the write graphite plugin is loaded in order to work as an output to the Graphite's Carbon tool, which receives the data to be stored in the Whisper RRD of the Graphite installation.
 
@@ -156,7 +156,7 @@ stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
 
 An important configuration, that must be previously decided and configured by knowing the requirements for why monitoring is required, implies defining the storage schemas, which detail retention rates for storing metrics by using the Round-Robin Database storage type, as mentioned in Chapter \ref{B:problemStatementAndProposal}. So, in order to work over a real-time media production platform it is important to achieve as much time accuracy as possible regarding the specific metrics of interest (e.g.: bandwidth usage, losses, pipeline delays, \ldots). There are more files regarding the Graphite's tools configuration, but most of them are set to default values which are the recommended ones. 
 
-Before presenting the results, it is important to describe example commands for both Collectd client and Collectd server + Graphite's containers:
+Before presenting the results, it is important to describe example commands for both Collectd client, and Collectd server and Graphite's containers:
 
 \begin{verbatim}
 $ docker run -it -e "LMS_NAME=lms" -e "GRAPHITE_HOST=<IP of >" \

@@ -43,7 +43,7 @@ Note that all tests have been carried out in a 1 Gbps local area network with a 
 
 \subsection{Isolated deployments}
 
-This section compares the performance of the LMS installed on system (i.e.: in the host OS) and the same LMS inside a container. A C/C++ script has been developed, which configures the LMS framework as shown in Figure \ref{F:idsc}. Moreover, in order to test the performance, the pipeline metrics are logged once per second (i.e.: pipeline losses and delay) and gathered by a Collectd client container properly configured. Then the Collectd client sends the data to the Graphite container. Check Appendix \ref{ANX:dockerFiles} section \ref{ANX:collectdTailFiles2} to see an example of how the logging and collecting is implemented for these demonstrations. 
+This section compares the performance of the LMS installed on system (i.e.: in the host OS) and the same LMS inside a container. A C/C++ script has been developed, which configures the LMS framework as shown in Figure \ref{F:idsc}. Moreover, in order to test the performance, the pipeline metrics are logged once per second (i.e.: pipeline losses and delay) and gathered by a Collectd client container properly configured. Then the Collectd client sends the data to the Graphite container. Check Appendix \ref{ANX:dockerFiles} Section \ref{ANX:collectdTailFiles2} to see an example of how the logging and collecting is implemented for these demonstrations. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -55,7 +55,7 @@ This section compares the performance of the LMS installed on system (i.e.: in t
 
 The Collectd client container, which reads from the folder where the LMS is logging its metrics, uses the \texttt{tail} plugin (previously explained in Chapter \ref{G:monitoringLayer}) with specific regular expressions in order to parse the metrics from the LMS logs.
 
-Both isolated scenarios are the same but one is running the LMS on the system and the other is running the same configured LMS but containerized. The second OS is the one which runs the Docker container with the Collectd+Graphite tools. Moreover, this OS acts as the receiver of the transcoded streams through the RTSP protocol and also acts as the transmitter of the source stream.
+Both isolated scenarios are the same but one is running the LMS on the system and the other is running the same configured LMS but containerized. The second OS is the one which runs the Docker container with the Collectd and Graphite tools. Moreover, this OS acts as the receiver of the transcoded streams through the RTSP protocol and also acts as the transmitter of the source stream.
 
 Figure \ref{F:isoCPU} shows the results. These are mainly focused on the pipeline performance metrics (i.e.: internal LMS performance). The figure describes the CPU usage gathered at the Collectd client side and presented for the Graphite web GUI for both isolated scenarios. Regarding system installation the CPU average usage of the averages given by Graphite is around 4,015\% and around 4,111\% for the containerized one. So, there is not so difference about running system installation or the same application containerized.
 
@@ -182,6 +182,6 @@ Regarding the audio mixing, all input streams are mixed using the logarithmic mi
 
 Then regarding the video "receiver to mixer" paths there aren't accumulated data losses. But, "mixer to transmitter" path reaches around 52.308 lost data blocks. The fact of having lost data blocks is due to the transitory period of the mixer filter. However, this accumulated losses remains constant, meaning that there are no more data blocks lost.
 
-So, although this scenario is being deployed in a i7 processor laptop, it's able to real-time mix four couples of audio and video streams without issues.
+So, although this scenario is being deployed in a i7 processor laptop, it is able to real-time mix four couples of audio and video streams without issues.
 
 Finally, to point out that the signal discontinuities that appear in some figures are due to the fact of transmitting origin streams in a pseudo-live mode, which means audio and video loops. Therefore, this noise appears when the origin streams restart.

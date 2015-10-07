@@ -17,7 +17,7 @@ Therefore, the obtained results demonstrate that this thesis offers a set of too
 
 As seen in Chapter \ref{H:platformDeploymentAndDemonstrations}, LiveMediaStreamer is performing properly and seems to be able to fit as the core part for real-time video and audio streams manipulation.
 
-Figures \ref{F:isoCPU} and \ref{F:gsavgcpu} illustrates the scalability of the core in terms of stream processing capabilities. This means that if for an audio and video stream treatment (figure \ref{F:idsc}) the average CPU usage is around the 4\%, and for four pairs of audio and video streams treatment (Figure \ref{F:gdsc}) the CPU usage is around the 23\% of an eight core CPU, then LMS can be considered as a reliable and a scalable core framework. This is also confirmed by the fact of not suffering data losses inside the pipeline (Figures \ref{F:isoaplb} and \ref{F:gsalb}). However, it is important to note that in the video mixing pipeline there are accumulated losses, which appear due to the fact of synchronizing different streams with different frame rates. Figure \ref{F:gsvpalbd} illustrates a constant index of losses which means that this data losses are not incrementing in time, so the system is stable.
+Figures \ref{F:isoCPU} and \ref{F:gsavgcpu} illustrates the scalability of the core in terms of stream processing capabilities. This means that if for an audio and video stream treatment (Figure \ref{F:idsc}) the average CPU usage is around the 4\%, and for four pairs of audio and video streams treatment (Figure \ref{F:gdsc}) the CPU usage is around the 23\% of an eight core CPU, then LMS can be considered as a reliable and a scalable core framework. This is also confirmed by the fact of not suffering data losses inside the pipeline (Figures \ref{F:isoaplb} and \ref{F:gsalb}). However, it is important to note that in the video mixing pipeline there are accumulated losses, which appear due to the fact of synchronizing different streams with different frame rates. Figure \ref{F:gsvpalbd} illustrates a constant index of losses which means that this data losses are not incrementing in time, so the system is stable.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -27,7 +27,7 @@ Figures \ref{F:isoCPU} and \ref{F:gsavgcpu} illustrates the scalability of the c
 \end{center}
 \end{figure}
 
-It is important to note that in Figure \ref{F:gsvpalbd} (also in previous chapter \ref{H:platformDeploymentAndDemonstrations} figures) there is some noisy data which are caused by the use of working static files to simulate live audio-video streaming. This means that when a file ends some seconds of discontinuity are noticed.
+It is important to note that in Figure \ref{F:gsvpalbd} (also in previous Chapter \ref{H:platformDeploymentAndDemonstrations} figures) there is some noisy data which are caused by the use of working static files to simulate live audio-video streaming. This means that when a file ends some seconds of discontinuity are noticed.
 
 Related to LMS framework development plan, it is demonstrated that the selected third party libraries are suitable to continue being used (i.e.: Live555, LibAV/ffmpeg, x264 and OpenCV, among others) because they achieve an acceptable performance (i.e: the results show that the filters where they are implemented do not add critical processing time). And, regarding behaviour debugging tools for the LMS, it is possible to know which filters are critical or which should be improved thanks to the implemented metrics gathering system (i.e.: developers are now able to know how many time a filter takes to process a frame).
 
@@ -39,7 +39,7 @@ Finally, note that the generic scenario, which performs audio and video mixing f
 
 The selection of these tools for the monitoring layer is a good choice when the goal is to have a lightweight and highly configurable system. 
 
-A critical issue about clustering such tools (i.e.: Collectd clustering) is how its bandwidth usage may affect the whole system performance. Figures \ref{F:tscbu} and \ref{F:avmscbu}, which are a filtered whireshark capture of the UDP stream bandwidth usage from the Collectd client to the Collectd+Graphite server, demonstrates that despite the huge amount of parameters to be sent, the communication protocol is lightweight and is not an issue that the system might suffer from. In the worst case (i.e.: generic scenario) the bandwidth usage average is below 70 kbps.
+A critical issue about clustering such tools (i.e.: Collectd clustering) is how its bandwidth usage may affect the whole system performance. Figures \ref{F:tscbu} and \ref{F:avmscbu}, which are a filtered whireshark capture of the UDP stream bandwidth usage from the Collectd client to the Collectd and Graphite server, demonstrates that despite the huge amount of parameters to be sent, the communication protocol is lightweight and is not an issue that the system might suffer from. In the worst case (i.e.: generic scenario) the bandwidth usage average is below 70 kbps.
 
 \begin{figure}[!htb]
 \begin{center}
