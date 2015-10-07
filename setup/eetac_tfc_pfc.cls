@@ -309,7 +309,7 @@
                    \ifthenelse{\boolean{UNdirector}}{{\normalsize\bf\sffamily\MakeUppercase  \@Ndirector :  \@director }  \\[2ex]}
                                                     {{\normalsize\bf\sffamily\MakeUppercase  \@Ndirectors : \@director \\ \hspace*{\Ldirectors} \@segondirector }  \\[2ex]}
                               \ifthenelse{\boolean{supervisor}}{{\normalsize\bf\sffamily\MakeUppercase  \@Nsupervisor : \@supervisor  } \\[2ex]}{}
-                                         {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : \today               }  \\[2ex]
+                                         {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : 7 d'Octubre de 2015               }  \\[2ex]
     }} \\
     
   \end{tabular}
@@ -358,7 +358,7 @@
       \ifthenelse{\boolean{UNdirector}}{{\bf \@NdirectorResum:}  \@director \\[1ex]}
                                       {{\bf \@NdirectorsResum:} \@director \\ \hspace*{\Ldirectors} \@segondirector  \\[1ex]}
       \ifthenelse{\boolean{supervisor}}{{\bf \@NsupervisorResum:} \@supervisor   \\[1ex]}{}
-      {\bf \@NdataResum:}       \today       \\[3mm]
+      {\bf \@NdataResum:}       7 d'Octubre de 2015       \\[3mm]
       \hline
     \end{tabular}
     
