@@ -163,7 +163,7 @@ Regarding the audio mixing, all input streams are mixed using the logarithmic mi
   \end{center}
 \end{figure}
 
-\vbox{The average delay introduced for the audio "receiver to mixer" paths averages is 8,6 milliseconds and the audio "mixer to transmitter" path average delay is 23,1 milliseconds. Then, by adding the maximum average path (16,2 ms), a total average value of 39,3 milliseconds of processing time involving the audio pipeline is achieved. Regarding the pipeline's video path, an average of 9,89 milliseconds is obtained by averaging the "receiver to mixer" video paths average processing times. By adding the average of the "mixer to transmitter" path processing time of 67 milliseconds to the maximum average obtained in the "receiver to mixer" path (12,8 ms) a total average of 79,8 milliseconds of delay introduced for the video pipeline is obtained. Therefore, the generic scenario demonstrates that LMS achieves acceptable processing time values for real-time\footnote{Real-time parameters, in media streaming, mean a total processing time (i.e.: added delay between origin and destination) of 150 to 200 milliseconds} audio-visual media content production.}
+The average delay introduced for the audio "receiver to mixer" paths averages is 8,6 milliseconds and the audio "mixer to transmitter" path average delay is 23,1 milliseconds. Then, by adding the maximum average path (16,2 ms), a total average value of 39,3 milliseconds of processing time involving the audio pipeline is achieved. Regarding the pipeline's video path, an average of 9,89 milliseconds is obtained by averaging the "receiver to mixer" video paths average processing times. By adding the average of the "mixer to transmitter" path processing time of 67 milliseconds to the maximum average obtained in the "receiver to mixer" path (12,8 ms) a total average of 79,8 milliseconds of delay introduced for the video pipeline is obtained. Therefore, the generic scenario demonstrates that LMS achieves real-time\footnote{Real-time parameters mean a maximum delay of 200 milliseconds between origin and destination.} processing time values.
 
 \begin{figure}[!htb]
   \begin{center}
@@ -182,6 +182,6 @@ Regarding the audio mixing, all input streams are mixed using the logarithmic mi
 
 Then regarding the video "receiver to mixer" paths there aren't accumulated data losses. But, "mixer to transmitter" path reaches around 52.308 lost data blocks. The fact of having lost data blocks is due to the transitory period of the mixer filter. However, this accumulated losses remains constant, meaning that there are no more data blocks lost.
 
-So, although this scenario is being deployed in a i7 processor laptop, it is able to real-time mix four couples of audio and video streams without issues.
+So, although this scenario is being deployed in an Intel i7 processor laptop, it is able to real-time mix four couples of audio and video streams without issues.
 
-Finally, to point out that the signal discontinuities that appear in some figures are due to the fact of transmitting origin streams in a pseudo-live mode, which means audio and video loops. Therefore, this noise appears when the origin streams restart.
+Finally, we want to emphasize that the signal discontinuities that appear in some figures are due to the fact of transmitting origin streams in a pseudo-live mode, which means audio and video loops. Therefore, this noise appears when the origin streams restart.

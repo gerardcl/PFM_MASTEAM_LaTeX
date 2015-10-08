@@ -10,7 +10,7 @@ The minimal containerized entities are the following ones:
 \item The HTTP REST API container with the middleware interface inside and ready to use
 \end{itemize}
 
-First of all, let us introduce how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS \cite{ubuntu}, which is the Linux distribution version where the LMS is being developed. Note that previous list does not handle monitoring requirements, but this topic will be treated in Chapter \ref{G:monitoringLayer}. this is because our initial interest is related to testing how LiveMediaStreamer can be deployed inside a containerised environment.
+First of all, let us describe how and where Docker is installed. The host operating system where tests are going to be carried out is an Ubuntu 14.04 LTS \cite{ubuntu}, which is the Linux distribution version where the LMS is being developed. Note that previous list does not handle monitoring requirements, but this topic will be treated in Chapter \ref{G:monitoringLayer}. this is because our initial interest is related to testing how LiveMediaStreamer can be deployed inside a containerised environment.
 
 Note that main Docker requirements for Ubuntu 14.04 are to be under a 64-bit installation and kernel must be at version 3.10 or higher (lower versions are buggy and unstable). 
 
@@ -114,7 +114,7 @@ $ docker run --rm -p <host port>:<container port> \
 
 \subsection{HTTP REST API container}
 
-The following container to be built is the HTTP REST API middleware developed in Chapter \ref{D:application}. Since it is a Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. This is show in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:dockerFiles2}.
+The following container to be built is the HTTP REST API middleware developed in Chapter \ref{D:application}. Since it is a Node.js application, it requires to be built with Node.js and the NPM which is the official Node.js package manager. NPM is used to to install middleware's dependencies. This is shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:dockerFiles2}.
 
 In this case, in order to build and manage such image, these are the image parameters which define this image:
 
@@ -213,7 +213,7 @@ This is quite similar to the first Docker file introduced in this chapter but:
 \item The user that is going to be used for this container is its root user due to require being used by supervisord service itself
 \end{itemize}
 
-The Nginx configuration file is as shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:nginxexample}. In this configuration file, apart from typical Nginx configurations (which are out of scope of this thesis), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing). Note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
+The Nginx configuration file is as shown in Appendix \ref{ANX:dockerFiles} Section \ref{ANX:nginxexample} In this configuration file, apart from typical Nginx configurations (which are out of scope of this thesis), some access control methods are added in order to treat common HTTP server issues like CORS (Cross-Origin Resource Sharing). Note that the root file system specified is the one which the LMS instance should use for saving the MPEG-DASH output files too (i.e.: the dasher filter should be configured with this folder).
 
 Finally, the last file to show is the supervisord.conf configuration file:
 
@@ -281,4 +281,4 @@ With \verb|-v| flag is specified the "host volume folder", which is the host fol
  
 So, scalability, performance and control of the set of containers are assured by applying best practices like the last one.
 
-Finally, to remark that thanks to these illustrations of Docker file configurations there is a step forward to demonstrate this thesis's goals.
+Finally, note that thanks to these illustrations of Docker file configurations there is a step forward to demonstrate this thesis's goals.

@@ -64,7 +64,7 @@ By following the LiveMediaStreamer architecture structure, input network impleme
 
 By initializing new RTP or RTSPClient sessions (i.e.: network inputs), a group of subessions is associated per each stream (i.e.: an RTP session has one subsession associated and the RTSPClient session has as many subsessions as accepted from the SDP that defines different RTP sessions).
 
-When a new subsession is set, a new RTPReceiverStats class is automatically initialized. This Live555 object implements RTCP stats measurement which are only required to be treated outside. This is done at SCSSubsessionState, which creates a new schedule to periodically measure and save current state (a default granularity of 1 second is set). The implemented method is called periodically as shown in Appendix \ref{ANX:appALG} Section \ref{inmm}. This implementation prepares the metrics that are going to be presented when a new state query is received. The code in Appendix \ref{ANX:appALG} Section \ref{inmm} shows how metrics from the Live555 library are obtained. For a more detailed insight of the overall implementation see Appendix \ref{ANX:sourceCodes}. The metrics that are presented per each new state query are shown next (a default granularity of 1 second is set):
+When a new subsession is set, a new RTPReceiverStats class is automatically initialized. This Live555 object implements RTCP stats measurement which are only required to be treated outside. This is done at SCSSubsessionState, which creates a new schedule to periodically measure and save current state (a default granularity of 1 second is set). The implemented method is called periodically as shown in Appendix \ref{ANX:appALG} Section \ref{inmm} This implementation prepares the metrics that are going to be presented when a new state query is received. The code in Appendix \ref{ANX:appALG} Section \ref{inmm} shows how metrics from the Live555 library are obtained. For a more detailed insight of the overall implementation see Appendix \ref{ANX:sourceCodes}. The metrics that are presented per each new state query are shown next (a default granularity of 1 second is set):
 
 \begin{itemize}
 \item Bitrate: maximum, minimum and average in kbps.
@@ -83,12 +83,12 @@ The maximum and the minimum bitrates are the last maximum and minimum average bi
 
 Jitter is measured as the estimate of the statistical variance of the RTP data interarrival time inserted in the interarrival jitter field of reception reports (in microseconds), and this is already internally done by the Live555 library. So, what is presented is the current jitter value at the beginning of each new schedule.
 
-Another metric that might be of interest is the delay from the stream source to the LMS instance but it is discarded due to not being offered from Live555 library. Moreover, it has been discared to be implemented at SCSSubsessionStats class level due to is computational cost and complexity to develop such requirement. Note that this metric is not relevant because network performance problems can be detected through other metrics already gathered (i.e.: jitter and packet loss ratio).
+Another metric that might be of interest is the delay from the stream source to the LMS instance but it is discarded due to not being offered from Live555 library. Moreover, it has been discarded to be implemented at SCSSubsessionStats class level due to is computational cost and complexity to develop such requirement. Note that this metric is not relevant because network performance problems can be detected through other metrics already gathered (i.e.: jitter and packet loss ratio).
 
 
 \subsection{Output network metrics}
 
-As done in previous section, output network metrics are going to be implemented by carrying out re-implementations of methods given by the Live555 library.
+As done in the previous section, output network metrics are going to be implemented by carrying out re-implementations of methods given by the Live555 library.
 
 This implementation has been much more difficult due to not having control of the creation or deletion of the RTPSink class of the Live555 library. Previous developments before the final version were based over the RTPSink re-implementation already done per each OnDemandServerMediaSubsession (Live555 library class), which is also re-implemented by QueueServerMediaSubsession (LMS framework class). But the implementation was still losing the specific RTPSink instance of specific subsession.
 

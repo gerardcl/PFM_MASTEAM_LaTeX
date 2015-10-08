@@ -22,7 +22,7 @@ Figure \ref{F:maex} illustrates the proposal of the monitoring architecture, whi
 
 This section is based on how Collectd can be configured and deployed in order to monitor and properly gather the metrics of interest.
 
-\subsection{From container point of view}
+\subsection{From the container point of view}
 
 From a container point of view and by following the requirement to build containers as reusable as possible, what is proposed to implement is a container to gather the logged stats from an LMS container. This, as shown in Figure \ref{F:maex}, implies sharing a Docker volume (as introduced in previous Chapter \ref{D:virtualization}) from LMS container to the Collectd client which is using the tail\footnote{The Tail plugin can be used to “tail” log files. Each line is given to one or more “matches” which test if the line is relevant for any statistics using a POSIX extended regular expression.} plugin as an input. Moreover, in order to send specific logged metrics to the Collectd server container it is also using the network\footnote{The Network plugin can send values to other instances (i.e.: client) and receive values from from other instances (i.e.: server). Which action is taken depends on the configuration.} plugin as done in previous Collectd client configuration.
 
@@ -61,7 +61,7 @@ This will start immediately sending the defined container stats to the Graphite 
 
 This example of deployed container for isolated Collectd clients is a key point in the general monitoring architecture due to the fact of being easyly configurable and reusable.
 
-\subsection{From OS point of view}
+\subsection{From the OS point of view}
 
 The fact of using Collectd means a wide community behind, which probably have already developed some of the functionalities a project could require. And this is the case: the requirement of monitoring each of the containers that a host OS might have can be solved by configuring already existing plugins or similar tools for Collectd from the Docker community. The selected tool is using the stats API introduced since Docker 1.5 version. The reported container's stats are:
  
@@ -168,6 +168,6 @@ $ docker run -it --rm --name graphite -p 25826:25826/udp -p 8080:8080 \
 gerardcl/lms-collectd-graphite
 \end{verbatim}
 
-As shown, the collectd (i.e.: Collectd client) container sends to the default port (i.e.: UDP protocol) of the graphite host's container ( with Collectd server and Graphite tools). Moreover, the graphite container opens the HTTP port 8080 in order to enable browsers to get access to its web application anywhere. 
+As shown, the collectd (i.e.: Collectd client) container sends to the default port (i.e.: UDP protocol) of the graphite host's container (with Collectd server and Graphite tools). Moreover, the graphite container opens the HTTP port 8080 in order to enable browsers to get access to its web application anywhere. 
 
 As conclusion, thanks to previous monitoring technology treated a generic and scalable monitoring layer is achieved.
