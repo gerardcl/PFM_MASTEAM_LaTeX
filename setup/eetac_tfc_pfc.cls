@@ -309,7 +309,7 @@
                    \ifthenelse{\boolean{UNdirector}}{{\normalsize\bf\sffamily\MakeUppercase  \@Ndirector :  \@director }  \\[2ex]}
                                                     {{\normalsize\bf\sffamily\MakeUppercase  \@Ndirectors : \@director \\ \hspace*{\Ldirectors} \@segondirector }  \\[2ex]}
                               \ifthenelse{\boolean{supervisor}}{{\normalsize\bf\sffamily\MakeUppercase  \@Nsupervisor : \@supervisor  } \\[2ex]}{}
-                                         {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : \today                             }  \\[2ex]
+                                         {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : October 7, 2015                             }  \\[2ex]
     }} \\
     
   \end{tabular}
@@ -399,7 +399,7 @@
       \ifthenelse{\boolean{UNdirector}}{{\bf Advisor:}  \@director \\[1ex]}
                                        {{\bf Advisors:} \@director \\ \hspace*{\Ldirectors} \@segondirector  \\[1ex]}
       \ifthenelse{\boolean{supervisor}}{{\bf Supervisor:} \@supervisor   \\[1ex]}{}
-      {\bf Date:}       \today       \\[3mm]
+      {\bf Date:}       October 7, 2015       \\[3mm]
       \hline
     \end{tabular}
     
@@ -805,7 +805,7 @@
                               \ifthenelse{\boolean{UNdirector}}{{\normalsize\bf\sffamily\MakeUppercase \@Ndirector :  \@director }  \\[2ex]}
                                          {{\normalsize\bf\sffamily\MakeUppercase \@Ndirectors : \@director \\ \hspace*{\Ldirectors} \@segondirector }  \\[2ex]}
                                          \ifthenelse{\boolean{supervisor}}{{\normalsize\bf\sffamily\MakeUppercase \@Nsupervisor : \@supervisor  } \\[2ex]}{}
-                                                    {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : \today               }  \\[2ex]
+                                                    {\normalsize\bf\sffamily\MakeUppercase  \@Ndata : October 7, 2015               }  \\[2ex]
     }} \\
   \end{tabular}
   \setcounter{page}{-1}
